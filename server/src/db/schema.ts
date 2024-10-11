@@ -6,7 +6,7 @@ export const usersTable = sqliteTable('users_table', {
 	name: text().notNull(),
 	email: text().notNull().unique(),
 	avatarURI: text(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
+	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
 })
@@ -20,7 +20,7 @@ export const autofillsTable = sqliteTable(
 			.references(() => usersTable.id, { onDelete: 'cascade' }),
 		field: text().notNull(),
 		value: text().notNull(),
-		createdAt: integer('created_at', { mode: 'timestamp' })
+		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
 	},
@@ -31,12 +31,42 @@ export const autofillsTable = sqliteTable(
 	}
 )
 
+export const notificationsTable = sqliteTable('notifications_table', {
+	id: integer().primaryKey({ autoIncrement: true }),
+	userId: integer()
+		.notNull()
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	read: integer({ mode: 'boolean' }).notNull().default(false),
+	type: text({ enum: ['newEvent', 'newForm'] }),
+	eventId: integer()
+		.notNull()
+		.references(() => eventsTable.id),
+	formId: integer()
+		.notNull()
+		.references(() => formsTable.id),
+	createdAt: integer({ mode: 'timestamp' })
+		.notNull()
+		.default(sql`(strftime('%s', 'now'))`)
+})
+
+export const notificationRulesTable = sqliteTable('notification_rules_table', {
+	userId: integer()
+		.notNull()
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	keyword: text().notNull()
+}, (table) => {
+	return {
+		pk: primaryKey({ columns: [table.userId, table.keyword] })
+	}
+})
+
 export const societiesTable = sqliteTable('societies_table', {
 	id: integer().primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
+	description: text().notNull(),
 	avatarURI: text(),
 	bannerURI: text(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
+	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
 })
@@ -53,7 +83,7 @@ export const societyRolesTable = sqliteTable(
 		role: text({ enum: ['member', 'manager', 'admin'] })
 			.notNull()
 			.default('member'),
-		createdAt: integer('created_at', { mode: 'timestamp' })
+		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
 	},
@@ -71,7 +101,13 @@ export const eventsTable = sqliteTable('societies_table', {
 		.references(() => societiesTable.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	description: text().notNull(),
-	bannerURI: text()
+	timeStart: integer({ mode: 'timestamp' }),
+	timeEnd: integer({ mode: 'timestamp' }),
+	location: text(),
+	bannerURI: text(),
+	createdAt: integer({ mode: 'timestamp' })
+		.notNull()
+		.default(sql`(strftime('%s', 'now'))`)
 })
 
 export const eventFollowsTable = sqliteTable(
@@ -83,7 +119,7 @@ export const eventFollowsTable = sqliteTable(
 		userId: integer()
 			.notNull()
 			.references(() => usersTable.id, { onDelete: 'cascade' }),
-		createdAt: integer('created_at', { mode: 'timestamp' })
+		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
 	},
@@ -103,7 +139,7 @@ export const formsTable = sqliteTable('societies_table', {
 	description: text().notNull(),
 	canEditResponses: integer({ mode: 'boolean' }).notNull().default(false),
 	fields: text({ mode: 'json' }).notNull().$type<{ type: string; id: number; header: string; description: string | undefined; options: any }[]>(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
+	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
 })
@@ -116,7 +152,7 @@ export const formSubmissionsTable = sqliteTable('form_submissions_table', {
 		.notNull()
 		.references(() => usersTable.id, { onDelete: 'cascade' }),
 	answers: text().notNull().$type<{ id: number; response: any }[]>(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
+	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
 })
