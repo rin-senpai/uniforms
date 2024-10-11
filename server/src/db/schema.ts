@@ -49,16 +49,20 @@ export const notificationsTable = sqliteTable('notifications_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const notificationRulesTable = sqliteTable('notification_rules_table', {
-	userId: integer()
-		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	keyword: text().notNull()
-}, (table) => {
-	return {
-		pk: primaryKey({ columns: [table.userId, table.keyword] })
+export const notificationRulesTable = sqliteTable(
+	'notification_rules_table',
+	{
+		userId: integer()
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		keyword: text().notNull()
+	},
+	(table) => {
+		return {
+			pk: primaryKey({ columns: [table.userId, table.keyword] })
+		}
 	}
-})
+)
 
 export const societiesTable = sqliteTable('societies_table', {
 	id: integer().primaryKey({ autoIncrement: true }),
@@ -101,6 +105,7 @@ export const eventsTable = sqliteTable('societies_table', {
 		.references(() => societiesTable.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	description: text().notNull(),
+	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
 	timeStart: integer({ mode: 'timestamp' }),
 	timeEnd: integer({ mode: 'timestamp' }),
 	location: text(),
@@ -138,6 +143,7 @@ export const formsTable = sqliteTable('societies_table', {
 	title: text().notNull(),
 	description: text().notNull(),
 	canEditResponses: integer({ mode: 'boolean' }).notNull().default(false),
+	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
 	fields: text({ mode: 'json' }).notNull().$type<{ type: string; id: number; header: string; description: string | undefined; options: any }[]>(),
 	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
