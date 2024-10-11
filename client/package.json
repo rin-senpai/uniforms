@@ -1,21 +1,27 @@
 {
-  "name": "example-with-tailwindcss",
-  "type": "module",
-  "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
-  },
-  "dependencies": {
-    "@solidjs/router": "^0.14.7",
-    "@solidjs/start": "^1.0.8",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "solid-js": "^1.9.1",
-    "tailwindcss": "^3.4.3",
-    "vinxi": "^0.4.3"
-  },
-  "engines": {
-    "node": ">=18"
-  }
+	"name": "example-with-tailwindcss",
+	"type": "module",
+	"scripts": {
+		"dev": "vinxi dev",
+		"build": "vinxi build",
+		"start": "vinxi start",
+		"lint": "bun prettier . --check --config ../prettier.config.mjs",
+		"lint-write": "bun prettier . --write --config ../prettier.config.mjs"
+	},
+	"dependencies": {
+		"@solidjs/router": "^0.14.7",
+		"@solidjs/start": "^1.0.8",
+		"autoprefixer": "^10.4.19",
+		"postcss": "^8.4.38",
+		"solid-js": "^1.9.1",
+		"tailwindcss": "^3.4.3",
+		"vinxi": "^0.4.3"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"devDependencies": {
+		"prettier": "3.3.3"
+	},
+	"prettier": "../prettier.config.js"
 }

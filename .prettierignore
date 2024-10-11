@@ -1,0 +1,41 @@
+coverage/
+types/
+
+.turbo
+.nitro
+.output
+.vinxi
+
+*.log
+
+dist
+worker
+.solid
+
+*/README.md
+
+# dependencies
+*/node_modules
+*/bun.lockb
+
+# IDEs and editors
+.idea
+.zed
+.code
+.project
+.classpath
+*.launch
+.settings/
+
+.tmp
+
+.env
+
+# System Files
+.DS_Store
+Thumbs.db
+
+vite.config.ts.timestamp*
+
+.nitro
+.output
