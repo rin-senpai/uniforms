@@ -9,10 +9,14 @@
 		"lint-write": "bun prettier . --write --config ../prettier.config.mjs"
 	},
 	"dependencies": {
+		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.34.1",
 		"elysia": "latest"
 	},
 	"devDependencies": {
+		"@types/bun": "^1.1.11",
 		"bun-types": "latest",
+		"drizzle-kit": "^0.25.0",
 		"prettier": "3.3.3"
 	},
 	"module": "src/index.ts"
