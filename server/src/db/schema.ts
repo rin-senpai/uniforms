@@ -18,7 +18,7 @@ export const autofillsTable = sqliteTable(
 		userId: integer()
 			.notNull()
 			.references(() => usersTable.id, { onDelete: 'cascade' }),
-		field: text().notNull(),
+		fieldType: text().notNull(),
 		value: text().notNull(),
 		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
