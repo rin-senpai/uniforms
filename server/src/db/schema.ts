@@ -115,6 +115,20 @@ export const eventsTable = sqliteTable('societies_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
+export const eventTagsTable = sqliteTable('event_tags_table', {
+	name: text().notNull(),
+	eventId: integer()
+		.notNull()
+		.references(() => eventsTable.id, { onDelete: 'cascade' }),
+	createdAt: integer({ mode: 'timestamp' })
+			.notNull()
+			.default(sql`(strftime('%s', 'now'))`)
+}, (table) => {
+	return {
+		pk: primaryKey({ columns: [table.name, table.eventId] })
+	}
+})
+
 export const eventFollowsTable = sqliteTable(
 	'event_follows_table',
 	{
