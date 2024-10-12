@@ -11,10 +11,9 @@ export const usersTable = sqliteTable('users_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const autofillsTable = sqliteTable(
-	'autofills_table',
+export const userAutofillsTable = sqliteTable(
+	'user_autofills_table',
 	{
-		id: integer().primaryKey({ autoIncrement: true }),
 		userId: integer()
 			.notNull()
 			.references(() => usersTable.id, { onDelete: 'cascade' }),
@@ -26,7 +25,30 @@ export const autofillsTable = sqliteTable(
 	},
 	(table) => {
 		return {
-			pk: primaryKey({ columns: [table.userId, table.field] })
+			pk: primaryKey({ columns: [table.userId, table.fieldType] })
+		}
+	}
+)
+
+export const templateAutofillsTable = sqliteTable(
+	'template_autofills_table',
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		userId: integer()
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		templateId: integer()
+			.notNull()
+			.references(() => templatesTable.id, { onDelete: 'cascade' }),
+		templateFieldId: integer().notNull(),
+		value: text().notNull(),
+		createdAt: integer({ mode: 'timestamp' })
+			.notNull()
+			.default(sql`(strftime('%s', 'now'))`)
+	},
+	(table) => {
+		return {
+			pk: primaryKey({ columns: [table.userId, table.templateId, table.templateFieldId] })
 		}
 	}
 )
@@ -115,19 +137,23 @@ export const eventsTable = sqliteTable('societies_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const eventTagsTable = sqliteTable('event_tags_table', {
-	name: text().notNull(),
-	eventId: integer()
-		.notNull()
-		.references(() => eventsTable.id, { onDelete: 'cascade' }),
-	createdAt: integer({ mode: 'timestamp' })
+export const eventTagsTable = sqliteTable(
+	'event_tags_table',
+	{
+		name: text().notNull(),
+		eventId: integer()
+			.notNull()
+			.references(() => eventsTable.id, { onDelete: 'cascade' }),
+		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
-}, (table) => {
-	return {
-		pk: primaryKey({ columns: [table.name, table.eventId] })
+	},
+	(table) => {
+		return {
+			pk: primaryKey({ columns: [table.name, table.eventId] })
+		}
 	}
-})
+)
 
 export const eventFollowsTable = sqliteTable(
 	'event_follows_table',
@@ -154,11 +180,24 @@ export const formsTable = sqliteTable('societies_table', {
 	eventId: integer()
 		.notNull()
 		.references(() => eventsTable.id, { onDelete: 'cascade' }),
+	templateId: integer().references(() => templatesTable.id),
 	title: text().notNull(),
 	description: text().notNull(),
 	canEditResponses: integer({ mode: 'boolean' }).notNull().default(false),
 	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
-	fields: text({ mode: 'json' }).notNull().$type<{ type: string; id: number; header: string; description: string | undefined; options: any }[]>(),
+	fields: text({ mode: 'json' }).notNull().$type<{ type: string; id: number; templateFieldId: number | undefined; header: string; description: string | undefined; options: any }[]>(),
+	createdAt: integer({ mode: 'timestamp' })
+		.notNull()
+		.default(sql`(strftime('%s', 'now'))`)
+})
+
+export const templatesTable = sqliteTable('templates_table', {
+	id: integer().primaryKey({ autoIncrement: true }),
+	title: text().notNull(),
+	description: text().notNull(),
+	canEditResponses: integer({ mode: 'boolean' }).notNull().default(false),
+	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
+	fields: text({ mode: 'json' }).notNull().$type<{ type: string; id: number; templateFieldId: number | undefined; header: string; description: string | undefined; options: any }[]>(),
 	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
