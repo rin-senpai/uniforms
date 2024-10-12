@@ -77,7 +77,10 @@ export const notificationRulesTable = sqliteTable(
 		userId: integer()
 			.notNull()
 			.references(() => usersTable.id, { onDelete: 'cascade' }),
-		keyword: text().notNull()
+		keyword: text().notNull(),
+		createdAt: integer({ mode: 'timestamp' })
+			.notNull()
+			.default(sql`(strftime('%s', 'now'))`)
 	},
 	(table) => {
 		return {
