@@ -35,10 +35,7 @@ export const UserRoles = t.Object(
 export const UserRolesUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
-		userId: t.Integer(),
-		orgId: t.Integer(),
-		updatedRoles: t.Array(t.String())
+		message: t.String()
 	},
 	{
 		description: 'User roles update return object'
@@ -114,6 +111,17 @@ export const EventPreview = t.Object(
 	},
 	{
 		description: 'Basic event details object'
+	}
+)
+
+export const EventFollowReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		eventId: t.Integer()
+	},
+	{
+		description: 'Event follow return object'
 	}
 )
 

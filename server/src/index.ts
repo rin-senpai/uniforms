@@ -2,7 +2,21 @@ import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
 
 import { Elysia, t } from 'elysia'
-import { Event, EventUpdateReturn, EventPreview, FormDetails, Organisation, OrganisationPreview, OrganisationUpdateReturn, UserRoles, UserRolesUpdateReturn, UserUpdateReturn, User, DeleteReturn } from './interface'
+import {
+	Event,
+	EventUpdateReturn,
+	EventPreview,
+	FormDetails,
+	Organisation,
+	OrganisationPreview,
+	OrganisationUpdateReturn,
+	UserRoles,
+	UserRolesUpdateReturn,
+	UserUpdateReturn,
+	User,
+	DeleteReturn,
+	EventFollowReturn
+} from './interface'
 
 const db = await drizzle('bun:sqlite', process.env.DB_FILE_NAME!)
 
@@ -64,6 +78,53 @@ const app = new Elysia()
 			response: Event,
 			detail: {
 				description: 'Get event by id'
+			}
+		}
+	)
+
+	.post(
+		'/events/:eventId/followers',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'User now following event',
+				eventId: 1
+			}
+		},
+		{
+			params: t.Object({
+				eventId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				userId: t.Integer()
+			}),
+			response: EventFollowReturn,
+			detail: {
+				description: 'Adds a user to followers of an event'
+			}
+		}
+	)
+
+	.delete(
+		'/events/:eventId/followers',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'User no longer following organisation'
+			}
+		},
+		{
+			params: t.Object({
+				eventId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				userId: t.Integer()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Removes a user from followers of an event'
 			}
 		}
 	)
@@ -182,6 +243,53 @@ const app = new Elysia()
 	)
 
 	.post(
+		'/orgs/:orgId/followers',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'User now following organisation'
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				userId: t.Integer()
+			}),
+			response: UserRolesUpdateReturn,
+			detail: {
+				description: 'Adds a user to followers of an organisation'
+			}
+		}
+	)
+
+	.delete(
+		'/orgs/:orgId/followers',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'User no longer following organisation'
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				userId: t.Integer(),
+				role: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Removes a user from followers of an organisation'
+			}
+		}
+	)
+
+	.post(
 		'/admin/events',
 		() => {
 			return {
@@ -261,6 +369,31 @@ const app = new Elysia()
 		}
 	)
 
+	.get(
+		'/admin/events/:eventId/followers',
+		() => {
+			return {
+				statusCode: 200,
+				followerCount: 1000
+			}
+		},
+		{
+			params: t.Object({
+				eventId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: t.Object({
+				statusCode: t.Integer(),
+				followerCount: t.Integer()
+			}),
+			detail: {
+				description: 'Get follower count of an event'
+			}
+		}
+	)
+
 	.post(
 		'/admin/orgs',
 		() => {
@@ -333,51 +466,58 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/orgs/:orgId/members',
+		'/admin/orgs/:orgId/admins',
 		() => {
-			return [
-				{
-					userId: 1,
-					orgId: 1,
-					role: 'admin'
-				},
-				{
-					userId: 2,
-					orgId: 1,
-					role: 'manager'
-				},
-				{
-					userId: 3,
-					orgId: 1,
-					role: 'member'
-				}
-			]
+			return {
+				managers: [
+					{
+						userId: 1,
+						orgId: 1,
+						role: 'manager'
+					},
+					{
+						userId: 2,
+						orgId: 1,
+						role: 'manager'
+					}
+				],
+				moderators: [
+					{
+						userId: 3,
+						orgId: 1,
+						role: 'moderator'
+					},
+					{
+						userId: 4,
+						orgId: 1,
+						role: 'moderator'
+					}
+				]
+			}
 		},
 		{
 			params: t.Object({
 				orgId: t.Integer()
 			}),
 			body: t.Object({
-				token: t.String(),
-				// Returns users with only certain roles if specified
-				role: t.Optional(t.Array(t.String()))
+				token: t.String()
 			}),
-			response: t.Array(UserRoles),
+			response: t.Object({
+				managers: t.Array(UserRoles),
+				moderators: t.Array(UserRoles)
+			}),
 			detail: {
-				description: 'Get all members of an organization'
+				description: 'Get all administrators of an organization'
 			}
 		}
 	)
 
 	.post(
-		'/admin/orgs/:orgId/members',
+		'/admin/orgs/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Member role added successfully',
-				userId: 1,
-				orgId: 1,
-				updatedRoles: ['admin', 'member']
+				message: 'User role added successfully'
 			}
 		},
 		{
@@ -391,20 +531,17 @@ const app = new Elysia()
 			}),
 			response: UserRolesUpdateReturn,
 			detail: {
-				description: 'Give a user a role in an organization'
+				description: 'Add a role to a user in an organization'
 			}
 		}
 	)
 
 	.delete(
-		'/admin/orgs/:orgId/members',
+		'/admin/orgs/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Member role removed successfully',
-				userId: 1,
-				orgId: 1,
-				updatedRoles: ['member']
+				message: 'User role removed successfully'
 			}
 		},
 		{
@@ -416,9 +553,9 @@ const app = new Elysia()
 				userId: t.Integer(),
 				role: t.String()
 			}),
-			response: UserRolesUpdateReturn,
+			response: DeleteReturn,
 			detail: {
-				description: 'Remove a user from an organization'
+				description: 'Remove a role from a user in an organization'
 			}
 		}
 	)
