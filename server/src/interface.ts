@@ -21,18 +21,17 @@ export const UserUpdateReturn = t.Object({
 	userId: t.Integer()
 })
 
-export const UserRoles = t.Object(
+export const UserRole = t.Object(
 	{
 		userId: t.Integer(),
-		orgId: t.Integer(),
 		role: t.String()
 	},
 	{
-		description: 'User roles within an organisation'
+		description: 'User role within an organisation'
 	}
 )
 
-export const UserRolesUpdateReturn = t.Object(
+export const UserRoleUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
 		message: t.String()

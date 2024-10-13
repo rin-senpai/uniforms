@@ -10,8 +10,8 @@ import {
 	Organisation,
 	OrganisationPreview,
 	OrganisationUpdateReturn,
-	UserRoles,
-	UserRolesUpdateReturn,
+	UserRole,
+	UserRoleUpdateReturn,
 	UserUpdateReturn,
 	User,
 	DeleteReturn,
@@ -258,7 +258,7 @@ const app = new Elysia()
 				token: t.String(),
 				userId: t.Integer()
 			}),
-			response: UserRolesUpdateReturn,
+			response: UserRoleUpdateReturn,
 			detail: {
 				description: 'Adds a user to followers of an organisation'
 			}
@@ -472,24 +472,20 @@ const app = new Elysia()
 				managers: [
 					{
 						userId: 1,
-						orgId: 1,
 						role: 'manager'
 					},
 					{
 						userId: 2,
-						orgId: 1,
 						role: 'manager'
 					}
 				],
 				moderators: [
 					{
 						userId: 3,
-						orgId: 1,
 						role: 'moderator'
 					},
 					{
 						userId: 4,
-						orgId: 1,
 						role: 'moderator'
 					}
 				]
@@ -503,8 +499,8 @@ const app = new Elysia()
 				token: t.String()
 			}),
 			response: t.Object({
-				managers: t.Array(UserRoles),
-				moderators: t.Array(UserRoles)
+				managers: t.Array(UserRole),
+				moderators: t.Array(UserRole)
 			}),
 			detail: {
 				description: 'Get all administrators of an organization'
@@ -529,7 +525,7 @@ const app = new Elysia()
 				userId: t.Integer(),
 				role: t.String()
 			}),
-			response: UserRolesUpdateReturn,
+			response: UserRoleUpdateReturn,
 			detail: {
 				description: 'Add a role to a user in an organization'
 			}
