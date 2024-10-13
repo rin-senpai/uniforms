@@ -10,7 +10,8 @@ import {
   CardTitle
 } from "~/components/ui/card"
 import { Switch, SwitchControl, SwitchThumb } from "~/components/ui/switch"
-import { For } from 'solid-js' // Added missing import for the "For" loop
+import { For } from 'solid-js' 
+import { Checkbox } from "~/components/ui/checkbox"
 
 // Notifications data
 const notifications = [
@@ -41,6 +42,8 @@ export default function Home() {
         </A>{' '}
       </p>
 
+	  <div class="flex items-start space-x-4">
+	  {/* Card and Switch test */}
       <Card class="w-[380px]">
         <CardHeader>
           <CardTitle>Notifications</CardTitle>
@@ -79,6 +82,17 @@ export default function Home() {
           </Button>
         </CardFooter>
       </Card>
+
+	  {/* Checkbox Test */}
+	  <div class="flex space-x-2">
+		<Checkbox id="terms1" />
+		<div class ="grid gap-1.5 leading-none">
+			<p class="text-sm text-muted-foreground">
+				Hiiiiiiiii
+			</p>
+		</div>
+	  </div>
+	</div>
     </main>
   )
 }
