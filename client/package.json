@@ -17,6 +17,7 @@
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"lucide-react": "^0.452.0",
+		"autoprefixer": "^10.4.19",
 		"postcss": "^8.4.38",
 		"solid-js": "^1.9.1",
 		"tailwind-merge": "^2.5.3",
