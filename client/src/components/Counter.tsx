@@ -1,10 +1,33 @@
 import { createSignal } from 'solid-js'
+import { Button } from '~/components/ui/button'
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog'
 
 export default function Counter() {
 	const [count, setCount] = createSignal(0)
+	const [open, setOpen] = createSignal(false) // Signal to control AlertDialog open state
+
 	return (
-		<button class='w-[200px] rounded-full bg-gray-100 border-2 border-gray-300 focus:border-gray-400 active:border-gray-400 px-[2rem] py-[1rem]' onClick={() => setCount(count() + 1)}>
-			Clicks: {count()}
-		</button>
+		<div>
+			{/* Test Button */}
+			<Button variant='ghost' onClick={() => setCount(count() + 1)}>
+				Clicks: {count()}
+			</Button>
+
+			{/* Test Alert Dialog */}
+			<Button variant='destructive' onClick={() => setOpen(true)}>
+				Show Alert
+			</Button>
+
+			{/* Alert Dialog */}
+			<AlertDialog open={open()} onOpenChange={setOpen}>
+				<AlertDialogContent>
+					<AlertDialogTitle>Alert Dialog</AlertDialogTitle>
+					<AlertDialogDescription>
+						An Alert Dialog enables assistive technologies and browsers to distinguish alert dialogs from other dialogs so they have the option of giving alert dialogs special treatment, such as playing a system alert
+						sound.
+					</AlertDialogDescription>
+				</AlertDialogContent>
+			</AlertDialog>
+		</div>
 	)
 }

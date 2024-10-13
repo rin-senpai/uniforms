@@ -69,6 +69,10 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			spacing: {
+				'btn-w': '8rem',
+				'btn-h': '2.5rem'
+			},
 			keyframes: {
 				'accordion-down': {
 					from: { height: 0 },
