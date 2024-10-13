@@ -139,3 +139,13 @@ export const FormDetails = t.Object(
 		description: 'Event details object'
 	}
 )
+
+export const DeleteReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String()
+	},
+	{
+		description: 'Delete return object'
+	}
+)

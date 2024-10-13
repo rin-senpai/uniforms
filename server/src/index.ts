@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
 
 import { Elysia, t } from 'elysia'
-import { Event, EventUpdateReturn, EventPreview, FormDetails, Organisation, OrganisationPreview, OrganisationUpdateReturn, UserRoles, UserRolesUpdateReturn, UserUpdateReturn, User } from './interface'
+import { Event, EventUpdateReturn, EventPreview, FormDetails, Organisation, OrganisationPreview, OrganisationUpdateReturn, UserRoles, UserRolesUpdateReturn, UserUpdateReturn, User, DeleteReturn } from './interface'
 
 const db = await drizzle('bun:sqlite', process.env.DB_FILE_NAME!)
 
@@ -172,7 +172,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.String()
 			}),
 			response: t.Array(EventPreview),
 			detail: {
@@ -244,8 +244,7 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Event deleted successfully',
-				eventId: 1
+				message: 'Event deleted successfully'
 			}
 		},
 		{
@@ -255,7 +254,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: EventUpdateReturn,
+			response: DeleteReturn,
 			detail: {
 				description: 'Delete an event'
 			}
@@ -316,8 +315,7 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Organization deleted successfully',
-				orgId: 1
+				message: 'Organization deleted successfully'
 			}
 		},
 		{
@@ -327,7 +325,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: OrganisationUpdateReturn,
+			response: DeleteReturn,
 			detail: {
 				description: 'Delete an organization'
 			}
@@ -499,8 +497,7 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User deleted',
-				userId: 1
+				message: 'User deleted'
 			}
 		},
 		{
@@ -510,7 +507,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: UserUpdateReturn,
+			response: DeleteReturn,
 			detail: {
 				description: 'Delete user'
 			}
