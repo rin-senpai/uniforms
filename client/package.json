@@ -9,6 +9,7 @@
 		"lint-write": "bun prettier . --write --config ../prettier.config.mjs"
 	},
 	"dependencies": {
+		"@corvu/resizable": "^0.2.3",
 		"@kobalte/core": "^0.13.7",
 		"@radix-ui/react-icons": "^1.3.0",
 		"@solidjs/router": "^0.14.7",

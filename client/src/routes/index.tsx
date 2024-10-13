@@ -102,19 +102,28 @@ export default function Home() {
 			</p>
 		</div>
 
+	{/* Popover Test */ }
+	<Popover>
+		<PopoverTrigger as={Button<"button">}>Notice me senpai</PopoverTrigger>
+		<PopoverContent>
+			:3
+		</PopoverContent>
+	</Popover>
+	
+	{/* Select Test */}
 	<Select
     value={value()}
     onChange={setValue}
     options={["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"]}
     placeholder="Select a fruit…"
-    itemComponent={(props) => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
->
+    itemComponent={(props) => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>} >
     <SelectTrigger aria-label="Fruit" class="w-[180px]">
-        <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
+    <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
     </SelectTrigger>
     <SelectContent />
-</Select>
+    </Select>
 	</div>
+
 </div>
     </main>
   )
