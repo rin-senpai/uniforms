@@ -9,10 +9,16 @@ import {
 } from "~/components/ui/alert-dialog";
 
 export default function Counter() {
+  const [count, setCount] = createSignal(0);
   const [open, setOpen] = createSignal(false); // Signal to control AlertDialog open state
 
   return (
     <div>
+      {/* Test Button */}
+      <Button variant="ghost" onClick={() => setCount(count() + 1)}>
+        Clicks: {count()}
+      </Button> 
+
       {/* Test Alert Dialog */}
       <Button variant="destructive" onClick={() => setOpen(true)}>
         Show Alert
