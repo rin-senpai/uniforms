@@ -19,6 +19,7 @@ jobs:
         uses: oven-sh/setup-bun@v2.0.1
         with:
           bun-version: latest
+      - run: bun install
       - run: bun lint
 
   server:
@@ -33,4 +34,5 @@ jobs:
         uses: oven-sh/setup-bun@v2.0.1
         with:
           bun-version: latest
+      - run: bun install
       - run: bun lint
