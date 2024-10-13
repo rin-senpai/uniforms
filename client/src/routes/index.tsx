@@ -10,8 +10,18 @@ import {
   CardTitle
 } from "~/components/ui/card"
 import { Switch, SwitchControl, SwitchThumb } from "~/components/ui/switch"
-import { For } from 'solid-js' 
+import { createSignal, For } from 'solid-js' 
 import { Checkbox } from "~/components/ui/checkbox"
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+  } from "~/components/ui/select"
+
+const [value, setValue] = createSignal("")
 
 // Notifications data
 const notifications = [
@@ -91,8 +101,21 @@ export default function Home() {
 				Hiiiiiiiii
 			</p>
 		</div>
-	  </div>
+
+	<Select
+    value={value()}
+    onChange={setValue}
+    options={["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"]}
+    placeholder="Select a fruit…"
+    itemComponent={(props) => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
+>
+    <SelectTrigger aria-label="Fruit" class="w-[180px]">
+        <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
+    </SelectTrigger>
+    <SelectContent />
+</Select>
 	</div>
+</div>
     </main>
   )
 }
