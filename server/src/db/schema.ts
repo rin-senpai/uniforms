@@ -1,7 +1,7 @@
-import { sql } from 'drizzle-orm'
+import { sql, relations } from 'drizzle-orm'
 import { integer, sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core'
 
-export const usersTable = sqliteTable('users_table', {
+export const users = sqliteTable('users', {
 	id: integer().primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
 	email: text().notNull().unique(),
@@ -11,12 +11,20 @@ export const usersTable = sqliteTable('users_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const userAutofillsTable = sqliteTable(
-	'user_autofills_table',
+export const usersRelations = relations(users, ({ many }) => ({
+	userAutofills: many(userAutofills),
+	templateAutofills: many(templateAutofills),
+	notificationRules: many(notificationRules),
+	organisationRoles: many(organisationRoles),
+	eventFollows: many(eventFollows)
+}))
+
+export const userAutofills = sqliteTable(
+	'user_autofills',
 	{
 		userId: integer()
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
+			.references(() => users.id, { onDelete: 'cascade' }),
 		fieldType: text().notNull(),
 		value: text().notNull(),
 		createdAt: integer({ mode: 'timestamp' })
@@ -30,16 +38,23 @@ export const userAutofillsTable = sqliteTable(
 	}
 )
 
-export const templateAutofillsTable = sqliteTable(
-	'template_autofills_table',
+export const userAutofillsRelations = relations(userAutofills, ({ one }) => ({
+	users: one(users, {
+		fields: [userAutofills.userId],
+		references: [users.id]
+	})
+}))
+
+export const templateAutofills = sqliteTable(
+	'template_autofills',
 	{
 		id: integer().primaryKey({ autoIncrement: true }),
 		userId: integer()
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
+			.references(() => users.id, { onDelete: 'cascade' }),
 		templateId: integer()
 			.notNull()
-			.references(() => templatesTable.id, { onDelete: 'cascade' }),
+			.references(() => templates.id, { onDelete: 'cascade' }),
 		templateFieldId: integer().notNull(),
 		value: text().notNull(),
 		createdAt: integer({ mode: 'timestamp' })
@@ -53,30 +68,52 @@ export const templateAutofillsTable = sqliteTable(
 	}
 )
 
-export const notificationsTable = sqliteTable('notifications_table', {
+export const templateAutofillsRelations = relations(templateAutofills, ({ one }) => ({
+	users: one(users, {
+		fields: [templateAutofills.userId],
+		references: [users.id]
+	})
+}))
+
+export const notifications = sqliteTable('notifications', {
 	id: integer().primaryKey({ autoIncrement: true }),
 	userId: integer()
 		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' }),
+		.references(() => users.id, { onDelete: 'cascade' }),
 	read: integer({ mode: 'boolean' }).notNull().default(false),
 	type: text({ enum: ['newEvent', 'newForm'] }),
 	eventId: integer()
 		.notNull()
-		.references(() => eventsTable.id),
+		.references(() => events.id),
 	formId: integer()
 		.notNull()
-		.references(() => formsTable.id),
+		.references(() => forms.id),
 	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const notificationRulesTable = sqliteTable(
-	'notification_rules_table',
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+	users: one(users, {
+		fields: [notifications.userId],
+		references: [users.id]
+	}),
+	events: one(events, {
+		fields: [notifications.eventId],
+		references: [events.id]
+	}),
+	forms: one(forms, {
+		fields: [notifications.formId],
+		references: [forms.id]
+	})
+}))
+
+export const notificationRules = sqliteTable(
+	'notification_rules',
 	{
 		userId: integer()
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
+			.references(() => users.id, { onDelete: 'cascade' }),
 		keyword: text().notNull(),
 		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
@@ -89,7 +126,14 @@ export const notificationRulesTable = sqliteTable(
 	}
 )
 
-export const societiesTable = sqliteTable('societies_table', {
+export const notificationsRulesRelations = relations(notificationRules, ({ one }) => ({
+	users: one(users, {
+		fields: [notificationRules.userId],
+		references: [users.id]
+	})
+}))
+
+export const organisations = sqliteTable('organisations', {
 	id: integer().primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
 	description: text().notNull(),
@@ -100,34 +144,50 @@ export const societiesTable = sqliteTable('societies_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const societyRolesTable = sqliteTable(
-	'society_roles_table',
+export const organisationsRelations = relations(organisations, ({ many }) => ({
+	organisationRoles: many(organisationRoles),
+	events: many(events)
+}))
+
+export const organisationRoles = sqliteTable(
+	'organisation_roles',
 	{
-		societyId: integer()
+		organisationId: integer()
 			.notNull()
-			.references(() => societiesTable.id, { onDelete: 'cascade' }),
+			.references(() => organisations.id, { onDelete: 'cascade' }),
 		userId: integer()
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
-		role: text({ enum: ['member', 'manager', 'admin'] })
+			.references(() => users.id, { onDelete: 'cascade' }),
+		role: text({ enum: ['follower', 'moderator', 'manager'] })
 			.notNull()
-			.default('member'),
+			.default('follower'),
 		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
 	},
 	(table) => {
 		return {
-			pk: primaryKey({ columns: [table.societyId, table.userId] })
+			pk: primaryKey({ columns: [table.organisationId, table.userId] })
 		}
 	}
 )
 
-export const eventsTable = sqliteTable('societies_table', {
+export const organisationRolesRelations = relations(organisationRoles, ({ one }) => ({
+	organisations: one(organisations, {
+		fields: [organisationRoles.organisationId],
+		references: [organisations.id]
+	}),
+	users: one(users, {
+		fields: [organisationRoles.userId],
+		references: [users.id]
+	})
+}))
+
+export const events = sqliteTable('events', {
 	id: integer().primaryKey({ autoIncrement: true }),
-	societyId: integer()
+	organisationId: integer()
 		.notNull()
-		.references(() => societiesTable.id, { onDelete: 'cascade' }),
+		.references(() => organisations.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	description: text().notNull(),
 	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
@@ -140,13 +200,25 @@ export const eventsTable = sqliteTable('societies_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const eventTagsTable = sqliteTable(
-	'event_tags_table',
+export const eventsRelations = relations(events, ({ one, many }) => ({
+	notifications: many(notifications),
+	organisations: one(organisations, {
+		fields: [events.organisationId],
+		references: [organisations.id]
+	}),
+	eventTags: many(eventTags),
+	eventFollows: many(eventFollows),
+	forms: many(forms),
+	templates: many(templates)
+}))
+
+export const eventTags = sqliteTable(
+	'event_tags',
 	{
 		name: text().notNull(),
 		eventId: integer()
 			.notNull()
-			.references(() => eventsTable.id, { onDelete: 'cascade' }),
+			.references(() => events.id, { onDelete: 'cascade' }),
 		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
@@ -158,15 +230,22 @@ export const eventTagsTable = sqliteTable(
 	}
 )
 
-export const eventFollowsTable = sqliteTable(
-	'event_follows_table',
+export const eventTagsRelations = relations(eventTags, ({ one }) => ({
+	events: one(events, {
+		fields: [eventTags.eventId],
+		references: [events.id]
+	})
+}))
+
+export const eventFollows = sqliteTable(
+	'event_follows',
 	{
 		eventId: integer()
 			.notNull()
-			.references(() => eventsTable.id, { onDelete: 'cascade' }),
+			.references(() => events.id, { onDelete: 'cascade' }),
 		userId: integer()
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
+			.references(() => users.id, { onDelete: 'cascade' }),
 		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
@@ -178,12 +257,23 @@ export const eventFollowsTable = sqliteTable(
 	}
 )
 
-export const formsTable = sqliteTable('societies_table', {
+export const eventFollowsRelations = relations(eventFollows, ({ one }) => ({
+	events: one(events, {
+		fields: [eventFollows.eventId],
+		references: [events.id]
+	}),
+	users: one(users, {
+		fields: [eventFollows.userId],
+		references: [users.id]
+	})
+}))
+
+export const forms = sqliteTable('forms', {
 	id: integer().primaryKey({ autoIncrement: true }),
 	eventId: integer()
 		.notNull()
-		.references(() => eventsTable.id, { onDelete: 'cascade' }),
-	templateId: integer().references(() => templatesTable.id),
+		.references(() => events.id, { onDelete: 'cascade' }),
+	templateId: integer().references(() => templates.id),
 	title: text().notNull(),
 	description: text().notNull(),
 	role: text(),
@@ -195,7 +285,20 @@ export const formsTable = sqliteTable('societies_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const templatesTable = sqliteTable('templates_table', {
+export const formsRelations = relations(forms, ({ one, many }) => ({
+	events: one(events, {
+		fields: [forms.eventId],
+		references: [events.id]
+	}),
+	templates: one(templates, {
+		fields: [forms.templateId],
+		references: [templates.id]
+	}),
+	formSubmissions: many(formSubmissions),
+	notifications: many(notifications)
+}))
+
+export const templates = sqliteTable('templates', {
 	id: integer().primaryKey({ autoIncrement: true }),
 	title: text().notNull(),
 	description: text().notNull(),
@@ -208,15 +311,57 @@ export const templatesTable = sqliteTable('templates_table', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const formSubmissionsTable = sqliteTable('form_submissions_table', {
-	formId: integer()
-		.notNull()
-		.references(() => formsTable.id, { onDelete: 'cascade' }),
-	userId: integer()
-		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	answers: text().notNull().$type<{ id: number; response: any }[]>(),
-	createdAt: integer({ mode: 'timestamp' })
-		.notNull()
-		.default(sql`(strftime('%s', 'now'))`)
-})
+export const templatesRelations = relations(templates, ({ many }) => ({
+	templateAutofills: many(templateAutofills),
+	forms: many(forms)
+}))
+
+export const formSubmissions = sqliteTable(
+	'form_submissions',
+	{
+		formId: integer()
+			.notNull()
+			.references(() => forms.id, { onDelete: 'cascade' }),
+		userId: integer()
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		answers: text().notNull().$type<{ id: number; response: any }[]>(),
+		createdAt: integer({ mode: 'timestamp' })
+			.notNull()
+			.default(sql`(strftime('%s', 'now'))`)
+	},
+	(table) => {
+		return {
+			pk: primaryKey({ columns: [table.formId, table.userId] })
+		}
+	}
+)
+
+export const formSubmissionsRelations = relations(formSubmissions, ({ one }) => ({
+	forms: one(forms, {
+		fields: [formSubmissions.formId],
+		references: [forms.id]
+	}),
+	users: one(users, {
+		fields: [formSubmissions.userId],
+		references: [users.id]
+	})
+}))
+
+export const table = {
+	users,
+	userAutofills,
+	templateAutofills,
+	notifications,
+	notificationRules,
+	organisations,
+	organisationRoles,
+	events,
+	eventTags,
+	eventFollows,
+	forms,
+	templates,
+	formSubmissions
+} as const
+
+export type Table = typeof table
