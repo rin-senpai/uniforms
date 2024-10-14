@@ -28,7 +28,8 @@ import {
 	FormTemplatePreview,
 	FormTemplateUpdateReturn,
 	FormTemplateFieldAutofill,
-	FormTemplateFieldAutofillUpdateReturn
+	FormTemplateFieldAutofillUpdateReturn,
+	FormTemplate
 } from './interface'
 
 // import { model } from './db/model'
@@ -381,6 +382,31 @@ const app = new Elysia()
 			}),
 			detail: {
 				description: 'Get all events for an organization'
+			}
+		}
+	)
+
+	.get(
+		'/orgs/:orgId/followers',
+		() => {
+			return {
+				statusCode: 200,
+				followerCount: 1000
+			}
+		},
+		{
+			params: t.Object({
+				eventId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: t.Object({
+				statusCode: t.Integer(),
+				followerCount: t.Integer()
+			}),
+			detail: {
+				description: 'Get follower count of an organisation'
 			}
 		}
 	)
@@ -779,6 +805,33 @@ const app = new Elysia()
 	)
 
 	.get(
+		'/admin/form/:formId',
+		() => {
+			return {
+				formId: 1,
+				eventId: 1,
+				templateId: 1,
+				title: 'Form Title',
+				description: 'Form Description',
+				role: 'attendance',
+				canEditResponses: true,
+				isPublic: true,
+				fields: '{}',
+				createdAt: 1630000000
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer()
+			}),
+			response: Form,
+			detail: {
+				description: 'Get a form'
+			}
+		}
+	)
+
+	.get(
 		'/admin/form/:formId/submissions',
 		() => {
 			return {
@@ -964,6 +1017,35 @@ const app = new Elysia()
 			response: DeleteReturn,
 			detail: {
 				description: 'Delete a form template'
+			}
+		}
+	)
+
+	.get(
+		'/admin/org/:orgId/templates/:templateId',
+		() => {
+			return {
+				templateId: 1,
+				title: 'Template Title',
+				description: 'Template Description',
+				role: 'attendance',
+				canEditResponses: true,
+				isPublic: true,
+				fields: '{}',
+				createdAt: 1630000000
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer(),
+				templateId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: FormTemplate,
+			detail: {
+				description: 'Get a form template'
 			}
 		}
 	)
@@ -1172,7 +1254,6 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String(),
 				userId: t.Integer(),
-				read: t.Boolean(),
 				type: t.String(),
 				eventId: t.Optional(t.Integer()),
 				formId: t.Optional(t.Integer()),
@@ -1445,6 +1526,27 @@ const app = new Elysia()
 		}
 	)
 
+	.get(
+		'/form/:formId/:userId',
+		() => {
+			return {
+				userId: 1,
+				fields: '{}',
+				createdAt: 1630000000
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer(),
+				userId: t.Integer()
+			}),
+			response: FormSubmission,
+			detail: {
+				description: 'Get form submission details of a user'
+			}
+		}
+	)
+
 	.put(
 		'/form/:formId/:userId',
 		() => {
@@ -1466,27 +1568,6 @@ const app = new Elysia()
 			response: FormSubmissionReturn,
 			detail: {
 				description: 'Update a form submission'
-			}
-		}
-	)
-
-	.get(
-		'/form/:formId/:userId',
-		() => {
-			return {
-				userId: 1,
-				fields: '{}',
-				createdAt: 1630000000
-			}
-		},
-		{
-			params: t.Object({
-				formId: t.Integer(),
-				userId: t.Integer()
-			}),
-			response: FormSubmission,
-			detail: {
-				description: 'Get form submission details of a user'
 			}
 		}
 	)
