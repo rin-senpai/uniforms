@@ -47,6 +47,7 @@ const app = new Elysia()
 		'/events',
 		() => {
 			return {
+				statusCode: 200,
 				events: [
 					{
 						eventId: 1,
@@ -79,6 +80,7 @@ const app = new Elysia()
 		},
 		{
 			response: t.Object({
+				statusCode: t.Integer(),
 				events: t.Array(Event)
 			}),
 			detail: {
@@ -91,6 +93,7 @@ const app = new Elysia()
 		'/events/spotlight',
 		() => {
 			return {
+				statusCode: 200,
 				events: [
 					{
 						eventId: 1,
@@ -123,6 +126,7 @@ const app = new Elysia()
 		},
 		{
 			response: t.Object({
+				statusCode: t.Integer(),
 				events: t.Array(Event)
 			}),
 			detail: {
@@ -173,24 +177,30 @@ const app = new Elysia()
 		'/events/:eventId',
 		() => {
 			return {
-				eventId: 1,
-				orgId: 1,
-				title: 'Event Title',
-				description: 'Event Description',
-				isPublic: true,
-				timeStart: 1630000000,
-				timeEnd: 1630000000,
-				location: 'Event Location',
-				tags: ['tag1', 'tag2'],
-				bannerURI: 'Event Banner URI',
-				createdAt: 1630000000
+				statusCode: 200,
+				event: {
+					eventId: 1,
+					orgId: 1,
+					title: 'Event Title',
+					description: 'Event Description',
+					isPublic: true,
+					timeStart: 1630000000,
+					timeEnd: 1630000000,
+					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
+					bannerURI: 'Event Banner URI',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
 			params: t.Object({
 				eventId: t.Integer()
 			}),
-			response: Event,
+			response: t.Object({
+				statusCode: t.Integer(),
+				event: Event
+			}),
 			detail: {
 				description: 'Get event by id'
 			}
@@ -245,6 +255,7 @@ const app = new Elysia()
 		'/events/:eventId/forms',
 		() => {
 			return {
+				statusCode: 200,
 				forms: [
 					{
 						eventId: 1,
@@ -266,6 +277,7 @@ const app = new Elysia()
 				eventId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				forms: t.Array(FormDetails)
 			}),
 			detail: {
@@ -278,6 +290,7 @@ const app = new Elysia()
 		'/org',
 		() => {
 			return {
+				statusCode: 200,
 				organisations: [
 					{
 						orgId: 1,
@@ -296,6 +309,7 @@ const app = new Elysia()
 		},
 		{
 			response: t.Object({
+				statusCode: t.Integer(),
 				organisations: t.Array(OrganisationPreview)
 			}),
 			detail: {
@@ -308,19 +322,25 @@ const app = new Elysia()
 		'/org/:orgId',
 		() => {
 			return {
-				orgId: 1,
-				name: 'organisation Name',
-				description: 'organisation Description',
-				avatarURI: 'organisation Banner URI',
-				bannerURI: 'organisation Banner URI',
-				createdAt: 1630000000
+				statusCode: 200,
+				organisation: {
+					orgId: 1,
+					name: 'organisation Name',
+					description: 'organisation Description',
+					avatarURI: 'organisation Banner URI',
+					bannerURI: 'organisation Banner URI',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
 			params: t.Object({
 				orgId: t.Integer()
 			}),
-			response: Organisation,
+			response: t.Object({
+				statusCode: t.Integer(),
+				organisation: Organisation
+			}),
 			detail: {
 				description: 'Get full organisation details by id'
 			}
@@ -331,6 +351,7 @@ const app = new Elysia()
 		'/org/:orgId/events',
 		() => {
 			return {
+				statusCode: 200,
 				events: [
 					{
 						eventId: 1,
@@ -366,6 +387,7 @@ const app = new Elysia()
 				orgId: t.String()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				events: t.Array(Event)
 			}),
 			detail: {
@@ -618,6 +640,7 @@ const app = new Elysia()
 		'/admin/org/:orgId/admins',
 		() => {
 			return {
+				statusCode: 200,
 				managers: [
 					{
 						userId: 1,
@@ -648,6 +671,7 @@ const app = new Elysia()
 				token: t.String()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				managers: t.Array(UserRole),
 				moderators: t.Array(UserRole)
 			}),
@@ -782,23 +806,29 @@ const app = new Elysia()
 		'/admin/form/:formId',
 		() => {
 			return {
-				formId: 1,
-				eventId: 1,
-				templateId: 1,
-				title: 'Form Title',
-				description: 'Form Description',
-				role: 'attendance',
-				canEditResponses: true,
-				isPublic: true,
-				fields: '{}',
-				createdAt: 1630000000
+				statusCode: 200,
+				form: {
+					formId: 1,
+					eventId: 1,
+					templateId: 1,
+					title: 'Form Title',
+					description: 'Form Description',
+					role: 'attendance',
+					canEditResponses: true,
+					isPublic: true,
+					fields: '{}',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
 			params: t.Object({
 				formId: t.Integer()
 			}),
-			response: Form,
+			response: t.Object({
+				statusCode: t.Integer(),
+				form: Form
+			}),
 			detail: {
 				description: 'Get a form'
 			}
@@ -809,6 +839,7 @@ const app = new Elysia()
 		'/admin/form/:formId/submissions',
 		() => {
 			return {
+				statusCode: 200,
 				submissions: [
 					{
 						userId: 1,
@@ -828,6 +859,7 @@ const app = new Elysia()
 				formId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				submissions: t.Array(FormSubmissionList)
 			}),
 			detail: {
@@ -840,9 +872,12 @@ const app = new Elysia()
 		'/admin/form/:formId/submissions/:userId',
 		() => {
 			return {
-				userId: 1,
-				fields: '{}',
-				createdAt: 1630000000
+				statusCode: 200,
+				submission: {
+					userId: 1,
+					fields: '{}',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
@@ -850,7 +885,10 @@ const app = new Elysia()
 				formId: t.Integer(),
 				userId: t.Integer()
 			}),
-			response: FormSubmission,
+			response: t.Object({
+				statusCode: t.Integer(),
+				submission: FormSubmission
+			}),
 			detail: {
 				description: 'Get a form submission'
 			}
@@ -883,6 +921,7 @@ const app = new Elysia()
 		'/admin/org/:orgId/templates',
 		() => {
 			return {
+				statusCode: 200,
 				templates: [
 					{
 						templateId: 1,
@@ -904,6 +943,7 @@ const app = new Elysia()
 				orgId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				templates: t.Array(FormTemplatePreview)
 			}),
 			detail: {
@@ -994,14 +1034,17 @@ const app = new Elysia()
 		'/admin/org/:orgId/templates/:templateId',
 		() => {
 			return {
-				templateId: 1,
-				title: 'Template Title',
-				description: 'Template Description',
-				role: 'attendance',
-				canEditResponses: true,
-				isPublic: true,
-				fields: '{}',
-				createdAt: 1630000000
+				statusCode: 200,
+				template: {
+					templateId: 1,
+					title: 'Template Title',
+					description: 'Template Description',
+					role: 'attendance',
+					canEditResponses: true,
+					isPublic: true,
+					fields: '{}',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
@@ -1012,7 +1055,10 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: FormTemplate,
+			response: t.Object({
+				statusCode: t.Integer(),
+				template: FormTemplate
+			}),
 			detail: {
 				description: 'Get a form template'
 			}
@@ -1067,18 +1113,24 @@ const app = new Elysia()
 		'/user/:userId',
 		() => {
 			return {
-				userId: 1,
-				name: 'User Name',
-				email: 'User Email',
-				avatarURI: 'User Avatar URI',
-				createdAt: 1630000000
+				statusCode: 200,
+				user: {
+					userId: 1,
+					name: 'User Name',
+					email: 'User Email',
+					avatarURI: 'User Avatar URI',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
 			params: t.Object({
 				userId: t.Integer()
 			}),
-			response: User,
+			response: t.Object({
+				statusCode: t.Integer(),
+				user: User
+			}),
 			detail: {
 				description: 'Get user details'
 			}
@@ -1134,6 +1186,7 @@ const app = new Elysia()
 		'/user/:userId/adminOrgs',
 		() => {
 			return {
+				statusCode: 200,
 				organisations: [
 					{
 						orgId: 1,
@@ -1155,6 +1208,7 @@ const app = new Elysia()
 				userId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				organisations: t.Array(OrganisationPreview)
 			}),
 			detail: {
@@ -1167,6 +1221,7 @@ const app = new Elysia()
 		'/user/:userId/notifications',
 		() => {
 			return {
+				statusCode: 200,
 				notifications: [
 					{
 						notificationId: 1,
@@ -1194,6 +1249,7 @@ const app = new Elysia()
 				userId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				notifications: t.Array(Notification)
 			}),
 			detail: {
@@ -1255,6 +1311,7 @@ const app = new Elysia()
 		'/user/:userId/notifications/unread',
 		() => {
 			return {
+				statusCode: 200,
 				unreadCount: 100
 			}
 		},
@@ -1266,6 +1323,7 @@ const app = new Elysia()
 				token: t.String()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				unreadCount: t.Integer()
 			}),
 			detail: {
@@ -1278,6 +1336,7 @@ const app = new Elysia()
 		'/user/:userId/autofill/:fieldType',
 		() => {
 			return {
+				statusCode: 200,
 				value: 'z1234567'
 			}
 		},
@@ -1287,6 +1346,7 @@ const app = new Elysia()
 				fieldType: t.String()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				value: t.String()
 			}),
 			detail: {
@@ -1367,6 +1427,7 @@ const app = new Elysia()
 		'/user/:userId/notificationRules',
 		() => {
 			return {
+				statusCode: 200,
 				keywords: ['anime', 'gooning', 'fortnite']
 			}
 		},
@@ -1375,6 +1436,7 @@ const app = new Elysia()
 				userId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				keywords: t.Array(t.String())
 			}),
 			detail: {
@@ -1431,22 +1493,28 @@ const app = new Elysia()
 		'/form/:formId',
 		() => {
 			return {
-				formId: 1,
-				eventId: 1,
-				title: 'Form Title',
-				description: 'Form Description',
-				role: 'role',
-				canEditResponses: true,
-				isPublic: true,
-				fields: '{}',
-				createdAt: 1630000000
+				statusCode: 200,
+				form: {
+					formId: 1,
+					eventId: 1,
+					title: 'Form Title',
+					description: 'Form Description',
+					role: 'role',
+					canEditResponses: true,
+					isPublic: true,
+					fields: '{}',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
 			params: t.Object({
 				formId: t.Integer()
 			}),
-			response: Form,
+			response: t.Object({
+				statusCode: t.Integer(),
+				form: Form
+			}),
 			detail: {
 				description: 'Get form details by id'
 			}
@@ -1480,9 +1548,12 @@ const app = new Elysia()
 		'/form/:formId/:userId',
 		() => {
 			return {
-				userId: 1,
-				fields: '{}',
-				createdAt: 1630000000
+				statusCode: 200,
+				submission: {
+					userId: 1,
+					fields: '{}',
+					createdAt: 1630000000
+				}
 			}
 		},
 		{
@@ -1490,7 +1561,10 @@ const app = new Elysia()
 				formId: t.Integer(),
 				userId: t.Integer()
 			}),
-			response: FormSubmission,
+			response: t.Object({
+				statusCode: t.Integer(),
+				submission: FormSubmission
+			}),
 			detail: {
 				description: 'Get form submission details of a user'
 			}
@@ -1524,6 +1598,7 @@ const app = new Elysia()
 		'/user/:userId/templateAutofill/:templateId',
 		() => {
 			return {
+				statusCode: 200,
 				fields: [
 					{
 						templateId: 1,
@@ -1544,6 +1619,7 @@ const app = new Elysia()
 				templateId: t.Integer()
 			}),
 			response: t.Object({
+				statusCode: t.Integer(),
 				fields: t.Array(FormTemplateFieldAutofill)
 			}),
 			detail: {
