@@ -41,7 +41,7 @@ export default function Home() {
 
 			<div class='flex items-start space-x-4'>
 				{/* Card and Switch test */}
-				<Card class='w-[380px] relative z-10'>
+				<Card class='w-[380px]'>
 					<CardHeader>
 						<CardTitle>Notifications</CardTitle>
 						<CardDescription>You have 3 unread messages.</CardDescription>
