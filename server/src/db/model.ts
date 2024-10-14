@@ -27,7 +27,8 @@ export const model = {
 			eventFollow: table.eventFollows,
 			form: table.forms,
 			template: table.templates,
-			formSubmission: table.formSubmissions
+			formSubmission: table.formSubmissions,
+			spotlight: table.spotlights
 		},
 		'insert'
 	),
@@ -53,7 +54,8 @@ export const model = {
 			eventFollow: table.eventFollows,
 			form: table.forms,
 			template: table.templates,
-			formSubmission: table.formSubmissions
+			formSubmission: table.formSubmissions,
+			spotlight: table.spotlights
 		},
 		'select'
 	)

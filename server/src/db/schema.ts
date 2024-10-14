@@ -355,6 +355,23 @@ export const formSubmissionsRelations = relations(formSubmissions, ({ one }) => 
 	})
 }))
 
+export const spotlights = sqliteTable('spotlights', {
+	week: integer({ mode: 'timestamp' }).notNull(),
+	eventId: integer()
+		.notNull()
+		.references(() => events.id, { onDelete: 'cascade' }),
+	createdAt: integer({ mode: 'timestamp' })
+		.notNull()
+		.default(sql`(strftime('%s', 'now'))`)
+})
+
+export const spotlightsRelations = relations(spotlights, ({ one }) => ({
+	events: one(events, {
+		fields: [spotlights.eventId],
+		references: [events.id]
+	})
+}))
+
 export const table = {
 	users,
 	userAutofills,
@@ -368,7 +385,8 @@ export const table = {
 	eventFollows,
 	forms,
 	templates,
-	formSubmissions
+	formSubmissions,
+	spotlights
 } as const
 
 export type Table = typeof table
