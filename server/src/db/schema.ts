@@ -300,6 +300,9 @@ export const formsRelations = relations(forms, ({ one, many }) => ({
 
 export const templates = sqliteTable('templates', {
 	id: integer().primaryKey({ autoIncrement: true }),
+	organisationId: integer()
+		.notNull()
+		.references(() => organisations.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	description: text().notNull(),
 	role: text(),
@@ -311,7 +314,11 @@ export const templates = sqliteTable('templates', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const templatesRelations = relations(templates, ({ many }) => ({
+export const templatesRelations = relations(templates, ({ one, many }) => ({
+	organisations: one(organisations, {
+		fields: [templates.organisationId],
+		references: [organisations.id]
+	}),
 	templateAutofills: many(templateAutofills),
 	forms: many(forms)
 }))
@@ -348,6 +355,23 @@ export const formSubmissionsRelations = relations(formSubmissions, ({ one }) => 
 	})
 }))
 
+export const spotlights = sqliteTable('spotlights', {
+	week: integer({ mode: 'timestamp' }).notNull(),
+	eventId: integer()
+		.notNull()
+		.references(() => events.id, { onDelete: 'cascade' }),
+	createdAt: integer({ mode: 'timestamp' })
+		.notNull()
+		.default(sql`(strftime('%s', 'now'))`)
+})
+
+export const spotlightsRelations = relations(spotlights, ({ one }) => ({
+	events: one(events, {
+		fields: [spotlights.eventId],
+		references: [events.id]
+	})
+}))
+
 export const table = {
 	users,
 	userAutofills,
@@ -361,7 +385,8 @@ export const table = {
 	eventFollows,
 	forms,
 	templates,
-	formSubmissions
+	formSubmissions,
+	spotlights
 } as const
 
 export type Table = typeof table
