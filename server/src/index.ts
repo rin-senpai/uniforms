@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
 
 import { Elysia, t } from 'elysia'
+import { swagger } from '@elysiajs/swagger'
 import {
 	Event,
 	EventUpdateReturn,
@@ -44,6 +45,7 @@ import {
 const db = await drizzle('bun:sqlite', process.env.DB_FILE_NAME!)
 
 const app = new Elysia()
+	.use(swagger())
 	.get('/', () => 'Hello Elysia')
 
 	.get(
