@@ -49,6 +49,7 @@ const app = new Elysia()
 					timeStart: 1630000000,
 					timeEnd: 1630000000,
 					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
 					bannerURI: 'Event Banner URI'
 				},
 				{
@@ -58,6 +59,7 @@ const app = new Elysia()
 					timeStart: 1630000000,
 					timeEnd: 1630000000,
 					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
 					bannerURI: 'Event Banner URI'
 				}
 			]
@@ -81,6 +83,7 @@ const app = new Elysia()
 					timeStart: 1630000000,
 					timeEnd: 1630000000,
 					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
 					bannerURI: 'Event Banner URI'
 				},
 				{
@@ -90,6 +93,7 @@ const app = new Elysia()
 					timeStart: 1630000000,
 					timeEnd: 1630000000,
 					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
 					bannerURI: 'Event Banner URI'
 				}
 			]
@@ -155,6 +159,7 @@ const app = new Elysia()
 				timeStart: 1630000000,
 				timeEnd: 1630000000,
 				location: 'Event Location',
+				tags: ['tag1', 'tag2'],
 				bannerURI: 'Event Banner URI',
 				createdAt: 1630000000
 			}
@@ -306,6 +311,7 @@ const app = new Elysia()
 					timeStart: 1630000000,
 					timeEnd: 1630000000,
 					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
 					bannerURI: 'Event Banner URI'
 				},
 				{
@@ -315,6 +321,7 @@ const app = new Elysia()
 					timeStart: 1630000000,
 					timeEnd: 1630000000,
 					location: 'Event Location',
+					tags: ['tag1', 'tag2'],
 					bannerURI: 'Event Banner URI'
 				}
 			]

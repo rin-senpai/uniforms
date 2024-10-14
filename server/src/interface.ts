@@ -100,6 +100,7 @@ export const Event = t.Object(
 		timeStart: t.Integer(),
 		timeEnd: t.Integer(),
 		location: t.String(),
+		tags: t.Array(t.String()),
 		bannerURI: t.String(),
 		createdAt: t.Integer()
 	},
@@ -117,6 +118,7 @@ export const EventPreview = t.Object(
 		timeStart: t.Integer(),
 		timeEnd: t.Integer(),
 		location: t.String(),
+		tags: t.Array(t.String()),
 		bannerURI: t.String()
 	},
 	{
