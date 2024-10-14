@@ -3,11 +3,11 @@ import { Type, type Static } from '@sinclair/typebox'
 
 export const User = t.Object(
 	{
-		userId: t.Integer(),
+		userId: t.Number(),
 		name: t.String(),
 		email: t.String(),
 		avatarURI: t.String(),
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'User details object'
@@ -16,13 +16,13 @@ export const User = t.Object(
 type User = Static<typeof User>
 
 export const UserCreateReturn = t.Object({
-	statusCode: t.Integer(),
-	userId: t.Integer()
+	statusCode: t.Number(),
+	userId: t.Number()
 })
 
 export const UserRole = t.Object(
 	{
-		userId: t.Integer(),
+		userId: t.Number(),
 		role: t.String()
 	},
 	{
@@ -32,12 +32,12 @@ export const UserRole = t.Object(
 
 export const Organisation = t.Object(
 	{
-		orgId: t.Integer(),
+		orgId: t.Number(),
 		name: t.String(),
 		description: t.String(),
 		avatarURI: t.String(),
 		bannerURI: t.String(),
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Organization details object'
@@ -47,7 +47,7 @@ type Organisation = Static<typeof Organisation>
 
 export const OrganisationPreview = t.Object(
 	{
-		orgId: t.Integer(),
+		orgId: t.Number(),
 		name: t.String(),
 		description: t.String(),
 		avatarURI: t.String()
@@ -59,8 +59,8 @@ export const OrganisationPreview = t.Object(
 
 export const OrganisationCreateReturn = t.Object(
 	{
-		statusCode: t.Integer(),
-		orgId: t.Integer()
+		statusCode: t.Number(),
+		orgId: t.Number()
 	},
 	{
 		description: 'Organisation creation return object'
@@ -69,17 +69,17 @@ export const OrganisationCreateReturn = t.Object(
 
 export const Event = t.Object(
 	{
-		eventId: t.Integer(),
-		orgId: t.Integer(),
+		eventId: t.Number(),
+		orgId: t.Number(),
 		title: t.String(),
 		description: t.String(),
 		isPublic: t.Boolean(),
-		timeStart: t.Integer(),
-		timeEnd: t.Integer(),
+		timeStart: t.Number(),
+		timeEnd: t.Number(),
 		location: t.String(),
 		tags: t.Array(t.String()),
 		bannerURI: t.String(),
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Event details object'
@@ -89,8 +89,8 @@ type Event = Static<typeof Event>
 
 export const EventCreateReturn = t.Object(
 	{
-		statusCode: t.Integer(),
-		eventId: t.Integer()
+		statusCode: t.Number(),
+		eventId: t.Number()
 	},
 	{
 		description: 'Event creation return object'
@@ -99,8 +99,8 @@ export const EventCreateReturn = t.Object(
 
 export const FormDetails = t.Object(
 	{
-		eventId: t.Integer(),
-		orgId: t.Integer(),
+		eventId: t.Number(),
+		orgId: t.Number(),
 		title: t.String(),
 		description: t.String()
 	},
@@ -111,14 +111,14 @@ export const FormDetails = t.Object(
 
 export const FormTemplate = t.Object(
 	{
-		templateId: t.Integer(),
+		templateId: t.Number(),
 		title: t.String(),
 		description: t.String(),
 		role: t.String(),
 		canEditResponses: t.Boolean(),
 		isPublic: t.Boolean(),
 		fields: t.String(), // json
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Form template details object'
@@ -127,7 +127,7 @@ export const FormTemplate = t.Object(
 
 export const FormTemplatePreview = t.Object(
 	{
-		templateId: t.Integer(),
+		templateId: t.Number(),
 		title: t.String(),
 		description: t.String(),
 		role: t.String()
@@ -139,8 +139,8 @@ export const FormTemplatePreview = t.Object(
 
 export const FormTemplateCreateReturn = t.Object(
 	{
-		statusCode: t.Integer(),
-		templateId: t.Integer()
+		statusCode: t.Number(),
+		templateId: t.Number()
 	},
 	{
 		description: 'Form template creation return object'
@@ -149,8 +149,8 @@ export const FormTemplateCreateReturn = t.Object(
 
 export const FormTemplateFieldAutofill = t.Object(
 	{
-		templateId: t.Integer(),
-		templateFieldId: t.Integer(),
+		templateId: t.Number(),
+		templateFieldId: t.Number(),
 		value: t.String()
 	},
 	{
@@ -160,16 +160,16 @@ export const FormTemplateFieldAutofill = t.Object(
 
 export const Form = t.Object(
 	{
-		formId: t.Integer(),
-		eventId: t.Integer(),
-		templateId: t.Optional(t.Integer()),
+		formId: t.Number(),
+		eventId: t.Number(),
+		templateId: t.Optional(t.Number()),
 		title: t.String(),
 		description: t.String(),
 		role: t.String(),
 		canEditResponses: t.Boolean(),
 		isPublic: t.Boolean(),
 		fields: t.String(), // json
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Form details object'
@@ -178,9 +178,9 @@ export const Form = t.Object(
 
 export const FormSubmission = t.Object(
 	{
-		userId: t.Integer(),
+		userId: t.Number(),
 		fields: t.String(), // json
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Form submission details object'
@@ -189,9 +189,9 @@ export const FormSubmission = t.Object(
 
 export const FormSubmissionList = t.Object(
 	{
-		userId: t.Integer(),
+		userId: t.Number(),
 		userName: t.String(),
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Form submission details object'
@@ -200,8 +200,8 @@ export const FormSubmissionList = t.Object(
 
 export const FormCreateReturn = t.Object(
 	{
-		statusCode: t.Integer(),
-		formId: t.Integer()
+		statusCode: t.Number(),
+		formId: t.Number()
 	},
 	{
 		description: 'Form creation return object'
@@ -210,14 +210,14 @@ export const FormCreateReturn = t.Object(
 
 export const Notification = t.Object(
 	{
-		notificationId: t.Integer(),
-		userId: t.Integer(),
+		notificationId: t.Number(),
+		userId: t.Number(),
 		read: t.Boolean(),
 		type: t.String(),
-		eventId: t.Optional(t.Integer()),
-		formId: t.Optional(t.Integer()),
+		eventId: t.Optional(t.Number()),
+		formId: t.Optional(t.Number()),
 		message: t.String(),
-		createdAt: t.Integer()
+		createdAt: t.Number()
 	},
 	{
 		description: 'Notification details object'
@@ -226,8 +226,8 @@ export const Notification = t.Object(
 
 export const NotificationCreateReturn = t.Object(
 	{
-		statusCode: t.Integer(),
-		notificationId: t.Integer()
+		statusCode: t.Number(),
+		notificationId: t.Number()
 	},
 	{
 		description: 'Notification creation return object'
@@ -236,7 +236,7 @@ export const NotificationCreateReturn = t.Object(
 
 export const StatusCodeReturn = t.Object(
 	{
-		statusCode: t.Integer()
+		statusCode: t.Number()
 	},
 	{
 		description: 'Status code return object'

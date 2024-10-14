@@ -80,7 +80,7 @@ const app = new Elysia()
 		},
 		{
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				events: t.Array(Event)
 			}),
 			detail: {
@@ -126,7 +126,7 @@ const app = new Elysia()
 		},
 		{
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				events: t.Array(Event)
 			}),
 			detail: {
@@ -145,7 +145,7 @@ const app = new Elysia()
 		{
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			response: StatusCodeReturn,
 			detail: {
@@ -164,7 +164,7 @@ const app = new Elysia()
 		{
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			response: StatusCodeReturn,
 			detail: {
@@ -195,10 +195,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				event: Event
 			}),
 			detail: {
@@ -216,11 +216,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: StatusCodeReturn,
 			detail: {
@@ -238,11 +238,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: StatusCodeReturn,
 			detail: {
@@ -274,10 +274,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				forms: t.Array(FormDetails)
 			}),
 			detail: {
@@ -309,7 +309,7 @@ const app = new Elysia()
 		},
 		{
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				organisations: t.Array(OrganisationPreview)
 			}),
 			detail: {
@@ -335,10 +335,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				organisation: Organisation
 			}),
 			detail: {
@@ -387,7 +387,7 @@ const app = new Elysia()
 				orgId: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				events: t.Array(Event)
 			}),
 			detail: {
@@ -406,14 +406,14 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
-				followerCount: t.Integer()
+				statusCode: t.Number(),
+				followerCount: t.Number()
 			}),
 			detail: {
 				description: 'Get follower count of an organisation'
@@ -430,11 +430,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: StatusCodeReturn,
 			detail: {
@@ -452,11 +452,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer(),
+				userId: t.Number(),
 				role: t.String()
 			}),
 			response: StatusCodeReturn,
@@ -477,12 +477,12 @@ const app = new Elysia()
 		{
 			body: t.Object({
 				token: t.String(),
-				organisationId: t.Integer(),
+				organisationId: t.Number(),
 				title: t.String(),
 				description: t.String(),
 				isPublic: t.Boolean(),
-				timeStart: t.Integer(),
-				timeEnd: t.Integer(),
+				timeStart: t.Number(),
+				timeEnd: t.Number(),
 				location: t.String(),
 				bannerURI: t.String()
 			}),
@@ -502,15 +502,15 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
 				title: t.String(),
 				description: t.String(),
 				isPublic: t.Boolean(),
-				timeStart: t.Integer(),
-				timeEnd: t.Integer(),
+				timeStart: t.Number(),
+				timeEnd: t.Number(),
 				location: t.String(),
 				bannerURI: t.String()
 			}),
@@ -530,7 +530,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -552,14 +552,14 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
-				followerCount: t.Integer()
+				statusCode: t.Number(),
+				followerCount: t.Number()
 			}),
 			detail: {
 				description: 'Get follower count of an event'
@@ -599,7 +599,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -624,7 +624,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -665,13 +665,13 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				managers: t.Array(UserRole),
 				moderators: t.Array(UserRole)
 			}),
@@ -690,11 +690,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer(),
+				userId: t.Number(),
 				role: t.String()
 			}),
 			response: StatusCodeReturn,
@@ -713,11 +713,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer(),
+				userId: t.Number(),
 				role: t.String()
 			}),
 			response: StatusCodeReturn,
@@ -738,7 +738,7 @@ const app = new Elysia()
 		{
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Integer(),
+				eventId: t.Number(),
 				title: t.String(),
 				description: t.String(),
 				role: t.String(),
@@ -762,11 +762,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer()
+				formId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Integer(),
+				eventId: t.Number(),
 				title: t.String(),
 				description: t.String(),
 				role: t.String(),
@@ -790,7 +790,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer()
+				formId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -823,10 +823,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer()
+				formId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				form: Form
 			}),
 			detail: {
@@ -856,10 +856,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer()
+				formId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				submissions: t.Array(FormSubmissionList)
 			}),
 			detail: {
@@ -882,11 +882,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer(),
-				userId: t.Integer()
+				formId: t.Number(),
+				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				submission: FormSubmission
 			}),
 			detail: {
@@ -904,8 +904,8 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer(),
-				userId: t.Integer()
+				formId: t.Number(),
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -940,10 +940,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				templates: t.Array(FormTemplatePreview)
 			}),
 			detail: {
@@ -962,7 +962,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer()
+				orgId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -989,8 +989,8 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer(),
-				templateId: t.Integer()
+				orgId: t.Number(),
+				templateId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -1017,8 +1017,8 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer(),
-				templateId: t.Integer()
+				orgId: t.Number(),
+				templateId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -1049,14 +1049,14 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer(),
-				templateId: t.Integer()
+				orgId: t.Number(),
+				templateId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				template: FormTemplate
 			}),
 			detail: {
@@ -1075,12 +1075,12 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				orgId: t.Integer(),
-				templateId: t.Integer()
+				orgId: t.Number(),
+				templateId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Integer()
+				eventId: t.Number()
 			}),
 			response: FormCreateReturn,
 			detail: {
@@ -1125,10 +1125,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				user: User
 			}),
 			detail: {
@@ -1146,7 +1146,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -1170,7 +1170,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -1205,10 +1205,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				organisations: t.Array(OrganisationPreview)
 			}),
 			detail: {
@@ -1246,10 +1246,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				notifications: t.Array(Notification)
 			}),
 			detail: {
@@ -1268,14 +1268,14 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer(),
+				userId: t.Number(),
 				type: t.String(),
-				eventId: t.Optional(t.Integer()),
-				formId: t.Optional(t.Integer()),
+				eventId: t.Optional(t.Number()),
+				formId: t.Optional(t.Number()),
 				message: t.String()
 			}),
 			response: NotificationCreateReturn,
@@ -1294,8 +1294,8 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
-				notificationId: t.Integer()
+				userId: t.Number(),
+				notificationId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
@@ -1317,14 +1317,14 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
-				unreadCount: t.Integer()
+				statusCode: t.Number(),
+				unreadCount: t.Number()
 			}),
 			detail: {
 				description: 'Get unread notification count for a user'
@@ -1342,11 +1342,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
+				userId: t.Number(),
 				fieldType: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				value: t.String()
 			}),
 			detail: {
@@ -1364,7 +1364,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
+				userId: t.Number(),
 				fieldType: t.String()
 			}),
 			body: t.Object({
@@ -1387,7 +1387,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
+				userId: t.Number(),
 				fieldType: t.String()
 			}),
 			body: t.Object({
@@ -1410,7 +1410,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
+				userId: t.Number(),
 				fieldType: t.String()
 			}),
 			body: t.Object({
@@ -1433,10 +1433,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				keywords: t.Array(t.String())
 			}),
 			detail: {
@@ -1454,7 +1454,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -1476,7 +1476,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer()
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -1509,10 +1509,10 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer()
+				formId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				form: Form
 			}),
 			detail: {
@@ -1530,11 +1530,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer()
+				formId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Integer(),
+				userId: t.Number(),
 				fields: t.String()
 			}),
 			response: StatusCodeReturn,
@@ -1558,11 +1558,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer(),
-				userId: t.Integer()
+				formId: t.Number(),
+				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				submission: FormSubmission
 			}),
 			detail: {
@@ -1580,8 +1580,8 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				formId: t.Integer(),
-				userId: t.Integer()
+				formId: t.Number(),
+				userId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -1615,11 +1615,11 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
-				templateId: t.Integer()
+				userId: t.Number(),
+				templateId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Integer(),
+				statusCode: t.Number(),
 				fields: t.Array(FormTemplateFieldAutofill)
 			}),
 			detail: {
@@ -1637,12 +1637,12 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
-				templateId: t.Integer()
+				userId: t.Number(),
+				templateId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
-				templateFieldId: t.Integer(),
+				templateFieldId: t.Number(),
 				value: t.String()
 			}),
 			response: StatusCodeReturn,
@@ -1661,9 +1661,9 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
-				templateId: t.Integer(),
-				templateFieldId: t.Integer()
+				userId: t.Number(),
+				templateId: t.Number(),
+				templateFieldId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String(),
@@ -1685,9 +1685,9 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Integer(),
-				templateId: t.Integer(),
-				templateFieldId: t.Integer()
+				userId: t.Number(),
+				templateId: t.Number(),
+				templateFieldId: t.Number()
 			}),
 			body: t.Object({
 				token: t.String()
