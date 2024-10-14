@@ -54,7 +54,7 @@ export default function Nav(props: object) {
 			</Button>
 		*/
 		
-		<NavigationMenu orientation='vertical' class='bg-red-900 flex flex-col items-stretch space-y-2 w-64 p-4 top-0 bottom-0 h-screen sticky border-r-2 align-center'>
+		<NavigationMenu orientation='vertical' class='flex flex-col items-stretch space-y-2 w-64 p-4 top-0 bottom-0 h-screen sticky border-r-2 align-center'>
 			<NavigationMenuItem>
 				<NavigationMenuTrigger as="a" href="/" class={`${buttonVariants({variant: activeButton('/')})}`}>
 				Home
