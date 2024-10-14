@@ -63,7 +63,7 @@ export const OrganisationCreateReturn = t.Object(
 		orgId: t.Integer()
 	},
 	{
-		description: 'Organisation update return object'
+		description: 'Organisation creation return object'
 	}
 )
 
@@ -93,7 +93,7 @@ export const EventCreateReturn = t.Object(
 		eventId: t.Integer()
 	},
 	{
-		description: 'Event update return object'
+		description: 'Event creation return object'
 	}
 )
 
@@ -143,7 +143,7 @@ export const FormTemplateCreateReturn = t.Object(
 		templateId: t.Integer()
 	},
 	{
-		description: 'Form template update return object'
+		description: 'Form template creation return object'
 	}
 )
 
@@ -204,7 +204,7 @@ export const FormCreateReturn = t.Object(
 		formId: t.Integer()
 	},
 	{
-		description: 'Form update return object'
+		description: 'Form creation return object'
 	}
 )
 
@@ -230,7 +230,7 @@ export const NotificationCreateReturn = t.Object(
 		notificationId: t.Integer()
 	},
 	{
-		description: 'Notification update return object'
+		description: 'Notification creation return object'
 	}
 )
 
@@ -239,6 +239,6 @@ export const StatusCodeReturn = t.Object(
 		statusCode: t.Integer()
 	},
 	{
-		description: 'Delete return object'
+		description: 'Status code return object'
 	}
 )
