@@ -10,7 +10,7 @@ export default function App() {
 		<Router
 			root={(props) => (
 				<div class='flex flex-row'>
-				<Nav />
+				<Nav/>
 				<Separator orientation='vertical' class='my-4'/>
 				<Suspense>{props.children}</Suspense>
 				</div>
