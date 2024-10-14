@@ -15,7 +15,7 @@ export const User = t.Object(
 )
 type User = Static<typeof User>
 
-export const UserUpdateReturn = t.Object({
+export const UserCreateReturn = t.Object({
 	statusCode: t.Integer(),
 	userId: t.Integer()
 })
@@ -27,25 +27,6 @@ export const UserRole = t.Object(
 	},
 	{
 		description: 'User role within an organisation'
-	}
-)
-
-export const UserRoleUpdateReturn = t.Object(
-	{
-		statusCode: t.Integer(),
-	},
-	{
-		description: 'User roles update return object'
-	}
-)
-
-export const UserAutofillUpdateReturn = t.Object(
-	{
-		statusCode: t.Integer(),
-		fieldType: t.String()
-	},
-	{
-		description: 'User autofill update return object'
 	}
 )
 
@@ -76,7 +57,7 @@ export const OrganisationPreview = t.Object(
 	}
 )
 
-export const OrganisationUpdateReturn = t.Object(
+export const OrganisationCreateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
 		orgId: t.Integer()
@@ -106,33 +87,7 @@ export const Event = t.Object(
 )
 type Event = Static<typeof Event>
 
-export const EventPreview = t.Object(
-	{
-		eventId: t.Integer(),
-		orgId: t.Integer(),
-		title: t.String(),
-		timeStart: t.Integer(),
-		timeEnd: t.Integer(),
-		location: t.String(),
-		tags: t.Array(t.String()),
-		bannerURI: t.String()
-	},
-	{
-		description: 'Basic event details object'
-	}
-)
-
-export const EventFollowReturn = t.Object(
-	{
-		statusCode: t.Integer(),
-		eventId: t.Integer()
-	},
-	{
-		description: 'Event follow return object'
-	}
-)
-
-export const EventUpdateReturn = t.Object(
+export const EventCreateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
 		eventId: t.Integer()
@@ -182,7 +137,7 @@ export const FormTemplatePreview = t.Object(
 	}
 )
 
-export const FormTemplateUpdateReturn = t.Object(
+export const FormTemplateCreateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
 		templateId: t.Integer()
@@ -200,16 +155,6 @@ export const FormTemplateFieldAutofill = t.Object(
 	},
 	{
 		description: 'Form template autofill object'
-	}
-)
-
-export const FormTemplateFieldAutofillUpdateReturn = t.Object(
-	{
-		statusCode: t.Integer(),
-		templateFieldId: t.Integer()
-	},
-	{
-		description: 'Form template autofill update return object'
 	}
 )
 
@@ -253,23 +198,13 @@ export const FormSubmissionList = t.Object(
 	}
 )
 
-export const FormUpdateReturn = t.Object(
+export const FormCreateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
 		formId: t.Integer()
 	},
 	{
 		description: 'Form update return object'
-	}
-)
-
-export const FormSubmissionReturn = t.Object(
-	{
-		statusCode: t.Integer(),
-		userId: t.Integer()
-	},
-	{
-		description: 'Form submission return object'
 	}
 )
 
@@ -289,7 +224,7 @@ export const Notification = t.Object(
 	}
 )
 
-export const NotificationUpdateReturn = t.Object(
+export const NotificationCreateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
 		notificationId: t.Integer()
@@ -299,19 +234,9 @@ export const NotificationUpdateReturn = t.Object(
 	}
 )
 
-export const NotificationRuleUpdateReturn = t.Object(
+export const StatusCodeReturn = t.Object(
 	{
-		statusCode: t.Integer(),
-		keyword: t.String()
-	},
-	{
-		description: 'Notification rule update return object'
-	}
-)
-
-export const DeleteReturn = t.Object(
-	{
-		statusCode: t.Integer(),
+		statusCode: t.Integer()
 	},
 	{
 		description: 'Delete return object'

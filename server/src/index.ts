@@ -5,30 +5,24 @@ import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
 import {
 	Event,
-	EventUpdateReturn,
+	EventCreateReturn,
 	FormDetails,
 	Organisation,
 	OrganisationPreview,
-	OrganisationUpdateReturn,
+	OrganisationCreateReturn,
 	UserRole,
-	UserRoleUpdateReturn,
-	UserUpdateReturn,
+	UserCreateReturn,
 	User,
-	DeleteReturn,
-	EventFollowReturn,
+	StatusCodeReturn,
 	Notification,
-	NotificationUpdateReturn,
-	UserAutofillUpdateReturn,
-	NotificationRuleUpdateReturn,
+	NotificationCreateReturn,
 	Form,
-	FormSubmissionReturn,
 	FormSubmission,
-	FormUpdateReturn,
+	FormCreateReturn,
 	FormSubmissionList,
 	FormTemplatePreview,
-	FormTemplateUpdateReturn,
+	FormTemplateCreateReturn,
 	FormTemplateFieldAutofill,
-	FormTemplateFieldAutofillUpdateReturn,
 	FormTemplate
 } from './interface'
 
@@ -141,8 +135,7 @@ const app = new Elysia()
 		'/events/spotlight',
 		() => {
 			return {
-				statusCode: 200,
-				eventId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -150,7 +143,7 @@ const app = new Elysia()
 				token: t.String(),
 				eventId: t.Integer()
 			}),
-			response: EventUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Add spotlight event'
 			}
@@ -161,7 +154,7 @@ const app = new Elysia()
 		'/events/spotlight',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -169,7 +162,7 @@ const app = new Elysia()
 				token: t.String(),
 				eventId: t.Integer()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Remove spotlight event'
 			}
@@ -208,8 +201,7 @@ const app = new Elysia()
 		'/events/:eventId/followers',
 		() => {
 			return {
-				statusCode: 200,
-				eventId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -220,7 +212,7 @@ const app = new Elysia()
 				token: t.String(),
 				userId: t.Integer()
 			}),
-			response: EventFollowReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Adds a user to followers of an event'
 			}
@@ -231,7 +223,7 @@ const app = new Elysia()
 		'/events/:eventId/followers',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -242,7 +234,7 @@ const app = new Elysia()
 				token: t.String(),
 				userId: t.Integer()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Removes a user from followers of an event'
 			}
@@ -411,7 +403,7 @@ const app = new Elysia()
 		'/org/:orgId/followers',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -422,7 +414,7 @@ const app = new Elysia()
 				token: t.String(),
 				userId: t.Integer()
 			}),
-			response: UserRoleUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Adds a user to followers of an organisation'
 			}
@@ -433,7 +425,7 @@ const app = new Elysia()
 		'/org/:orgId/followers',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -445,7 +437,7 @@ const app = new Elysia()
 				userId: t.Integer(),
 				role: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Removes a user from followers of an organisation'
 			}
@@ -463,7 +455,7 @@ const app = new Elysia()
 		{
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Integer(),
+				organisationId: t.Integer(),
 				title: t.String(),
 				description: t.String(),
 				isPublic: t.Boolean(),
@@ -472,7 +464,7 @@ const app = new Elysia()
 				location: t.String(),
 				bannerURI: t.String()
 			}),
-			response: EventUpdateReturn,
+			response: EventCreateReturn,
 			detail: {
 				description: 'Create an event'
 			}
@@ -483,8 +475,7 @@ const app = new Elysia()
 		'/admin/events/:eventId',
 		() => {
 			return {
-				statusCode: 200,
-				eventId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -501,7 +492,7 @@ const app = new Elysia()
 				location: t.String(),
 				bannerURI: t.String()
 			}),
-			response: EventUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update an event'
 			}
@@ -512,7 +503,7 @@ const app = new Elysia()
 		'/admin/events/:eventId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -522,7 +513,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete an event'
 			}
@@ -567,9 +558,10 @@ const app = new Elysia()
 				token: t.String(),
 				name: t.String(),
 				description: t.String(),
-				avatarURI: t.String()
+				avatarURI: t.String(),
+				bannerURI: t.String()
 			}),
-			response: OrganisationUpdateReturn,
+			response: OrganisationCreateReturn,
 			detail: {
 				description: 'Create an organisation'
 			}
@@ -580,8 +572,7 @@ const app = new Elysia()
 		'/admin/org/:orgId',
 		() => {
 			return {
-				statusCode: 200,
-				orgId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -592,9 +583,10 @@ const app = new Elysia()
 				token: t.String(),
 				name: t.String(),
 				description: t.String(),
-				avatarURI: t.String()
+				avatarURI: t.String(),
+				bannerURI: t.String()
 			}),
-			response: OrganisationUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update an organisation'
 			}
@@ -605,7 +597,7 @@ const app = new Elysia()
 		'/admin/org/:orgId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -615,7 +607,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete an organisation'
 			}
@@ -669,7 +661,7 @@ const app = new Elysia()
 		'/admin/org/:orgId/admins',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -681,7 +673,7 @@ const app = new Elysia()
 				userId: t.Integer(),
 				role: t.String()
 			}),
-			response: UserRoleUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Add a role to a user in an organisation'
 			}
@@ -692,7 +684,7 @@ const app = new Elysia()
 		'/admin/org/:orgId/admins',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -704,7 +696,7 @@ const app = new Elysia()
 				userId: t.Integer(),
 				role: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Remove a role from a user in an organisation'
 			}
@@ -730,7 +722,7 @@ const app = new Elysia()
 				isPublic: t.Boolean(),
 				fields: t.String()
 			}),
-			response: FormUpdateReturn,
+			response: FormCreateReturn,
 			detail: {
 				description: 'Create a form'
 			}
@@ -741,8 +733,7 @@ const app = new Elysia()
 		'/admin/form/:formId',
 		() => {
 			return {
-				statusCode: 200,
-				formId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -759,7 +750,7 @@ const app = new Elysia()
 				isPublic: t.Boolean(),
 				fields: t.String()
 			}),
-			response: FormUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update a form'
 			}
@@ -770,7 +761,7 @@ const app = new Elysia()
 		'/admin/form/:formId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -780,7 +771,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete a form'
 			}
@@ -870,7 +861,7 @@ const app = new Elysia()
 		'/admin/form/:formId/submissions/:userId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -881,7 +872,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete a form submission'
 			}
@@ -942,7 +933,7 @@ const app = new Elysia()
 				isPublic: t.Boolean(),
 				fields: t.String()
 			}),
-			response: FormTemplateUpdateReturn,
+			response: FormTemplateCreateReturn,
 			detail: {
 				description: 'Create a form template'
 			}
@@ -953,8 +944,7 @@ const app = new Elysia()
 		'/admin/org/:orgId/templates/:templateId',
 		() => {
 			return {
-				statusCode: 200,
-				templateId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -971,7 +961,7 @@ const app = new Elysia()
 				isPublic: t.Boolean(),
 				fields: t.String()
 			}),
-			response: FormTemplateUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update a form template'
 			}
@@ -982,7 +972,7 @@ const app = new Elysia()
 		'/admin/org/:orgId/templates/:templateId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -993,7 +983,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete a form template'
 			}
@@ -1046,7 +1036,7 @@ const app = new Elysia()
 				token: t.String(),
 				eventId: t.Integer()
 			}),
-			response: FormUpdateReturn,
+			response: FormCreateReturn,
 			detail: {
 				description: 'Create a form from a template'
 			}
@@ -1066,7 +1056,7 @@ const app = new Elysia()
 				name: t.String(),
 				email: t.String()
 			}),
-			response: UserUpdateReturn,
+			response: UserCreateReturn,
 			detail: {
 				description: 'Create a user'
 			}
@@ -1099,8 +1089,7 @@ const app = new Elysia()
 		'/user/:userId',
 		() => {
 			return {
-				statusCode: 200,
-				userId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -1113,7 +1102,7 @@ const app = new Elysia()
 				email: t.String(),
 				avatarURI: t.String()
 			}),
-			response: UserUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update user details'
 			}
@@ -1124,7 +1113,7 @@ const app = new Elysia()
 		'/user/:userId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -1134,7 +1123,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete user'
 			}
@@ -1233,7 +1222,7 @@ const app = new Elysia()
 				formId: t.Optional(t.Integer()),
 				message: t.String()
 			}),
-			response: NotificationUpdateReturn,
+			response: NotificationCreateReturn,
 			detail: {
 				description: 'Create a notification for a user'
 			}
@@ -1244,8 +1233,7 @@ const app = new Elysia()
 		'/user/:userId/notifications/:notificationId/read',
 		() => {
 			return {
-				statusCode: 200,
-				notificationId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -1256,7 +1244,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: NotificationUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Mark a notification as read'
 			}
@@ -1311,8 +1299,7 @@ const app = new Elysia()
 		'/user/:userId/autofill/:fieldType',
 		() => {
 			return {
-				statusCode: 200,
-				fieldType: 'studentId'
+				statusCode: 200
 			}
 		},
 		{
@@ -1324,7 +1311,7 @@ const app = new Elysia()
 				token: t.String(),
 				value: t.String()
 			}),
-			response: UserAutofillUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Create autofill field for a user'
 			}
@@ -1335,8 +1322,7 @@ const app = new Elysia()
 		'/user/:userId/autofill/:fieldType',
 		() => {
 			return {
-				statusCode: 200,
-				fieldType: 'studentId'
+				statusCode: 200
 			}
 		},
 		{
@@ -1348,7 +1334,7 @@ const app = new Elysia()
 				token: t.String(),
 				value: t.String()
 			}),
-			response: UserAutofillUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update autofill field for a user'
 			}
@@ -1359,8 +1345,7 @@ const app = new Elysia()
 		'/user/:userId/autofill/:fieldType',
 		() => {
 			return {
-				statusCode: 200,
-				fieldType: 'studentId'
+				statusCode: 200
 			}
 		},
 		{
@@ -1371,7 +1356,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete autofill field for a user'
 			}
@@ -1402,8 +1387,7 @@ const app = new Elysia()
 		'/user/:userId/notificationRules',
 		() => {
 			return {
-				statusCode: 200,
-				keyword: 'anime'
+				statusCode: 200
 			}
 		},
 		{
@@ -1414,7 +1398,7 @@ const app = new Elysia()
 				token: t.String(),
 				keyword: t.String()
 			}),
-			response: NotificationRuleUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Create notification rule for a user'
 			}
@@ -1425,7 +1409,7 @@ const app = new Elysia()
 		'/user/:userId/notificationRules',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -1436,7 +1420,7 @@ const app = new Elysia()
 				token: t.String(),
 				keyword: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete notification rule for a user'
 			}
@@ -1473,8 +1457,7 @@ const app = new Elysia()
 		'/form/:formId',
 		() => {
 			return {
-				statusCode: 200,
-				userId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -1486,7 +1469,7 @@ const app = new Elysia()
 				userId: t.Integer(),
 				fields: t.String()
 			}),
-			response: FormSubmissionReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Create a form submission'
 			}
@@ -1518,8 +1501,7 @@ const app = new Elysia()
 		'/form/:formId/:userId',
 		() => {
 			return {
-				statusCode: 200,
-				userId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -1531,7 +1513,7 @@ const app = new Elysia()
 				token: t.String(),
 				fields: t.String()
 			}),
-			response: FormSubmissionReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update a form submission'
 			}
@@ -1574,8 +1556,7 @@ const app = new Elysia()
 		'/user/:userId/templateAutofill/:templateId',
 		() => {
 			return {
-				statusCode: 200,
-				templateFieldId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -1588,7 +1569,7 @@ const app = new Elysia()
 				templateFieldId: t.Integer(),
 				value: t.String()
 			}),
-			response: FormTemplateFieldAutofillUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Create autofill field for a user'
 			}
@@ -1599,8 +1580,7 @@ const app = new Elysia()
 		'/user/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
 			return {
-				statusCode: 200,
-				templateFieldId: 1
+				statusCode: 200
 			}
 		},
 		{
@@ -1613,7 +1593,7 @@ const app = new Elysia()
 				token: t.String(),
 				value: t.String()
 			}),
-			response: FormTemplateFieldAutofillUpdateReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Update template autofill field for a user'
 			}
@@ -1624,7 +1604,7 @@ const app = new Elysia()
 		'/user/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
 			return {
-				statusCode: 200,
+				statusCode: 200
 			}
 		},
 		{
@@ -1636,7 +1616,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: DeleteReturn,
+			response: StatusCodeReturn,
 			detail: {
 				description: 'Delete template autofill field for a user'
 			}
