@@ -8,13 +8,13 @@ export default function App() {
 	return (
 		<Router
 			root={(props) => (
-				<>
-					<Nav />
-					<Suspense>{props.children}</Suspense>
-				</>
+				<div class='flex flex-row'>
+				<Nav />
+				<Suspense>{props.children}</Suspense>
+				</div>
 			)}
 		>
-			<FileRoutes />
+				<FileRoutes />
 		</Router>
 	)
 }
