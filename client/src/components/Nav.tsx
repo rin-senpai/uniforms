@@ -44,7 +44,7 @@ export default function Nav(props: object) {
 		</NavigationMenu>
 		*/
 		
-		<NavigationMenu orientation='vertical' class='flex flex-col items-stretch space-y-1 w-64 top-0 bottom-0 h-screen sticky border-r-2 align-center'>
+		<NavigationMenu orientation='vertical' class='flex flex-col items-stretch space-y-2 w-64 top-0 bottom-0 h-screen sticky border-r-2 align-center'>
 			<Button as='a' href='/' class='text-left' variant={`${activeButton('/')}`}>
 				Home
 			</Button>
@@ -94,7 +94,7 @@ export default function Nav(props: object) {
 			</NavigationMenuContent>
 			</NavigationMenuItem>
 
-			<Card class='absolute inset-x-0 bottom-0'>
+			<Card class='absolute inset-x-0 bottom-0 border-0'>
 				<CardHeader class='flex flex-row space-x-3 self-start'>
 				<Avatar>
 					<AvatarImage src="https://avatars.githubusercontent.com/u/31785428?v=4" />
