@@ -300,6 +300,9 @@ export const formsRelations = relations(forms, ({ one, many }) => ({
 
 export const templates = sqliteTable('templates', {
 	id: integer().primaryKey({ autoIncrement: true }),
+	organisationId: integer()
+		.notNull()
+		.references(() => organisations.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	description: text().notNull(),
 	role: text(),
@@ -311,7 +314,11 @@ export const templates = sqliteTable('templates', {
 		.default(sql`(strftime('%s', 'now'))`)
 })
 
-export const templatesRelations = relations(templates, ({ many }) => ({
+export const templatesRelations = relations(templates, ({ one, many }) => ({
+	organisations: one(organisations, {
+		fields: [templates.organisationId],
+		references: [organisations.id]
+	}),
 	templateAutofills: many(templateAutofills),
 	forms: many(forms)
 }))
