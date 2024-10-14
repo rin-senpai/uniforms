@@ -287,7 +287,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/orgs',
+		'/org',
 		() => {
 			return {
 				organisations: [
@@ -317,7 +317,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/orgs/:orgId',
+		'/org/:orgId',
 		() => {
 			return {
 				orgId: 1,
@@ -340,7 +340,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/orgs/:orgId/events',
+		'/org/:orgId/events',
 		() => {
 			return {
 				events: [
@@ -387,7 +387,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/orgs/:orgId/followers',
+		'/org/:orgId/followers',
 		() => {
 			return {
 				statusCode: 200,
@@ -412,7 +412,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/orgs/:orgId/followers',
+		'/org/:orgId/followers',
 		() => {
 			return {
 				statusCode: 200,
@@ -435,7 +435,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/orgs/:orgId/followers',
+		'/org/:orgId/followers',
 		() => {
 			return {
 				statusCode: 200,
@@ -564,7 +564,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/orgs',
+		'/admin/org',
 		() => {
 			return {
 				statusCode: 200,
@@ -587,7 +587,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/admin/orgs/:orgId',
+		'/admin/org/:orgId',
 		() => {
 			return {
 				statusCode: 200,
@@ -613,7 +613,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/orgs/:orgId',
+		'/admin/org/:orgId',
 		() => {
 			return {
 				statusCode: 200,
@@ -635,7 +635,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/orgs/:orgId/admins',
+		'/admin/org/:orgId/admins',
 		() => {
 			return {
 				managers: [
@@ -678,7 +678,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/orgs/:orgId/admins',
+		'/admin/org/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200,
@@ -702,7 +702,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/orgs/:orgId/admins',
+		'/admin/org/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200,
