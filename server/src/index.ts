@@ -293,15 +293,15 @@ const app = new Elysia()
 				organisations: [
 					{
 						orgId: 1,
-						name: 'Organization Name',
-						description: 'Organization Description',
-						avatarURI: 'Organization Banner URI'
+						name: 'organisation Name',
+						description: 'organisation Description',
+						avatarURI: 'organisation Banner URI'
 					},
 					{
 						orgId: 2,
-						name: 'Organization Name',
-						description: 'Organization Description',
-						avatarURI: 'Organization Banner URI'
+						name: 'organisation Name',
+						description: 'organisation Description',
+						avatarURI: 'organisation Banner URI'
 					}
 				]
 			}
@@ -311,7 +311,7 @@ const app = new Elysia()
 				organisations: t.Array(OrganisationPreview)
 			}),
 			detail: {
-				description: 'Get all organizations'
+				description: 'Get all organisations'
 			}
 		}
 	)
@@ -321,10 +321,10 @@ const app = new Elysia()
 		() => {
 			return {
 				orgId: 1,
-				name: 'Organization Name',
-				description: 'Organization Description',
-				avatarURI: 'Organization Banner URI',
-				bannerURI: 'Organization Banner URI',
+				name: 'organisation Name',
+				description: 'organisation Description',
+				avatarURI: 'organisation Banner URI',
+				bannerURI: 'organisation Banner URI',
 				createdAt: 1630000000
 			}
 		},
@@ -334,7 +334,7 @@ const app = new Elysia()
 			}),
 			response: Organisation,
 			detail: {
-				description: 'Get full organization details by id'
+				description: 'Get full organisation details by id'
 			}
 		}
 	)
@@ -381,7 +381,7 @@ const app = new Elysia()
 				events: t.Array(Event)
 			}),
 			detail: {
-				description: 'Get all events for an organization'
+				description: 'Get all events for an organisation'
 			}
 		}
 	)
@@ -568,7 +568,7 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Organization created successfully',
+				message: 'organisation created successfully',
 				orgId: 1
 			}
 		},
@@ -581,7 +581,7 @@ const app = new Elysia()
 			}),
 			response: OrganisationUpdateReturn,
 			detail: {
-				description: 'Create an organization'
+				description: 'Create an organisation'
 			}
 		}
 	)
@@ -591,7 +591,7 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Organization updated successfully',
+				message: 'organisation updated successfully',
 				orgId: 1
 			}
 		},
@@ -607,7 +607,7 @@ const app = new Elysia()
 			}),
 			response: OrganisationUpdateReturn,
 			detail: {
-				description: 'Update an organization'
+				description: 'Update an organisation'
 			}
 		}
 	)
@@ -617,7 +617,7 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Organization deleted successfully'
+				message: 'organisation deleted successfully'
 			}
 		},
 		{
@@ -629,7 +629,7 @@ const app = new Elysia()
 			}),
 			response: DeleteReturn,
 			detail: {
-				description: 'Delete an organization'
+				description: 'Delete an organisation'
 			}
 		}
 	)
@@ -672,7 +672,7 @@ const app = new Elysia()
 				moderators: t.Array(UserRole)
 			}),
 			detail: {
-				description: 'Get all administrators of an organization'
+				description: 'Get all administrators of an organisation'
 			}
 		}
 	)
@@ -696,7 +696,7 @@ const app = new Elysia()
 			}),
 			response: UserRoleUpdateReturn,
 			detail: {
-				description: 'Add a role to a user in an organization'
+				description: 'Add a role to a user in an organisation'
 			}
 		}
 	)
@@ -720,7 +720,7 @@ const app = new Elysia()
 			}),
 			response: DeleteReturn,
 			detail: {
-				description: 'Remove a role from a user in an organization'
+				description: 'Remove a role from a user in an organisation'
 			}
 		}
 	)
@@ -934,7 +934,7 @@ const app = new Elysia()
 				templates: t.Array(FormTemplatePreview)
 			}),
 			detail: {
-				description: 'Get all form templates for an organization'
+				description: 'Get all form templates for an organisation'
 			}
 		}
 	)
@@ -1173,15 +1173,15 @@ const app = new Elysia()
 				organisations: [
 					{
 						orgId: 1,
-						name: 'Organization Name',
-						description: 'Organization Description',
-						avatarURI: 'Organization Banner URI'
+						name: 'organisation Name',
+						description: 'organisation Description',
+						avatarURI: 'organisation Banner URI'
 					},
 					{
 						orgId: 2,
-						name: 'Organization Name',
-						description: 'Organization Description',
-						avatarURI: 'Organization Banner URI'
+						name: 'organisation Name',
+						description: 'organisation Description',
+						avatarURI: 'organisation Banner URI'
 					}
 				]
 			}
@@ -1194,7 +1194,7 @@ const app = new Elysia()
 				organisations: t.Array(OrganisationPreview)
 			}),
 			detail: {
-				description: 'Get all organizations a user is an admin of'
+				description: 'Get all organisations a user is an admin of'
 			}
 		}
 	)
