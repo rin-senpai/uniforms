@@ -1,19 +1,28 @@
 import { useLocation } from '@solidjs/router'
 import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIcon,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuTrigger,
-	NavigationMenuLabel,
-	NavigationMenuDescription
-  } from "~/components/ui/navigation-menu"
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle
+  } from "~/components/ui/card"
 
 import { Button } from "~/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 
 import { Resizable, ResizableHandle, ResizablePanel } from "~/components/ui/resizable"
 import { buttonVariants } from './ui/button'
+import {
+	NavigationMenu,
+	NavigationMenuContent,
+	NavigationMenuDescription,
+	NavigationMenuIcon,
+	NavigationMenuItem,
+	NavigationMenuLabel,
+	NavigationMenuLink,
+	NavigationMenuTrigger
+} from "~/components/ui/navigation-menu"
 
 
 //flex flex-col items-center w-16 h-full overflow-hidden text-gray-400 bg-gray-900 rounded
@@ -35,15 +44,68 @@ export default function Nav(props: object) {
 		</NavigationMenu>
 		*/
 		
-		<nav class='w-64 top-0 bottom-0 bg-red-800 h-screen sticky flex flex-row'>
-			<Button as='a' href='/' variant={`${activeButton('/')}`}>
+		<NavigationMenu orientation='vertical' class='flex flex-col items-stretch *:m-2 space-y-1 w-64 top-0 bottom-0 h-screen sticky justify-start border-r-2'>
+			<Card>
+				<CardHeader class='flex flex-row space-x-3'>
+				<Avatar>
+					<AvatarImage src="https://avatars.githubusercontent.com/u/31785428?v=4" />
+					<AvatarFallback>RN</AvatarFallback>
+				</Avatar>
+					<div><CardTitle>Username</CardTitle><CardDescription>placeholder@raoli.moe</CardDescription></div>		
+				</CardHeader>
+			</Card>
+
+			<Button as='a' href='/' class='text-left' variant={`${activeButton('/')}`}>
 				Home
 			</Button>
-			
-			<Button as='a' href='/about' variant={`${activeButton('/about')}`}>
+
+			<Button as='a' href='/about' class='text-left' variant={`${activeButton('/about')}`}>
 				About
 			</Button>
-		</nav> 
+
+			<NavigationMenu orientation='vertical' class='flex flex-row space-x-2 w-60'>
+				<NavigationMenuItem>
+			<NavigationMenuTrigger>
+				Event
+				<NavigationMenuIcon />
+			</NavigationMenuTrigger>
+	
+			<NavigationMenuContent class="grid grid-flow-col grid-rows-3 gap-3 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] [&>li:first-child]:row-span-3">
+				<NavigationMenuLink
+				class="box-border flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline focus:shadow-md"
+				href="https://solid-ui.com"
+				>
+				<NavigationMenuLabel class="mb-2 mt-4 text-lg font-medium">
+					SolidUI
+				</NavigationMenuLabel>
+				<NavigationMenuDescription class="text-sm leading-tight text-muted-foreground">
+					Beautifully designed components. Built with Kobalte & corvu. Styled with Tailwind
+					CSS.
+				</NavigationMenuDescription>
+				</NavigationMenuLink>
+	
+				<NavigationMenuLink href="/docs">
+				<NavigationMenuLabel>Introduction</NavigationMenuLabel>
+				<NavigationMenuDescription>
+					Re-usable components. Built with Kobalte & corvu. Styled with Tailwind CSS.
+				</NavigationMenuDescription>
+				</NavigationMenuLink>
+	
+				<NavigationMenuLink href="/docs/installation/overview">
+				<NavigationMenuLabel>Installation</NavigationMenuLabel>
+				<NavigationMenuDescription>
+					How to install dependencies and structure your app.
+				</NavigationMenuDescription>
+				</NavigationMenuLink>
+	
+				<NavigationMenuLink href="/docs/dark-mode/overview">
+				<NavigationMenuLabel>Dark Mode</NavigationMenuLabel>
+				<NavigationMenuDescription>Adding dark mode to your site.</NavigationMenuDescription>
+				</NavigationMenuLink>
+			</NavigationMenuContent>
+			</NavigationMenuItem>
+			</NavigationMenu>
+		</NavigationMenu> 
 		
 	)
 }
