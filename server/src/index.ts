@@ -287,7 +287,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/org',
+		'/orgs',
 		() => {
 			return {
 				statusCode: 200,
@@ -319,7 +319,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/org/:orgId',
+		'/orgs/:orgId',
 		() => {
 			return {
 				statusCode: 200,
@@ -348,7 +348,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/org/:orgId/events',
+		'/orgs/:orgId/events',
 		() => {
 			return {
 				statusCode: 200,
@@ -397,7 +397,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/org/:orgId/followers',
+		'/orgs/:orgId/followers',
 		() => {
 			return {
 				statusCode: 200,
@@ -422,7 +422,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/org/:orgId/followers',
+		'/orgs/:orgId/followers',
 		() => {
 			return {
 				statusCode: 200
@@ -444,7 +444,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/org/:orgId/followers',
+		'/orgs/:orgId/followers',
 		() => {
 			return {
 				statusCode: 200
@@ -568,7 +568,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/org',
+		'/admin/orgs',
 		() => {
 			return {
 				statusCode: 200,
@@ -591,7 +591,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/admin/org/:orgId',
+		'/admin/orgs/:orgId',
 		() => {
 			return {
 				statusCode: 200
@@ -616,7 +616,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/org/:orgId',
+		'/admin/orgs/:orgId',
 		() => {
 			return {
 				statusCode: 200
@@ -637,7 +637,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/org/:orgId/admins',
+		'/admin/orgs/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200,
@@ -682,7 +682,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/org/:orgId/admins',
+		'/admin/orgs/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200
@@ -705,7 +705,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/org/:orgId/admins',
+		'/admin/orgs/:orgId/admins',
 		() => {
 			return {
 				statusCode: 200
@@ -728,7 +728,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/form',
+		'/admin/forms',
 		() => {
 			return {
 				statusCode: 200,
@@ -754,7 +754,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/admin/form/:formId',
+		'/admin/forms/:formId',
 		() => {
 			return {
 				statusCode: 200
@@ -782,7 +782,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/form/:formId',
+		'/admin/forms/:formId',
 		() => {
 			return {
 				statusCode: 200
@@ -803,7 +803,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/form/:formId',
+		'/admin/forms/:formId',
 		() => {
 			return {
 				statusCode: 200,
@@ -836,7 +836,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/form/:formId/submissions',
+		'/admin/forms/:formId/submissions',
 		() => {
 			return {
 				statusCode: 200,
@@ -869,7 +869,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/form/:formId/submissions/:userId',
+		'/admin/forms/:formId/submissions/:userId',
 		() => {
 			return {
 				statusCode: 200,
@@ -896,7 +896,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/form/:formId/submissions/:userId',
+		'/admin/forms/:formId/submissions/:userId',
 		() => {
 			return {
 				statusCode: 200
@@ -918,7 +918,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/org/:orgId/templates',
+		'/admin/orgs/:orgId/templates',
 		() => {
 			return {
 				statusCode: 200,
@@ -953,7 +953,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/org/:orgId/templates',
+		'/admin/orgs/:orgId/templates',
 		() => {
 			return {
 				statusCode: 200,
@@ -981,7 +981,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/admin/org/:orgId/templates/:templateId',
+		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
 			return {
 				statusCode: 200
@@ -1009,7 +1009,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/admin/org/:orgId/templates/:templateId',
+		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
 			return {
 				statusCode: 200
@@ -1031,7 +1031,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/admin/org/:orgId/templates/:templateId',
+		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
 			return {
 				statusCode: 200,
@@ -1066,7 +1066,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/admin/org/:orgId/templates/:templateId/createForm',
+		'/admin/orgs/:orgId/templates/:templateId/createForm',
 		() => {
 			return {
 				statusCode: 200,
@@ -1090,7 +1090,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/user',
+		'/users',
 		() => {
 			return {
 				statusCode: 200,
@@ -1110,7 +1110,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId',
+		'/users/:userId',
 		() => {
 			return {
 				statusCode: 200,
@@ -1138,7 +1138,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/user/:userId',
+		'/users/:userId',
 		() => {
 			return {
 				statusCode: 200
@@ -1162,7 +1162,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/user/:userId',
+		'/users/:userId',
 		() => {
 			return {
 				statusCode: 200
@@ -1183,7 +1183,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId/adminOrgs',
+		'/users/:userId/adminOrgs',
 		() => {
 			return {
 				statusCode: 200,
@@ -1218,7 +1218,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId/notifications',
+		'/users/:userId/notifications',
 		() => {
 			return {
 				statusCode: 200,
@@ -1259,7 +1259,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/user/:userId/notifications',
+		'/users/:userId/notifications',
 		() => {
 			return {
 				statusCode: 200,
@@ -1286,7 +1286,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/user/:userId/notifications/:notificationId/read',
+		'/users/:userId/notifications/:notificationId/read',
 		() => {
 			return {
 				statusCode: 200
@@ -1308,7 +1308,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId/notifications/unread',
+		'/users/:userId/notifications/unread',
 		() => {
 			return {
 				statusCode: 200,
@@ -1333,7 +1333,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId/autofill/:fieldType',
+		'/users/:userId/autofill/:fieldType',
 		() => {
 			return {
 				statusCode: 200,
@@ -1356,7 +1356,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/user/:userId/autofill/:fieldType',
+		'/users/:userId/autofill/:fieldType',
 		() => {
 			return {
 				statusCode: 200
@@ -1379,7 +1379,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/user/:userId/autofill/:fieldType',
+		'/users/:userId/autofill/:fieldType',
 		() => {
 			return {
 				statusCode: 200
@@ -1402,7 +1402,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/user/:userId/autofill/:fieldType',
+		'/users/:userId/autofill/:fieldType',
 		() => {
 			return {
 				statusCode: 200
@@ -1424,7 +1424,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId/notificationRules',
+		'/users/:userId/notificationRules',
 		() => {
 			return {
 				statusCode: 200,
@@ -1446,7 +1446,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/user/:userId/notificationRules',
+		'/users/:userId/notificationRules',
 		() => {
 			return {
 				statusCode: 200
@@ -1468,7 +1468,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/user/:userId/notificationRules',
+		'/users/:userId/notificationRules',
 		() => {
 			return {
 				statusCode: 200
@@ -1490,7 +1490,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/form/:formId',
+		'/forms/:formId',
 		() => {
 			return {
 				statusCode: 200,
@@ -1522,7 +1522,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/form/:formId',
+		'/forms/:formId',
 		() => {
 			return {
 				statusCode: 200
@@ -1545,7 +1545,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/form/:formId/:userId',
+		'/forms/:formId/:userId',
 		() => {
 			return {
 				statusCode: 200,
@@ -1572,7 +1572,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/form/:formId/:userId',
+		'/forms/:formId/:userId',
 		() => {
 			return {
 				statusCode: 200
@@ -1595,7 +1595,7 @@ const app = new Elysia()
 	)
 
 	.get(
-		'/user/:userId/templateAutofill/:templateId',
+		'/users/:userId/templateAutofill/:templateId',
 		() => {
 			return {
 				statusCode: 200,
@@ -1629,7 +1629,7 @@ const app = new Elysia()
 	)
 
 	.post(
-		'/user/:userId/templateAutofill/:templateId',
+		'/users/:userId/templateAutofill/:templateId',
 		() => {
 			return {
 				statusCode: 200
@@ -1653,7 +1653,7 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/user/:userId/templateAutofill/:templateId/:templateFieldId',
+		'/users/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
 			return {
 				statusCode: 200
@@ -1677,7 +1677,7 @@ const app = new Elysia()
 	)
 
 	.delete(
-		'/user/:userId/templateAutofill/:templateId/:templateFieldId',
+		'/users/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
 			return {
 				statusCode: 200
