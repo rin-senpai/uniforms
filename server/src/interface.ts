@@ -17,7 +17,6 @@ type User = Static<typeof User>
 
 export const UserUpdateReturn = t.Object({
 	statusCode: t.Integer(),
-	message: t.String(),
 	userId: t.Integer()
 })
 
@@ -34,7 +33,6 @@ export const UserRole = t.Object(
 export const UserRoleUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String()
 	},
 	{
 		description: 'User roles update return object'
@@ -44,7 +42,6 @@ export const UserRoleUpdateReturn = t.Object(
 export const UserAutofillUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		fieldType: t.String()
 	},
 	{
@@ -82,7 +79,6 @@ export const OrganisationPreview = t.Object(
 export const OrganisationUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		orgId: t.Integer()
 	},
 	{
@@ -129,7 +125,6 @@ export const EventPreview = t.Object(
 export const EventFollowReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		eventId: t.Integer()
 	},
 	{
@@ -140,7 +135,6 @@ export const EventFollowReturn = t.Object(
 export const EventUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		eventId: t.Integer()
 	},
 	{
@@ -191,7 +185,6 @@ export const FormTemplatePreview = t.Object(
 export const FormTemplateUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		templateId: t.Integer()
 	},
 	{
@@ -213,7 +206,6 @@ export const FormTemplateFieldAutofill = t.Object(
 export const FormTemplateFieldAutofillUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		templateFieldId: t.Integer()
 	},
 	{
@@ -264,7 +256,6 @@ export const FormSubmissionList = t.Object(
 export const FormUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		formId: t.Integer()
 	},
 	{
@@ -275,7 +266,6 @@ export const FormUpdateReturn = t.Object(
 export const FormSubmissionReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		userId: t.Integer()
 	},
 	{
@@ -302,7 +292,6 @@ export const Notification = t.Object(
 export const NotificationUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		notificationId: t.Integer()
 	},
 	{
@@ -313,7 +302,6 @@ export const NotificationUpdateReturn = t.Object(
 export const NotificationRuleUpdateReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String(),
 		keyword: t.String()
 	},
 	{
@@ -324,7 +312,6 @@ export const NotificationRuleUpdateReturn = t.Object(
 export const DeleteReturn = t.Object(
 	{
 		statusCode: t.Integer(),
-		message: t.String()
 	},
 	{
 		description: 'Delete return object'

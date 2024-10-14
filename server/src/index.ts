@@ -142,7 +142,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Spotlight events added successfully',
 				eventId: 1
 			}
 		},
@@ -163,7 +162,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Spotlight event removed successfully'
 			}
 		},
 		{
@@ -211,7 +209,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User now following event',
 				eventId: 1
 			}
 		},
@@ -235,7 +232,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User no longer following organisation'
 			}
 		},
 		{
@@ -416,7 +412,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User now following organisation'
 			}
 		},
 		{
@@ -439,7 +434,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User no longer following organisation'
 			}
 		},
 		{
@@ -463,7 +457,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Event created successfully',
 				eventId: 1
 			}
 		},
@@ -491,7 +484,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Event updated successfully',
 				eventId: 1
 			}
 		},
@@ -521,7 +513,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Event deleted successfully'
 			}
 		},
 		{
@@ -568,7 +559,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'organisation created successfully',
 				orgId: 1
 			}
 		},
@@ -591,7 +581,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'organisation updated successfully',
 				orgId: 1
 			}
 		},
@@ -617,7 +606,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'organisation deleted successfully'
 			}
 		},
 		{
@@ -682,7 +670,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User role added successfully'
 			}
 		},
 		{
@@ -706,7 +693,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User role removed successfully'
 			}
 		},
 		{
@@ -730,7 +716,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form created successfully',
 				formId: 1
 			}
 		},
@@ -757,7 +742,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form updated successfully',
 				formId: 1
 			}
 		},
@@ -787,7 +771,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form deleted successfully'
 			}
 		},
 		{
@@ -888,7 +871,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form submission deleted'
 			}
 		},
 		{
@@ -944,7 +926,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Template created successfully',
 				templateId: 1
 			}
 		},
@@ -973,7 +954,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Template updated successfully',
 				templateId: 1
 			}
 		},
@@ -1003,7 +983,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Template deleted successfully'
 			}
 		},
 		{
@@ -1055,7 +1034,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form created successfully',
 				formId: 1
 			}
 		},
@@ -1080,7 +1058,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User created successfully',
 				userId: 1
 			}
 		},
@@ -1123,7 +1100,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User updated',
 				userId: 1
 			}
 		},
@@ -1149,7 +1125,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'User deleted'
 			}
 		},
 		{
@@ -1243,7 +1218,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Notification created successfully',
 				notificationId: 1
 			}
 		},
@@ -1271,7 +1245,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Notification set to read',
 				notificationId: 1
 			}
 		},
@@ -1339,7 +1312,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Autofill field created',
 				fieldType: 'studentId'
 			}
 		},
@@ -1364,7 +1336,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Autofill field updated',
 				fieldType: 'studentId'
 			}
 		},
@@ -1389,7 +1360,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Autofill field deleted',
 				fieldType: 'studentId'
 			}
 		},
@@ -1433,7 +1403,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Notification rule created',
 				keyword: 'anime'
 			}
 		},
@@ -1457,7 +1426,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Notification rule deleted'
 			}
 		},
 		{
@@ -1506,7 +1474,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form submitted successfully',
 				userId: 1
 			}
 		},
@@ -1552,7 +1519,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Form updated successfully',
 				userId: 1
 			}
 		},
@@ -1609,7 +1575,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Template autofill field created',
 				templateFieldId: 1
 			}
 		},
@@ -1635,7 +1600,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Template autofill field updated',
 				templateFieldId: 1
 			}
 		},
@@ -1661,7 +1625,6 @@ const app = new Elysia()
 		() => {
 			return {
 				statusCode: 200,
-				message: 'Template autofill field deleted'
 			}
 		},
 		{
