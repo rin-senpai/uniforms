@@ -54,7 +54,7 @@ export default function Nav(props: object) {
 			</Button>
 		*/
 		
-		<NavigationMenu orientation='vertical' class='bg-red-900 flex flex-col items-stretch space-y-2 w-64 top-0 bottom-0 h-screen sticky border-r-2 align-center'>
+		<NavigationMenu orientation='vertical' class='bg-red-900 flex flex-col items-stretch space-y-2 w-64 top-0 bottom-0 h-screen border-r-2 align-center relative z-50'>
 			<NavigationMenuItem>
 				<NavigationMenuTrigger as="a" href="/" class={buttonVariants({variant: activeButton('/')})}>
 				Home
@@ -73,7 +73,7 @@ export default function Nav(props: object) {
 				<NavigationMenuIcon />
 			</NavigationMenuTrigger>
 	
-			<NavigationMenuContent class="grid grid-flow-col grid-rows-3 gap-3 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] [&>li:first-child]:row-span-3">
+			<NavigationMenuContent class="relative z-50 grid grid-flow-col grid-rows-3 gap-3 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] [&>li:first-child]:row-span-3">
 				<NavigationMenuLink
 				class="box-border flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline focus:shadow-md"
 				href="https://solid-ui.com"
