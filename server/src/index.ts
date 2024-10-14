@@ -15,7 +15,11 @@ import {
 	UserUpdateReturn,
 	User,
 	DeleteReturn,
-	EventFollowReturn
+	EventFollowReturn,
+	Notification,
+	NotificationUpdateReturn,
+	UserAutofillUpdateReturn,
+	NotificationRuleUpdateReturn
 } from './interface'
 
 // import { model } from './db/model'
@@ -62,6 +66,79 @@ const app = new Elysia()
 			response: t.Array(EventPreview),
 			detail: {
 				description: 'Get all events'
+			}
+		}
+	)
+
+	.get(
+		'/events/spotlight',
+		() => {
+			return [
+				{
+					eventId: 1,
+					orgId: 1,
+					title: 'Event Title',
+					timeStart: 1630000000,
+					timeEnd: 1630000000,
+					location: 'Event Location',
+					bannerURI: 'Event Banner URI'
+				},
+				{
+					eventId: 2,
+					orgId: 2,
+					title: 'Event Title',
+					timeStart: 1630000000,
+					timeEnd: 1630000000,
+					location: 'Event Location',
+					bannerURI: 'Event Banner URI'
+				}
+			]
+		},
+		{
+			response: t.Array(EventPreview),
+			detail: {
+				description: 'Get all spotlight events'
+			}
+		}
+	)
+
+	.post(
+		'/events/spotlight',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Spotlight events added successfully',
+				eventId: 1
+			}
+		},
+		{
+			body: t.Object({
+				token: t.String(),
+				eventId: t.Integer()
+			}),
+			response: EventUpdateReturn,
+			detail: {
+				description: 'Add spotlight event'
+			}
+		}
+	)
+
+	.delete(
+		'/events/spotlight',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Spotlight event removed successfully'
+			}
+		},
+		{
+			body: t.Object({
+				token: t.String(),
+				eventId: t.Integer()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Remove spotlight event'
 			}
 		}
 	)
@@ -654,6 +731,308 @@ const app = new Elysia()
 			response: DeleteReturn,
 			detail: {
 				description: 'Delete user'
+			}
+		}
+	)
+
+	.get(
+		'/user/:userId/adminOrgs',
+		() => {
+			return [
+				{
+					orgId: 1,
+					name: 'Organization Name',
+					description: 'Organization Description',
+					avatarURI: 'Organization Banner URI'
+				},
+				{
+					orgId: 2,
+					name: 'Organization Name',
+					description: 'Organization Description',
+					avatarURI: 'Organization Banner URI'
+				}
+			]
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			response: t.Array(OrganisationPreview),
+			detail: {
+				description: 'Get all organizations a user is an admin of'
+			}
+		}
+	)
+
+	.get(
+		'/user/:userId/notifications',
+		() => {
+			return [
+				{
+					notificationId: 1,
+					userId: 1,
+					read: false,
+					type: 'newEvent',
+					eventId: 1,
+					message: 'New event!!!!!!!!!!',
+					createdAt: 1630000000
+				},
+				{
+					notificationId: 2,
+					userId: 2,
+					read: false,
+					type: 'newForm',
+					formId: 1,
+					message: 'New form!!!!!!!!!!',
+					createdAt: 1630000000
+				}
+			]
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			response: t.Array(Notification),
+			detail: {
+				description: 'Get all notifications for a user'
+			}
+		}
+	)
+
+	.post(
+		'/user/:userId/notifications',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Notification created successfully',
+				notificationId: 1
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				userId: t.Integer(),
+				read: t.Boolean(),
+				type: t.String(),
+				eventId: t.Optional(t.Integer()),
+				formId: t.Optional(t.Integer()),
+				message: t.String()
+			}),
+			response: NotificationUpdateReturn,
+			detail: {
+				description: 'Create a notification for a user'
+			}
+		}
+	)
+
+	.put(
+		'/user/:userId/notifications/:notificationId/read',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Notification set to read',
+				notificationId: 1
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				notificationId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: NotificationUpdateReturn,
+			detail: {
+				description: 'Mark a notification as read'
+			}
+		}
+	)
+
+	.get(
+		'/user/:userId/notifications/unread',
+		() => {
+			return {
+				unreadCount: 100
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: t.Object({
+				unreadCount: t.Integer()
+			}),
+			detail: {
+				description: 'Get unread notification count for a user'
+			}
+		}
+	)
+
+	.get(
+		'/user/:userId/autofill/:fieldType',
+		() => {
+			return {
+				value: 'z1234567'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				fieldType: t.String()
+			}),
+			response: t.Object({
+				value: t.String()
+			}),
+			detail: {
+				description: 'Get autofill data for a user'
+			}
+		}
+	)
+
+	.post(
+		'/user/:userId/autofill/:fieldType',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Autofill field created',
+				fieldType: 'studentId'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				fieldType: t.String()
+			}),
+			body: t.Object({
+				token: t.String(),
+				value: t.String()
+			}),
+			response: UserAutofillUpdateReturn,
+			detail: {
+				description: 'Create autofill field for a user'
+			}
+		}
+	)
+
+	.put(
+		'/user/:userId/autofill/:fieldType',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Autofill field updated',
+				fieldType: 'studentId'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				fieldType: t.String()
+			}),
+			body: t.Object({
+				token: t.String(),
+				value: t.String()
+			}),
+			response: UserAutofillUpdateReturn,
+			detail: {
+				description: 'Update autofill field for a user'
+			}
+		}
+	)
+
+	.delete(
+		'/user/:userId/autofill/:fieldType',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Autofill field deleted',
+				fieldType: 'studentId'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				fieldType: t.String()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Delete autofill field for a user'
+			}
+		}
+	)
+
+	.get(
+		'/user/:userId/notificationRules',
+		() => {
+			return {
+				keywords: ['anime', 'gooning', 'fortnite']
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			response: t.Object({
+				keywords: t.Array(t.String())
+			}),
+			detail: {
+				description: 'Get all notification rules for a user'
+			}
+		}
+	)
+
+	.post(
+		'/user/:userId/notificationRules',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Notification rule created',
+				keyword: 'anime'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				keyword: t.String()
+			}),
+			response: NotificationRuleUpdateReturn,
+			detail: {
+				description: 'Create notification rule for a user'
+			}
+		}
+	)
+
+	.delete(
+		'/user/:userId/notificationRules',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Notification rule deleted'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				keyword: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Delete notification rule for a user'
 			}
 		}
 	)

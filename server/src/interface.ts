@@ -41,6 +41,17 @@ export const UserRoleUpdateReturn = t.Object(
 	}
 )
 
+export const UserAutofillUpdateReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		fieldType: t.String()
+	},
+	{
+		description: 'User autofill update return object'
+	}
+)
+
 export const Organisation = t.Object(
 	{
 		orgId: t.Integer(),
@@ -144,6 +155,44 @@ export const FormDetails = t.Object(
 	},
 	{
 		description: 'Event details object'
+	}
+)
+
+export const Notification = t.Object(
+	{
+		notificationId: t.Integer(),
+		userId: t.Integer(),
+		read: t.Boolean(),
+		type: t.String(),
+		eventId: t.Optional(t.Integer()),
+		formId: t.Optional(t.Integer()),
+		message: t.String(),
+		createdAt: t.Integer()
+	},
+	{
+		description: 'Notification details object'
+	}
+)
+
+export const NotificationUpdateReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		notificationId: t.Integer()
+	},
+	{
+		description: 'Notification update return object'
+	}
+)
+
+export const NotificationRuleUpdateReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		keyword: t.String()
+	},
+	{
+		description: 'Notification rule update return object'
 	}
 )
 
