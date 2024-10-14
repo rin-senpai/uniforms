@@ -9,6 +9,7 @@
 		"lint-write": "bun prettier . --write --config ../prettier.config.mjs"
 	},
 	"dependencies": {
+		"@elysiajs/swagger": "^1.1.5",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.34.1",
 		"drizzle-typebox": "^0.1.1",
