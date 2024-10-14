@@ -44,17 +44,8 @@ export default function Nav(props: object) {
 		</NavigationMenu>
 		*/
 		
-		<NavigationMenu orientation='vertical' class='flex flex-col items-stretch *:m-2 space-y-1 w-64 top-0 bottom-0 h-screen sticky justify-start border-r-2'>
-			<Card>
-				<CardHeader class='flex flex-row space-x-3'>
-				<Avatar>
-					<AvatarImage src="https://avatars.githubusercontent.com/u/31785428?v=4" />
-					<AvatarFallback>RN</AvatarFallback>
-				</Avatar>
-					<div><CardTitle>Username</CardTitle><CardDescription>placeholder@raoli.moe</CardDescription></div>		
-				</CardHeader>
-			</Card>
-
+		<NavigationMenu orientation='vertical' class='flex flex-col items-stretch space-y-1 w-64 top-0 bottom-0 h-screen sticky border-r-2 align-center'>
+			<div class='flex flex-col items-stretch space-y-1 align-center'>
 			<Button as='a' href='/' class='text-left' variant={`${activeButton('/')}`}>
 				Home
 			</Button>
@@ -63,7 +54,7 @@ export default function Nav(props: object) {
 				About
 			</Button>
 
-			<NavigationMenu orientation='vertical' class='flex flex-row space-x-2 w-60'>
+			<NavigationMenu orientation='vertical' class='flex flex-row space-x-2 items-stretch w-60'>
 				<NavigationMenuItem>
 			<NavigationMenuTrigger>
 				Event
@@ -105,7 +96,18 @@ export default function Nav(props: object) {
 			</NavigationMenuContent>
 			</NavigationMenuItem>
 			</NavigationMenu>
+			</div>
+			<Card class='absolute inset-x-0 bottom-0'>
+				<CardHeader class='flex flex-row space-x-3 self-start'>
+				<Avatar>
+					<AvatarImage src="https://avatars.githubusercontent.com/u/31785428?v=4" />
+					<AvatarFallback>RN</AvatarFallback>
+				</Avatar>
+					<div><CardTitle>Username</CardTitle><CardDescription>placeholder@raoli.moe</CardDescription></div>		
+				</CardHeader>
+			</Card>
 		</NavigationMenu> 
+		
 		
 	)
 }
