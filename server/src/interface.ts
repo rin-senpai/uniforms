@@ -160,6 +160,129 @@ export const FormDetails = t.Object(
 	}
 )
 
+export const FormTemplate = t.Object(
+	{
+		templateId: t.Integer(),
+		title: t.String(),
+		description: t.String(),
+		role: t.String(),
+		canEditResponses: t.Boolean(),
+		isPublic: t.Boolean(),
+		fields: t.String(), // json
+		createdAt: t.Integer()
+	},
+	{
+		description: 'Form template details object'
+	}
+)
+
+export const FormTemplatePreview = t.Object(
+	{
+		templateId: t.Integer(),
+		title: t.String(),
+		description: t.String(),
+		role: t.String()
+	},
+	{
+		description: 'Basic form template details object'
+	}
+)
+
+export const FormTemplateUpdateReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		templateId: t.Integer()
+	},
+	{
+		description: 'Form template update return object'
+	}
+)
+
+export const FormTemplateFieldAutofill = t.Object(
+	{
+		templateId: t.Integer(),
+		templateFieldId: t.Integer(),
+		value: t.String()
+	},
+	{
+		description: 'Form template autofill object'
+	}
+)
+
+export const FormTemplateFieldAutofillUpdateReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		templateFieldId: t.Integer()
+	},
+	{
+		description: 'Form template autofill update return object'
+	}
+)
+
+export const Form = t.Object(
+	{
+		formId: t.Integer(),
+		eventId: t.Integer(),
+		templateId: t.Optional(t.Integer()),
+		title: t.String(),
+		description: t.String(),
+		role: t.String(),
+		canEditResponses: t.Boolean(),
+		isPublic: t.Boolean(),
+		fields: t.String(), // json
+		createdAt: t.Integer()
+	},
+	{
+		description: 'Form details object'
+	}
+)
+
+export const FormSubmission = t.Object(
+	{
+		userId: t.Integer(),
+		fields: t.String(), // json
+		createdAt: t.Integer()
+	},
+	{
+		description: 'Form submission details object'
+	}
+)
+
+export const FormSubmissionList = t.Object(
+	{
+		userId: t.Integer(),
+		userName: t.String(),
+		createdAt: t.Integer()
+	},
+	{
+		description: 'Form submission details object'
+	}
+)
+
+export const FormUpdateReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		formId: t.Integer()
+	},
+	{
+		description: 'Form update return object'
+	}
+)
+
+export const FormSubmissionReturn = t.Object(
+	{
+		statusCode: t.Integer(),
+		message: t.String(),
+		userId: t.Integer()
+	},
+	{
+		description: 'Form submission return object'
+	}
+)
+
 export const Notification = t.Object(
 	{
 		notificationId: t.Integer(),

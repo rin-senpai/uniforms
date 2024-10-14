@@ -5,7 +5,6 @@ import { Elysia, t } from 'elysia'
 import {
 	Event,
 	EventUpdateReturn,
-	EventPreview,
 	FormDetails,
 	Organisation,
 	OrganisationPreview,
@@ -19,7 +18,16 @@ import {
 	Notification,
 	NotificationUpdateReturn,
 	UserAutofillUpdateReturn,
-	NotificationRuleUpdateReturn
+	NotificationRuleUpdateReturn,
+	Form,
+	FormSubmissionReturn,
+	FormSubmission,
+	FormUpdateReturn,
+	FormSubmissionList,
+	FormTemplatePreview,
+	FormTemplateUpdateReturn,
+	FormTemplateFieldAutofill,
+	FormTemplateFieldAutofillUpdateReturn
 } from './interface'
 
 // import { model } from './db/model'
@@ -41,31 +49,41 @@ const app = new Elysia()
 	.get(
 		'/events',
 		() => {
-			return [
-				{
-					eventId: 1,
-					orgId: 1,
-					title: 'Event Title',
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI'
-				},
-				{
-					eventId: 2,
-					orgId: 2,
-					title: 'Event Title',
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI'
-				}
-			]
+			return {
+				events: [
+					{
+						eventId: 1,
+						orgId: 1,
+						title: 'Event Title',
+						description: 'Event Description',
+						isPublic: true,
+						timeStart: 1630000000,
+						timeEnd: 1630000000,
+						location: 'Event Location',
+						tags: ['tag1', 'tag2'],
+						bannerURI: 'Event Banner URI',
+						createdAt: 1630000000
+					},
+					{
+						eventId: 2,
+						orgId: 2,
+						title: 'Event Title',
+						description: 'Event Description very long yes asdklasjdaksdjkasjd;ljlkjdfkljasdklfjklsdajfklsdjafklja lkfjsdlkf j;klsajf lkajsf kljdslk',
+						isPublic: true,
+						timeStart: 1630000000,
+						timeEnd: 1630000000,
+						location: 'Event Location',
+						tags: ['tag1', 'tag2'],
+						bannerURI: 'Event Banner URI',
+						createdAt: 1630000000
+					}
+				]
+			}
 		},
 		{
-			response: t.Array(EventPreview),
+			response: t.Object({
+				events: t.Array(Event)
+			}),
 			detail: {
 				description: 'Get all events'
 			}
@@ -75,31 +93,41 @@ const app = new Elysia()
 	.get(
 		'/events/spotlight',
 		() => {
-			return [
-				{
-					eventId: 1,
-					orgId: 1,
-					title: 'Event Title',
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI'
-				},
-				{
-					eventId: 2,
-					orgId: 2,
-					title: 'Event Title',
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI'
-				}
-			]
+			return {
+				events: [
+					{
+						eventId: 1,
+						orgId: 1,
+						title: 'Event Title',
+						description: 'Event Description',
+						isPublic: true,
+						timeStart: 1630000000,
+						timeEnd: 1630000000,
+						location: 'Event Location',
+						tags: ['tag1', 'tag2'],
+						bannerURI: 'Event Banner URI',
+						createdAt: 1630000000
+					},
+					{
+						eventId: 2,
+						orgId: 2,
+						title: 'Event Title',
+						description: 'Event Description very long yes asdklasjdaksdjkasjd;ljlkjdfkljasdklfjklsdajfklsdjafklja lkfjsdlkf j;klsajf lkajsf kljdslk',
+						isPublic: true,
+						timeStart: 1630000000,
+						timeEnd: 1630000000,
+						location: 'Event Location',
+						tags: ['tag1', 'tag2'],
+						bannerURI: 'Event Banner URI',
+						createdAt: 1630000000
+					}
+				]
+			}
 		},
 		{
-			response: t.Array(EventPreview),
+			response: t.Object({
+				events: t.Array(Event)
+			}),
 			detail: {
 				description: 'Get all spotlight events'
 			}
@@ -225,26 +253,30 @@ const app = new Elysia()
 	.get(
 		'/events/:eventId/forms',
 		() => {
-			return [
-				{
-					eventId: 1,
-					orgId: 1,
-					title: 'Form Title',
-					description: 'Form Description'
-				},
-				{
-					eventId: 2,
-					orgId: 2,
-					title: 'Form Title',
-					description: 'Form Description'
-				}
-			]
+			return {
+				forms: [
+					{
+						eventId: 1,
+						orgId: 1,
+						title: 'Form Title',
+						description: 'Form Description'
+					},
+					{
+						eventId: 2,
+						orgId: 2,
+						title: 'Form Title',
+						description: 'Form Description'
+					}
+				]
+			}
 		},
 		{
 			params: t.Object({
 				eventId: t.Integer()
 			}),
-			response: t.Array(FormDetails),
+			response: t.Object({
+				forms: t.Array(FormDetails)
+			}),
 			detail: {
 				description: 'Get all forms for an event'
 			}
@@ -254,23 +286,27 @@ const app = new Elysia()
 	.get(
 		'/orgs',
 		() => {
-			return [
-				{
-					orgId: 1,
-					name: 'Organization Name',
-					description: 'Organization Description',
-					avatarURI: 'Organization Banner URI'
-				},
-				{
-					orgId: 2,
-					name: 'Organization Name',
-					description: 'Organization Description',
-					avatarURI: 'Organization Banner URI'
-				}
-			]
+			return {
+				organisations: [
+					{
+						orgId: 1,
+						name: 'Organization Name',
+						description: 'Organization Description',
+						avatarURI: 'Organization Banner URI'
+					},
+					{
+						orgId: 2,
+						name: 'Organization Name',
+						description: 'Organization Description',
+						avatarURI: 'Organization Banner URI'
+					}
+				]
+			}
 		},
 		{
-			response: t.Array(OrganisationPreview),
+			response: t.Object({
+				organisations: t.Array(OrganisationPreview)
+			}),
 			detail: {
 				description: 'Get all organizations'
 			}
@@ -303,34 +339,44 @@ const app = new Elysia()
 	.get(
 		'/orgs/:orgId/events',
 		() => {
-			return [
-				{
-					eventId: 1,
-					orgId: 1,
-					title: 'Event Title',
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI'
-				},
-				{
-					eventId: 2,
-					orgId: 2,
-					title: 'Event Title',
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI'
-				}
-			]
+			return {
+				events: [
+					{
+						eventId: 1,
+						orgId: 1,
+						title: 'Event Title',
+						description: 'Event Description',
+						isPublic: true,
+						timeStart: 1630000000,
+						timeEnd: 1630000000,
+						location: 'Event Location',
+						tags: ['tag1', 'tag2'],
+						bannerURI: 'Event Banner URI',
+						createdAt: 1630000000
+					},
+					{
+						eventId: 2,
+						orgId: 2,
+						title: 'Event Title',
+						description: 'Event Description very long yes asdklasjdaksdjkasjd;ljlkjdfkljasdklfjklsdajfklsdjafklja lkfjsdlkf j;klsajf lkajsf kljdslk',
+						isPublic: true,
+						timeStart: 1630000000,
+						timeEnd: 1630000000,
+						location: 'Event Location',
+						tags: ['tag1', 'tag2'],
+						bannerURI: 'Event Banner URI',
+						createdAt: 1630000000
+					}
+				]
+			}
 		},
 		{
 			params: t.Object({
 				orgId: t.String()
 			}),
-			response: t.Array(EventPreview),
+			response: t.Object({
+				events: t.Array(Event)
+			}),
 			detail: {
 				description: 'Get all events for an organization'
 			}
@@ -652,6 +698,300 @@ const app = new Elysia()
 	)
 
 	.post(
+		'/admin/form',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form created successfully',
+				formId: 1
+			}
+		},
+		{
+			body: t.Object({
+				token: t.String(),
+				eventId: t.Integer(),
+				title: t.String(),
+				description: t.String(),
+				role: t.String(),
+				canEditResponses: t.Boolean(),
+				isPublic: t.Boolean(),
+				fields: t.String()
+			}),
+			response: FormUpdateReturn,
+			detail: {
+				description: 'Create a form'
+			}
+		}
+	)
+
+	.put(
+		'/admin/form/:formId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form updated successfully',
+				formId: 1
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				eventId: t.Integer(),
+				title: t.String(),
+				description: t.String(),
+				role: t.String(),
+				canEditResponses: t.Boolean(),
+				isPublic: t.Boolean(),
+				fields: t.String()
+			}),
+			response: FormUpdateReturn,
+			detail: {
+				description: 'Update a form'
+			}
+		}
+	)
+
+	.delete(
+		'/admin/form/:formId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form deleted successfully'
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Delete a form'
+			}
+		}
+	)
+
+	.get(
+		'/admin/form/:formId/submissions',
+		() => {
+			return {
+				submissions: [
+					{
+						userId: 1,
+						userName: 'User Name',
+						createdAt: 1630000000
+					},
+					{
+						userId: 2,
+						userName: 'User Name',
+						createdAt: 163000000
+					}
+				]
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer()
+			}),
+			response: t.Object({
+				submissions: t.Array(FormSubmissionList)
+			}),
+			detail: {
+				description: 'Get list of submissions for a form'
+			}
+		}
+	)
+
+	.get(
+		'/admin/form/:formId/submissions/:userId',
+		() => {
+			return {
+				userId: 1,
+				fields: '{}',
+				createdAt: 1630000000
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer(),
+				userId: t.Integer()
+			}),
+			response: FormSubmission,
+			detail: {
+				description: 'Get a form submission'
+			}
+		}
+	)
+
+	.delete(
+		'/admin/form/:formId/submissions/:userId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form submission deleted'
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer(),
+				userId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Delete a form submission'
+			}
+		}
+	)
+
+	.get(
+		'/admin/org/:orgId/templates',
+		() => {
+			return {
+				templates: [
+					{
+						templateId: 1,
+						title: 'Template Title',
+						description: 'Template Description',
+						role: 'attendance'
+					},
+					{
+						templateId: 2,
+						title: 'Template Title',
+						description: 'Template Description',
+						role: 'attendance'
+					}
+				]
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer()
+			}),
+			response: t.Object({
+				templates: t.Array(FormTemplatePreview)
+			}),
+			detail: {
+				description: 'Get all form templates for an organization'
+			}
+		}
+	)
+
+	.post(
+		'/admin/org/:orgId/templates',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Template created successfully',
+				templateId: 1
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				title: t.String(),
+				description: t.String(),
+				role: t.String(),
+				canEditResponses: t.Boolean(),
+				isPublic: t.Boolean(),
+				fields: t.String()
+			}),
+			response: FormTemplateUpdateReturn,
+			detail: {
+				description: 'Create a form template'
+			}
+		}
+	)
+
+	.put(
+		'/admin/org/:orgId/templates/:templateId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Template updated successfully',
+				templateId: 1
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer(),
+				templateId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				title: t.String(),
+				description: t.String(),
+				role: t.String(),
+				canEditResponses: t.Boolean(),
+				isPublic: t.Boolean(),
+				fields: t.String()
+			}),
+			response: FormTemplateUpdateReturn,
+			detail: {
+				description: 'Update a form template'
+			}
+		}
+	)
+
+	.delete(
+		'/admin/org/:orgId/templates/:templateId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Template deleted successfully'
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer(),
+				templateId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Delete a form template'
+			}
+		}
+	)
+
+	.post(
+		'/admin/org/:orgId/templates/:templateId/createForm',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form created successfully',
+				formId: 1
+			}
+		},
+		{
+			params: t.Object({
+				orgId: t.Integer(),
+				templateId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				eventId: t.Integer()
+			}),
+			response: FormUpdateReturn,
+			detail: {
+				description: 'Create a form from a template'
+			}
+		}
+	)
+
+	.post(
 		'/user',
 		() => {
 			return {
@@ -745,26 +1085,30 @@ const app = new Elysia()
 	.get(
 		'/user/:userId/adminOrgs',
 		() => {
-			return [
-				{
-					orgId: 1,
-					name: 'Organization Name',
-					description: 'Organization Description',
-					avatarURI: 'Organization Banner URI'
-				},
-				{
-					orgId: 2,
-					name: 'Organization Name',
-					description: 'Organization Description',
-					avatarURI: 'Organization Banner URI'
-				}
-			]
+			return {
+				organisations: [
+					{
+						orgId: 1,
+						name: 'Organization Name',
+						description: 'Organization Description',
+						avatarURI: 'Organization Banner URI'
+					},
+					{
+						orgId: 2,
+						name: 'Organization Name',
+						description: 'Organization Description',
+						avatarURI: 'Organization Banner URI'
+					}
+				]
+			}
 		},
 		{
 			params: t.Object({
 				userId: t.Integer()
 			}),
-			response: t.Array(OrganisationPreview),
+			response: t.Object({
+				organisations: t.Array(OrganisationPreview)
+			}),
 			detail: {
 				description: 'Get all organizations a user is an admin of'
 			}
@@ -774,32 +1118,36 @@ const app = new Elysia()
 	.get(
 		'/user/:userId/notifications',
 		() => {
-			return [
-				{
-					notificationId: 1,
-					userId: 1,
-					read: false,
-					type: 'newEvent',
-					eventId: 1,
-					message: 'New event!!!!!!!!!!',
-					createdAt: 1630000000
-				},
-				{
-					notificationId: 2,
-					userId: 2,
-					read: false,
-					type: 'newForm',
-					formId: 1,
-					message: 'New form!!!!!!!!!!',
-					createdAt: 1630000000
-				}
-			]
+			return {
+				notifications: [
+					{
+						notificationId: 1,
+						userId: 1,
+						read: false,
+						type: 'newEvent',
+						eventId: 1,
+						message: 'New event!!!!!!!!!!',
+						createdAt: 1630000000
+					},
+					{
+						notificationId: 2,
+						userId: 2,
+						read: false,
+						type: 'newForm',
+						formId: 1,
+						message: 'New form!!!!!!!!!!',
+						createdAt: 1630000000
+					}
+				]
+			}
 		},
 		{
 			params: t.Object({
 				userId: t.Integer()
 			}),
-			response: t.Array(Notification),
+			response: t.Object({
+				notifications: t.Array(Notification)
+			}),
 			detail: {
 				description: 'Get all notifications for a user'
 			}
@@ -1040,6 +1388,211 @@ const app = new Elysia()
 			response: DeleteReturn,
 			detail: {
 				description: 'Delete notification rule for a user'
+			}
+		}
+	)
+
+	.get(
+		'/form/:formId',
+		() => {
+			return {
+				formId: 1,
+				eventId: 1,
+				title: 'Form Title',
+				description: 'Form Description',
+				role: 'role',
+				canEditResponses: true,
+				isPublic: true,
+				fields: '{}',
+				createdAt: 1630000000
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer()
+			}),
+			response: Form,
+			detail: {
+				description: 'Get form details by id'
+			}
+		}
+	)
+
+	.post(
+		'/form/:formId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form submitted successfully',
+				userId: 1
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				userId: t.Integer(),
+				fields: t.String()
+			}),
+			response: FormSubmissionReturn,
+			detail: {
+				description: 'Create a form submission'
+			}
+		}
+	)
+
+	.put(
+		'/form/:formId/:userId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Form updated successfully',
+				userId: 1
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer(),
+				userId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				fields: t.String()
+			}),
+			response: FormSubmissionReturn,
+			detail: {
+				description: 'Update a form submission'
+			}
+		}
+	)
+
+	.get(
+		'/form/:formId/:userId',
+		() => {
+			return {
+				userId: 1,
+				fields: '{}',
+				createdAt: 1630000000
+			}
+		},
+		{
+			params: t.Object({
+				formId: t.Integer(),
+				userId: t.Integer()
+			}),
+			response: FormSubmission,
+			detail: {
+				description: 'Get form submission details of a user'
+			}
+		}
+	)
+
+	.get(
+		'/user/:userId/templateAutofill/:templateId',
+		() => {
+			return {
+				fields: [
+					{
+						templateId: 1,
+						templateFieldId: 1,
+						value: 'aaaa'
+					},
+					{
+						templateId: 1,
+						templateFieldId: 2,
+						value: 'abc'
+					}
+				]
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				templateId: t.Integer()
+			}),
+			response: t.Object({
+				fields: t.Array(FormTemplateFieldAutofill)
+			}),
+			detail: {
+				description: 'Get autofill data for a user'
+			}
+		}
+	)
+
+	.post(
+		'/user/:userId/templateAutofill/:templateId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Template autofill field created',
+				templateFieldId: 1
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				templateId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				templateFieldId: t.Integer(),
+				value: t.String()
+			}),
+			response: FormTemplateFieldAutofillUpdateReturn,
+			detail: {
+				description: 'Create autofill field for a user'
+			}
+		}
+	)
+
+	.put(
+		'/user/:userId/templateAutofill/:templateId/:templateFieldId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Template autofill field updated',
+				templateFieldId: 1
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				templateId: t.Integer(),
+				templateFieldId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String(),
+				value: t.String()
+			}),
+			response: FormTemplateFieldAutofillUpdateReturn,
+			detail: {
+				description: 'Update template autofill field for a user'
+			}
+		}
+	)
+
+	.delete(
+		'/user/:userId/templateAutofill/:templateId/:templateFieldId',
+		() => {
+			return {
+				statusCode: 200,
+				message: 'Template autofill field deleted'
+			}
+		},
+		{
+			params: t.Object({
+				userId: t.Integer(),
+				templateId: t.Integer(),
+				templateFieldId: t.Integer()
+			}),
+			body: t.Object({
+				token: t.String()
+			}),
+			response: DeleteReturn,
+			detail: {
+				description: 'Delete template autofill field for a user'
 			}
 		}
 	)
