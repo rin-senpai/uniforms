@@ -56,7 +56,7 @@ export default function Nav(props: object) {
 		
 		<NavigationMenu orientation='vertical' class='bg-red-900 flex flex-col items-stretch space-y-2 w-64 top-0 bottom-0 h-screen border-r-2 align-center relative z-50'>
 			<NavigationMenuItem>
-				<NavigationMenuTrigger as="a" href="/" class={buttonVariants({variant: activeButton('/')})}>
+				<NavigationMenuTrigger as="a" href="/" class={`${buttonVariants({variant: activeButton('/')})}`}>
 				Home
 				</NavigationMenuTrigger>
 			</NavigationMenuItem>
@@ -108,15 +108,19 @@ export default function Nav(props: object) {
 			</NavigationMenuContent>
 			</NavigationMenuItem>
 
-			<Card class='absolute inset-x-0 bottom-0 border-0'>
-				<CardHeader class='flex flex-row space-x-3 self-start'>
-				<Avatar>
-					<AvatarImage src="https://avatars.githubusercontent.com/u/31785428?v=4" />
-					<AvatarFallback>RN</AvatarFallback>
-				</Avatar>
-					<div><CardTitle>Username</CardTitle><CardDescription>placeholder@raoli.moe</CardDescription></div>		
-				</CardHeader>
-			</Card>
+			<NavigationMenuItem>
+				<NavigationMenuTrigger as='a' href='/settings' class='absolute inset-x-0 bottom-6 border-0'>
+					<Card class='justify-start'>
+						<CardHeader class='flex flex-row space-x-3 self-start'>
+						<Avatar>
+							<AvatarImage src="https://avatars.githubusercontent.com/u/31785428?v=4" />
+							<AvatarFallback>RN</AvatarFallback>
+						</Avatar>
+							<div><CardTitle>Username</CardTitle><CardDescription>placeholder@raoli.moe</CardDescription></div>		
+						</CardHeader>
+					</Card>
+				</NavigationMenuTrigger>
+			</NavigationMenuItem>
 		</NavigationMenu> 
 		
 		
