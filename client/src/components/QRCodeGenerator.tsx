@@ -1,28 +1,33 @@
 // QRCodeGenerator.tsx
-import { createSignal } from 'solid-js'
-import { Button } from '~/components/ui/button'
-import { generateQRCode } from '~/lib/utils'
-import { Label } from '~/components/ui/label'
-import { Checkbox } from '~/components/ui/checkbox'
+import { createSignal } from 'solid-js';
+import { Button } from '~/components/ui/button';
+import { generateQRCode } from '~/lib/utils';
+import {
+	AlertDialog,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from '~/components/ui/alert-dialog';
 
 const QRCodeGenerator = () => {
-	const [qrCodeUrl, setQrCodeUrl] = createSignal('')
-	const [isModalOpen, setIsModalOpen] = createSignal(false)
-	const [includeLink, setIncludedLink] = createSignal(false)
-	const predefinedValue = 'https://example.com'
+	const [qrCodeUrl, setQrCodeUrl] = createSignal('');
+	const [isModalOpen, setIsModalOpen] = createSignal(false);
+	const [includeLink, setIncludedLink] = createSignal(false);
+	const predefinedValue = 'https://example.com';
 
 	const handleGenerateQRCode = async () => {
 		try {
-			const url = await generateQRCode(predefinedValue)
-			setQrCodeUrl(url)
-			setIsModalOpen(true)
+			const url = await generateQRCode(predefinedValue);
+			setQrCodeUrl(url);
+			setIsModalOpen(true);
 		} catch (error) {
-			console.error('Error generating QR code:', error)
+			console.error('Error generating QR code:', error);
 		}
-	}
+	};
 
 	const handleOpenQRCodeInNewTab = () => {
-		const newTab = window.open('', '_blank')
+		const newTab = window.open('', '_blank');
 		if (newTab) {
 			newTab.document.write(`
         <html>
@@ -32,18 +37,23 @@ const QRCodeGenerator = () => {
               body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
               img { margin-bottom: 20px; }
               a { display: block; color: blue; font-size: 18px; text-decoration: underline; margin-top: 10px; }
+			  button { margin-top: 20px; }
             </style>
           </head>
           <body>
             <h1>Generated QR Code</h1>
             <img src="${qrCodeUrl()}" alt="QR Code" />
-            ${includeLink() ? `<a href="${predefinedValue}" target="_blank">${predefinedValue}</a>` : ''}
+            <a href="${predefinedValue}" target="_blank">${predefinedValue}</a>
+			<button onclick="navigator.clipboard.writeText('${predefinedValue}');
+			alert('Link copied to clipboard!');">
+			Copy Link
+			</button>
           </body>
         </html>
-      `)
-			newTab.document.close()
+      `);
+			newTab.document.close();
 		}
-	}
+	};
 
 	return (
 		<div class='text-center'>
@@ -51,32 +61,33 @@ const QRCodeGenerator = () => {
 				View QR Code
 			</Button>
 
-			{isModalOpen() && qrCodeUrl() && (
-				<div class='fixed inset-0 flex items-center justify-center z-50 bg-opacity-75'>
-					<div class='bg-white p-6 rounded-lg shadow-lg relative'>
-						<Button class='absolute top-2 right-2 focus:outline-none' style={{ outline: 'none' }} onClick={() => setIsModalOpen(false)}>
-							&#10005;
-						</Button>
+			<AlertDialog open={isModalOpen()} onOpenChange={setIsModalOpen}>
+				<AlertDialogTrigger>
+				</AlertDialogTrigger>
 
-						<h3 class='font-bold'>Generated QR Code:</h3>
+				<AlertDialogContent>
+					<AlertDialogTitle class='justify-between text-center'>Generated QR Code:</AlertDialogTitle>
+					<div class='flex flex-col items-center'>
 						<img src={qrCodeUrl()} alt='QR Code' class='mx-auto mt-2' />
+						<Button class ='flex text-center mt-4' variant='default' onClick={handleOpenQRCodeInNewTab} >
+							Open QR Code in New Tab
+						</Button>
+					</div>
+					<AlertDialogDescription>
 						<div class='mt-4 flex justify-between'>
-							<Button variant='default' onClick={handleOpenQRCodeInNewTab}>
-								Open QR Code in New Tab
-							</Button>
-
+							{/* Checkbox for including link - currently commented out 
 							<div class='mt-4 items-top flex justify-center space-x-2'>
 								<Checkbox id='include-link' checked={includeLink()} onChange={setIncludedLink} />
 								<div class='grid gap-1.5 leading-none'>
 									<Label for='include-link'>Include form's link</Label>
 								</div>
-							</div>
+							</div> */}
 						</div>
-					</div>
-				</div>
-			)}
+					</AlertDialogDescription>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
-	)
-}
+	);
+};
 
-export default QRCodeGenerator
+export default QRCodeGenerator;
