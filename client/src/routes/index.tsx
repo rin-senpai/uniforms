@@ -78,6 +78,7 @@ export default function Home() {
 					</CardFooter>
 				</Card>
 
+			
 				{/* Checkbox Test */}
 				<div class='flex space-x-2'>
 					<Checkbox id='terms1' />
