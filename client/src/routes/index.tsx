@@ -7,36 +7,37 @@ import { createSignal, For } from 'solid-js'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
-
-const [value, setValue] = createSignal('')
-
-// Notifications data
-const notifications = [
-	{
-		title: 'Your call has been confirmed.',
-		description: '1 hour ago'
-	},
-	{
-		title: 'You have a new message!',
-		description: '1 hour ago'
-	},
-	{
-		title: 'Your subscription is expiring soon!',
-		description: '2 hours ago'
-	}
-]
+import QRCodeButton from '~/components/QRCodeButton'
 
 export default function Home() {
+	const [value, setValue] = createSignal('')
+
+	// Notifications data
+	const notifications = [
+		{
+			title: 'Your call has been confirmed.',
+			description: '1 hour ago'
+		},
+		{
+			title: 'You have a new message!',
+			description: '1 hour ago'
+		},
+		{
+			title: 'Your subscription is expiring soon!',
+			description: '2 hours ago'
+		}
+	]
+
 	return (
 		<main class='text-center mx-auto text-gray-700 p-4'>
-			<h1 class='max-6-xs text-6xl text-sky-700 font-thin uppercase my-16'>Hello world!</h1>
+			<h1 class='max-w-xs text-6xl text-sky-700 font-thin uppercase my-16'>Hello world!</h1>
 			<Counter />
 			<p class='my-4'>
 				<span>Home</span>
 				{' - '}
 				<A href='/about' class='text-sky-600 hover:underline'>
 					About Page
-				</A>{' '}
+				</A>
 			</p>
 
 			<div class='flex items-start space-x-4'>
@@ -104,6 +105,11 @@ export default function Home() {
 						</SelectTrigger>
 						<SelectContent />
 					</Select>
+				</div>
+
+				{/* QR Code test */}
+				<div>
+					<QRCodeButton link='https://rin.vin' />
 				</div>
 			</div>
 		</main>
