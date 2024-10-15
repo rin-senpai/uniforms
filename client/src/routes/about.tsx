@@ -26,7 +26,7 @@ export default function About() {
 				<span>About Page</span>
 			</p>
 			
-			<EventsView events={eventsListDefault} numberOfEvents={3} />
+			<EventsView events={eventsListDefault}/>
 			<SocietyView/>
 		</main>
 	)
