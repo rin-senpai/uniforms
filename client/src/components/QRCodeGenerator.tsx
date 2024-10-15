@@ -1,33 +1,27 @@
 // QRCodeGenerator.tsx
-import { createSignal } from 'solid-js';
-import { Button } from '~/components/ui/button';
-import { generateQRCode } from '~/lib/utils';
-import {
-	AlertDialog,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogTitle,
-	AlertDialogTrigger
-} from '~/components/ui/alert-dialog';
+import { createSignal } from 'solid-js'
+import { Button } from '~/components/ui/button'
+import { generateQRCode } from '~/lib/utils'
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog'
 
 const QRCodeGenerator = () => {
-	const [qrCodeUrl, setQrCodeUrl] = createSignal('');
-	const [isModalOpen, setIsModalOpen] = createSignal(false);
-	const [includeLink, setIncludedLink] = createSignal(false);
-	const predefinedValue = 'https://example.com';
+	const [qrCodeUrl, setQrCodeUrl] = createSignal('')
+	const [isModalOpen, setIsModalOpen] = createSignal(false)
+	const [includeLink, setIncludedLink] = createSignal(false)
+	const predefinedValue = 'https://example.com'
 
 	const handleGenerateQRCode = async () => {
 		try {
-			const url = await generateQRCode(predefinedValue);
-			setQrCodeUrl(url);
-			setIsModalOpen(true);
+			const url = await generateQRCode(predefinedValue)
+			setQrCodeUrl(url)
+			setIsModalOpen(true)
 		} catch (error) {
-			console.error('Error generating QR code:', error);
+			console.error('Error generating QR code:', error)
 		}
-	};
+	}
 
 	const handleOpenQRCodeInNewTab = () => {
-		const newTab = window.open('', '_blank');
+		const newTab = window.open('', '_blank')
 		if (newTab) {
 			newTab.document.write(`
         <html>
@@ -44,16 +38,12 @@ const QRCodeGenerator = () => {
             <h1>Generated QR Code</h1>
             <img src="${qrCodeUrl()}" alt="QR Code" />
             <a href="${predefinedValue}" target="_blank">${predefinedValue}</a>
-			<button onclick="navigator.clipboard.writeText('${predefinedValue}');
-			alert('Link copied to clipboard!');">
-			Copy Link
-			</button>
           </body>
         </html>
-      `);
-			newTab.document.close();
+      `)
+			newTab.document.close()
 		}
-	};
+	}
 
 	return (
 		<div class='text-center'>
@@ -62,16 +52,34 @@ const QRCodeGenerator = () => {
 			</Button>
 
 			<AlertDialog open={isModalOpen()} onOpenChange={setIsModalOpen}>
-				<AlertDialogTrigger>
-				</AlertDialogTrigger>
+				<AlertDialogTrigger></AlertDialogTrigger>
 
 				<AlertDialogContent>
 					<AlertDialogTitle class='justify-between text-center'>Generated QR Code:</AlertDialogTitle>
 					<div class='flex flex-col items-center'>
 						<img src={qrCodeUrl()} alt='QR Code' class='mx-auto mt-2' />
-						<Button class ='flex text-center mt-4' variant='default' onClick={handleOpenQRCodeInNewTab} >
-							Open QR Code in New Tab
-						</Button>
+						<div class='flex flex-row gap-6'>
+							<Button class='flex text-center mt-4' variant='default' onClick={handleOpenQRCodeInNewTab}>
+								Open QR Code in New Tab
+							</Button>
+
+							<Button
+								class='mt-4'
+								variant='default'
+								onClick={() => {
+									navigator.clipboard
+										.writeText(predefinedValue)
+										.then(() => {
+											alert('Link copied to clipboard!')
+										})
+										.catch((error) => {
+											console.error('Error copying link:', error)
+										})
+								}}
+							>
+								Copy Link
+							</Button>
+						</div>
 					</div>
 					<AlertDialogDescription>
 						<div class='mt-4 flex justify-between'>
@@ -87,7 +95,7 @@ const QRCodeGenerator = () => {
 				</AlertDialogContent>
 			</AlertDialog>
 		</div>
-	);
-};
+	)
+}
 
-export default QRCodeGenerator;
+export default QRCodeGenerator
