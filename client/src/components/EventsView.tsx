@@ -1,12 +1,12 @@
-import { boulderingURI, skullimgURI } from "./URItest"
-import { Card, CardContent, CardDescription, CardTitle, CardHeader } from "./ui/card"
-import { For, ValidComponent, splitProps, Show } from "solid-js";
+import { boulderingURI, skullimgURI } from './URItest'
+import { Card, CardContent, CardDescription, CardTitle, CardHeader } from './ui/card'
+import { For, ValidComponent, splitProps, Show } from 'solid-js'
 import { Event } from '../../../server/src/interface'
-import { cn } from "~/lib/utils";
+import { cn } from '~/lib/utils'
 import Clock from 'lucide-solid/icons/clock'
-import Map from "lucide-solid/icons/map";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "~/components/ui/hover-card"
-import { Button } from "./ui/button";
+import Map from 'lucide-solid/icons/map'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '~/components/ui/hover-card'
+import { Button } from './ui/button'
 
 // type EventsViewProps<T extends ValidComponent = 'div'> = {
 // 	displaySociety?: boolean
@@ -26,11 +26,11 @@ export default function EventsView(props: any) {
 
 	const numberOfEvents = () => ('numberOfEvents' in props ? props.numberOfEvents : -1)
 
-	let eventsList;
+	let eventsList
 	if (numberOfEvents() != -1) {
-		eventsList = () => (('events' in props) ? props.events.slice(0, numberOfEvents()) : [])
+		eventsList = () => ('events' in props ? props.events.slice(0, numberOfEvents()) : [])
 	} else {
-		eventsList = () => (('events' in props) ? props.events : [])
+		eventsList = () => ('events' in props ? props.events : [])
 	}
 
 	const description = () => ('displayDescription' in props ? props.displayDescription : true)
@@ -50,50 +50,52 @@ export default function EventsView(props: any) {
 
 	const [local, others] = splitProps(props, ['class'])
 	return (
-		<div class={cn("grid grid-cols-5 gap-4 m-4", local.class)} {...others}>
-			<For each={eventsList()}>{(item) => (
-				<Card class="">
-					
-					<CardHeader class="relative inset-x-0 top-0 p-0">
-						<div class='*:rounded-lg relative'>
-							<img class="object-contain" src={item.bannerURI}/>
-							<Show when={!compact()}>
-								<div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30"></div>
-								<CardTitle class="absolute inset-x-0 bottom-5 text-white text-lg">{item.title}</CardTitle>
-							</Show>
-						</div>
-					</CardHeader>
+		<div class={cn('grid grid-cols-5 gap-4 m-4', local.class)} {...others}>
+			<For each={eventsList()}>
+				{(item) => (
+					<Card class=''>
+						<CardHeader class='relative inset-x-0 top-0 p-0'>
+							<div class='*:rounded-lg relative'>
+								<img class='object-contain' src={item.bannerURI} />
+								<Show when={!compact()}>
+									<div class='absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>
+									<CardTitle class='absolute inset-x-0 bottom-5 text-white text-lg'>{item.title}</CardTitle>
+								</Show>
+							</div>
+						</CardHeader>
 
-					<Show when={!compact()}>
-					<CardDescription class='justify-self-center mx-5 mt-5 flex flex-row flex-wrap gap-4'>
-						<div class='flex flex-row gap-2 items-center'>
-							<Clock/>
-							<p class="font-bold">{dateFormat(item.timeStart)} {dateFormatHour(item.timeStart, item.timeEnd)}</p>
-						</div>
-						
+						<Show when={!compact()}>
+							<CardDescription class='justify-self-center mx-5 mt-5 flex flex-row flex-wrap gap-4'>
+								<div class='flex flex-row gap-2 items-center'>
+									<Clock />
+									<p class='font-bold'>
+										{dateFormat(item.timeStart)} {dateFormatHour(item.timeStart, item.timeEnd)}
+									</p>
+								</div>
 
-						<div class='flex flex-row gap-2 items-center'>
-							<Map/>
-							<p class="font-bold">{item.location}</p>
-						</div>
-					</CardDescription>
+								<div class='flex flex-row gap-2 items-center'>
+									<Map />
+									<p class='font-bold'>{item.location}</p>
+								</div>
+							</CardDescription>
 
-					
-					<CardContent class="p-4 px-8">
-					<HoverCard>
-						<HoverCardTrigger as={Button<"button">} variant="link">See more...</HoverCardTrigger>
-						<HoverCardContent>{(description() ? item.description : '')}</HoverCardContent>
-					</HoverCard>
-					</CardContent>
-					</Show>
-				</Card>
-			)}
+							<CardContent class='p-4 px-8'>
+								<HoverCard>
+									<HoverCardTrigger as={Button<'button'>} variant='link'>
+										See more...
+									</HoverCardTrigger>
+									<HoverCardContent>{description() ? item.description : ''}</HoverCardContent>
+								</HoverCard>
+							</CardContent>
+						</Show>
+					</Card>
+				)}
 			</For>
 		</div>
 	)
 }
 
-// 	
+//
 
 // const createEventQuery = (url: string) => {
 // 	const events = createQuery(() => ({
@@ -112,7 +114,7 @@ export default function EventsView(props: any) {
 // const retrieveEvents = (props: EventsViewProps) => {
 // 	const displaySociety = () => ('displaySociety' in props ? props.displaySociety : false)
 // 	const displaySpotlight = () => ('displaySpotlight' in props ? props.displaySpotlight : false)
-	
+
 // 	let url: string;
 // 	if (displaySpotlight()) {
 // 		url = `/event/spotlight`

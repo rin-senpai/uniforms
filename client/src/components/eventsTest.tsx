@@ -1,5 +1,5 @@
 import { Event } from '../../../server/src/interface'
-import { boulderingURI, skullimgURI } from "./URItest"
+import { boulderingURI, skullimgURI } from './URItest'
 
 export const eventsListDefault: Event[] = [
 	{
@@ -31,7 +31,8 @@ export const eventsListDefault: Event[] = [
 		eventId: 2,
 		orgId: 0,
 		title: 'AUNSW x BESS x BoulderSoc Bouldering Event! 🧗‍♂️😱',
-		description: 'Join AUNSW, BESS, and BoulderSoc for an exciting evening of bouldering at Nomad in Annandale! Whether you\'re a climbing pro or a complete beginner, this is the perfect chance to have fun and meet new people. 🎉🤗',
+		description:
+			"Join AUNSW, BESS, and BoulderSoc for an exciting evening of bouldering at Nomad in Annandale! Whether you're a climbing pro or a complete beginner, this is the perfect chance to have fun and meet new people. 🎉🤗",
 		isPublic: true,
 		timeStart: 1728885600,
 		timeEnd: 1728892800,

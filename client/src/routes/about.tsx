@@ -25,9 +25,9 @@ export default function About() {
 				{' - '}
 				<span>About Page</span>
 			</p>
-			
-			<EventsView events={eventsListDefault}/>
-			<SocietyView/>
+
+			<EventsView events={eventsListDefault} />
+			<SocietyView />
 		</main>
 	)
 }
