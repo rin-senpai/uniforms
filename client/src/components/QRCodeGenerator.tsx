@@ -58,14 +58,10 @@ const QRCodeGenerator = () => {
 					<AlertDialogTitle class='justify-between text-center'>Generated QR Code:</AlertDialogTitle>
 					<div class='flex flex-col items-center'>
 						<img src={qrCodeUrl()} alt='QR Code' class='mx-auto mt-2' />
-						<div class='flex flex-row gap-6'>
-							<Button class='flex text-center mt-4' variant='default' onClick={handleOpenQRCodeInNewTab}>
-								Open QR Code in New Tab
-							</Button>
-
+						<div class='flex flex-row  gap-6 mt-4'>
 							<Button
-								class='mt-4'
-								variant='default'
+								class='flex-1'
+								variant='secondary'
 								onClick={() => {
 									navigator.clipboard
 										.writeText(predefinedValue)
@@ -78,6 +74,10 @@ const QRCodeGenerator = () => {
 								}}
 							>
 								Copy Link
+							</Button>
+
+							<Button class='flex-2' variant='default' onClick={handleOpenQRCodeInNewTab}>
+								Open in New Tab
 							</Button>
 						</div>
 					</div>
