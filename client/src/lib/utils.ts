@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export async function generateQRCode(valueHolder: string): Promise<string> {
 	try {
-		const url = await QRCode.toDataURL(valueHolder)
+		const url = await QRCode.toDataURL(valueHolder, { width: 512 })
 		return url
 	} catch (error) {
 		console.error('Error generating QR Code:', error)

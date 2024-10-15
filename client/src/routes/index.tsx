@@ -7,7 +7,7 @@ import { createSignal, For } from 'solid-js'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
-import QRCodeGenerator from '~/components/QRCodeGenerator'
+import QRCodeButton from '~/components/QRCodeButton'
 
 export default function Home() {
 	const [value, setValue] = createSignal('')
@@ -109,7 +109,7 @@ export default function Home() {
 
 				{/* QR Code test */}
 				<div>
-					<QRCodeGenerator />
+					<QRCodeButton link='https://rin.vin' />
 				</div>
 			</div>
 		</main>
