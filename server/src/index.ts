@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
+import { eq } from 'drizzle-orm'
 
 import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
@@ -26,8 +27,9 @@ import {
 	FormTemplate
 } from './interface'
 
-// import { model } from './db/model'
-// import { Users } from './db/schema'
+import { model } from './db/model'
+import { users, notifications } from './db/schema'
+const { user, notification } = model.select
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -1219,38 +1221,18 @@ const app = new Elysia()
 
 	.get(
 		'/users/:userId/notifications',
-		() => {
-			return {
-				statusCode: 200,
-				notifications: [
-					{
-						notificationId: 1,
-						userId: 1,
-						read: false,
-						type: 'newEvent',
-						eventId: 1,
-						message: 'New event!!!!!!!!!!',
-						createdAt: 1630000000
-					},
-					{
-						notificationId: 2,
-						userId: 2,
-						read: false,
-						type: 'newForm',
-						formId: 1,
-						message: 'New form!!!!!!!!!!',
-						createdAt: 1630000000
-					}
-				]
-			}
+		async ({ params }) => {
+			const userId = params.userId
+			const userNotifications = await db.select().from(notifications).where(eq(notifications.userId, userId))
+
+			return { notifications: userNotifications }
 		},
 		{
 			params: t.Object({
 				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				notifications: t.Array(Notification)
+				notifications: t.Array(t.Object(notification))
 			}),
 			detail: {
 				description: 'Get all notifications for a user'
@@ -1260,25 +1242,34 @@ const app = new Elysia()
 
 	.post(
 		'/users/:userId/notifications',
-		() => {
-			return {
-				statusCode: 200,
-				notificationId: 1
-			}
+		async ({ params, body }) => {
+			const userId = params.userId
+			const { token, type, eventId, formId } = body
+			const newNotification = await db
+				.insert(notifications)
+				.values({
+					userId: userId,
+					eventId: eventId,
+					formId: formId,
+					type: type,
+					createdAt: new Date() // Add created timestamp if needed
+				})
+				.returning()
+			return { notificationId: newNotification[0].id }
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: user.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number(),
 				type: t.String(),
 				eventId: t.Optional(t.Number()),
-				formId: t.Optional(t.Number()),
-				message: t.String()
+				formId: t.Optional(t.Number())
 			}),
-			response: NotificationCreateReturn,
+			response: t.Object({
+				notificationId: t.Number()
+			}),
 			detail: {
 				description: 'Create a notification for a user'
 			}
@@ -1294,7 +1285,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: t.Number(),
+				userId: user.id,
 				notificationId: t.Number()
 			}),
 			body: t.Object({

@@ -1,5 +1,5 @@
 import { t } from 'elysia'
-import { Type, type Static } from '@sinclair/typebox'
+import { type Static } from '@sinclair/typebox'
 
 export const User = t.Object(
 	{
@@ -226,7 +226,6 @@ export const Notification = t.Object(
 
 export const NotificationCreateReturn = t.Object(
 	{
-		statusCode: t.Number(),
 		notificationId: t.Number()
 	},
 	{
