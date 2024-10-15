@@ -1,5 +1,6 @@
 import { A } from '@solidjs/router'
 import Counter from '~/components/Counter'
+import Settings from '~/components/Settings'
 
 export default function About() {
 	return (
@@ -20,6 +21,7 @@ export default function About() {
 				{' - '}
 				<span>About Page</span>
 			</p>
+			<Settings/>
 		</main>
 	)
 }
