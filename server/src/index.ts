@@ -29,8 +29,7 @@ import {
 } from './interface'
 
 import { model } from './db/model'
-import { users, notifications } from './db/schema'
-const { user, notification } = model.insert
+import { users, forms, notifications } from './db/schema'
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -260,32 +259,21 @@ const app = new Elysia()
 
 	.get(
 		'/events/:eventId/forms',
-		() => {
+		async ({ params }) => {
+			const res = await db.select().from(forms).where(eq(forms.eventId, params.eventId))
+
 			return {
 				statusCode: 200,
-				forms: [
-					{
-						eventId: 1,
-						orgId: 1,
-						title: 'Form Title',
-						description: 'Form Description'
-					},
-					{
-						eventId: 2,
-						orgId: 2,
-						title: 'Form Title',
-						description: 'Form Description'
-					}
-				]
+				forms: res
 			}
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.form.eventId
 			}),
 			response: t.Object({
 				statusCode: t.Number(),
-				forms: t.Array(FormDetails)
+				forms: t.Array(t.Object(model.select.form))
 			}),
 			detail: {
 				description: 'Get all forms for an event'
@@ -736,7 +724,7 @@ const app = new Elysia()
 
 	.post(
 		'/admin/forms',
-		() => {
+		async ({ body }) => {
 			return {
 				statusCode: 200,
 				formId: 1
@@ -745,15 +733,12 @@ const app = new Elysia()
 		{
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Number(),
-				title: t.String(),
-				description: t.String(),
-				role: t.String(),
-				canEditResponses: t.Boolean(),
-				isPublic: t.Boolean(),
-				fields: t.String()
+				...model.insert.form
 			}),
-			response: FormCreateReturn,
+			response: {
+				statusCode: t.Number(),
+				formId: t.Number()
+			},
 			detail: {
 				description: 'Create a form'
 			}
@@ -1237,7 +1222,7 @@ const app = new Elysia()
 				userId: t.Number()
 			}),
 			response: t.Object({
-				notifications: t.Array(t.Object(notification))
+				notifications: t.Array(t.Object(model.select.notification))
 			}),
 			detail: {
 				description: 'Get all notifications for a user'
@@ -1265,16 +1250,16 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: notification.userId
+				userId: model.select.user.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				type: notification.type,
-				eventId: notification.eventId,
-				formId: notification.formId
+				type: model.select.notification.type,
+				eventId: model.select.notification.eventId,
+				formId: model.select.notification.formId
 			}),
 			response: t.Object({
-				notificationId: notification.id
+				notificationId: model.select.notification.id
 			}),
 			detail: {
 				description: 'Create a notification for a user'
@@ -1291,7 +1276,7 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: user.id,
+				userId: model.select.user.id,
 				notificationId: t.Number()
 			}),
 			body: t.Object({
