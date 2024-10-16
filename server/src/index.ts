@@ -1,23 +1,16 @@
 import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
 import { migrate } from 'drizzle-orm/bun-sqlite/migrator'
-import { eq, and } from 'drizzle-orm'
+import { eq, lte, gt, and, or } from 'drizzle-orm'
 
-import { Elysia, t } from 'elysia'
+import { Elysia, t, error } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
 import {
-	Event,
+	EmptyReturn,
 	EventCreateReturn,
-	FormDetails,
-	Organisation,
-	OrganisationPreview,
 	OrganisationCreateReturn,
-	UserRole,
 	UserCreateReturn,
-	User,
 	StatusCodeReturn,
-	Notification,
-	NotificationCreateReturn,
 	Form,
 	FormSubmission,
 	FormCreateReturn,
@@ -28,8 +21,10 @@ import {
 	FormTemplate
 } from './interface'
 
+import { errorMap } from './errorCodes'
+
 import { model } from './db/model'
-import { users, forms, notifications, events } from './db/schema'
+import { users, forms, notifications, events, spotlights, eventFollows, organisations, organisationRoles, userAutofills, notificationRules } from './db/schema'
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -56,43 +51,15 @@ const app = new Elysia()
 
 	.get(
 		'/events',
-		() => {
-			return {
-				statusCode: 200,
-				events: [
-					{
-						eventId: 1,
-						orgId: 1,
-						title: 'Event Title',
-						description: 'Event Description',
-						isPublic: true,
-						timeStart: 1630000000,
-						timeEnd: 1630000000,
-						location: 'Event Location',
-						tags: ['tag1', 'tag2'],
-						bannerURI: 'Event Banner URI',
-						createdAt: 1630000000
-					},
-					{
-						eventId: 2,
-						orgId: 2,
-						title: 'Event Title',
-						description: 'Event Description very long yes asdklasjdaksdjkasjd;ljlkjdfkljasdklfjklsdajfklsdjafklja lkfjsdlkf j;klsajf lkajsf kljdslk',
-						isPublic: true,
-						timeStart: 1630000000,
-						timeEnd: 1630000000,
-						location: 'Event Location',
-						tags: ['tag1', 'tag2'],
-						bannerURI: 'Event Banner URI',
-						createdAt: 1630000000
-					}
-				]
-			}
+		async () => {
+			const currentTime = new Date()
+
+			const upcomingEvents = await db.select().from(events).where(gt(events.timeEnd, currentTime))
+			return { events: upcomingEvents }
 		},
 		{
 			response: t.Object({
-				statusCode: t.Number(),
-				events: t.Array(Event)
+				events: t.Array(t.Object(model.select.event))
 			}),
 			detail: {
 				description: 'Get all events'
@@ -102,43 +69,19 @@ const app = new Elysia()
 
 	.get(
 		'/events/spotlight',
-		() => {
-			return {
-				statusCode: 200,
-				events: [
-					{
-						eventId: 1,
-						orgId: 1,
-						title: 'Event Title',
-						description: 'Event Description',
-						isPublic: true,
-						timeStart: 1630000000,
-						timeEnd: 1630000000,
-						location: 'Event Location',
-						tags: ['tag1', 'tag2'],
-						bannerURI: 'Event Banner URI',
-						createdAt: 1630000000
-					},
-					{
-						eventId: 2,
-						orgId: 2,
-						title: 'Event Title',
-						description: 'Event Description very long yes asdklasjdaksdjkasjd;ljlkjdfkljasdklfjklsdajfklsdjafklja lkfjsdlkf j;klsajf lkajsf kljdslk',
-						isPublic: true,
-						timeStart: 1630000000,
-						timeEnd: 1630000000,
-						location: 'Event Location',
-						tags: ['tag1', 'tag2'],
-						bannerURI: 'Event Banner URI',
-						createdAt: 1630000000
-					}
-				]
-			}
+		async () => {
+			const currentTime = new Date()
+
+			const activeSpotlights = await db
+				.select()
+				.from(spotlights)
+				.where(and(gt(spotlights.week, currentTime), lte(spotlights.week, new Date(currentTime.getTime() + 7 * 24 * 60 * 60 * 1000))))
+
+			return { events: activeSpotlights }
 		},
 		{
 			response: t.Object({
-				statusCode: t.Number(),
-				events: t.Array(Event)
+				events: t.Array(t.Object(model.select.spotlight))
 			}),
 			detail: {
 				description: 'Get all spotlight events'
@@ -148,17 +91,33 @@ const app = new Elysia()
 
 	.post(
 		'/events/spotlight',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ body }) => {
+			const { token, eventId, startDate } = body
+
+			// // Check if user is an admin
+			// const user = await db.select().from(users).where(eq(users.token, token)).first()
+			// if (!user || user.role !== UserRole.Admin) {
+			// 	return { statusCode: 403 }
+			// }
+
+			// // Check if event is already spotlighted
+			// const existingSpotlight = await db.select().from(spotlights).where(eq(spotlights.eventId, eventId)).first()
+			// if (existingSpotlight) {
+			// 	return { statusCode: 409 }
+			// }
+
+			// Add event to spotlight
+			await db.insert(spotlights).values({ eventId, week: startDate })
+
+			return { statusCode: 200 }
 		},
 		{
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Number()
+				eventId: t.Number(),
+				startDate: t.Date()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Add spotlight event'
 			}
@@ -167,17 +126,38 @@ const app = new Elysia()
 
 	.delete(
 		'/events/spotlight',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ body }) => {
+			const { token, eventId } = body
+
+			// // Check if user is an admin
+			// const user = await db.select().from(users).where(eq(users.token, token)).first()
+			// if (!user || user.role !== UserRole.Admin) {
+			// 	return { statusCode: 403 }
+			// }
+
+			// // Check if event exists
+			// const event = await db.select().from(events).where(eq(events.eventId, eventId)).first()
+			// if (!event) {
+			// 	return { statusCode: 404 }
+			// }
+
+			// // Check if event is spotlighted
+			// const existingSpotlight = await db.select().from(spotlights).where(eq(spotlights.eventId, eventId)).first()
+			// if (!existingSpotlight) {
+			// 	return { statusCode: 404 }
+			// }
+
+			// Remove event from spotlight
+			await db.delete(spotlights).where(eq(spotlights.eventId, eventId))
+
+			return {}
 		},
 		{
 			body: t.Object({
 				token: t.String(),
 				eventId: t.Number()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Remove spotlight event'
 			}
@@ -186,31 +166,22 @@ const app = new Elysia()
 
 	.get(
 		'/events/:eventId',
-		() => {
-			return {
-				statusCode: 200,
-				event: {
-					eventId: 1,
-					orgId: 1,
-					title: 'Event Title',
-					description: 'Event Description',
-					isPublic: true,
-					timeStart: 1630000000,
-					timeEnd: 1630000000,
-					location: 'Event Location',
-					tags: ['tag1', 'tag2'],
-					bannerURI: 'Event Banner URI',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { eventId } = params
+
+			const event = await db.select().from(events).where(eq(events.id, eventId))
+			// if (!event) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { event: event[0] }
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.event.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				event: Event
+				event: t.Object(model.select.event)
 			}),
 			detail: {
 				description: 'Get event by id'
@@ -220,20 +191,40 @@ const app = new Elysia()
 
 	.post(
 		'/events/:eventId/followers',
-		() => {
-			return {
-				statusCode: 200
+		async ({ params, body }) => {
+			const { eventId } = params
+			const { token, userId } = body
+
+			// // Check if event exists
+			// const event = await db.select().from(events).where(eq(events.eventId, eventId)).first()
+			// if (!event) {
+			//  return { statusCode: 404 }
+			// }
+
+			// Check if user exists
+			const user = await db.select().from(users).where(eq(users.id, userId))
+			if (user.length === 0) {
+				return error(404, errorMap.get(404))
 			}
+
+			// // Check if user is already following the event
+			// const existingFollower = await db.select().from(followers).where(and(eq(followers.eventId, eventId), eq(followers.userId, userId))).first()
+			// if (existingFollower) {
+			//  return { statusCode: 409 }
+			// }
+
+			await db.insert(eventFollows).values({ eventId, userId })
+			return {}
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.event.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number()
+				userId: model.select.user.id
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Adds a user to followers of an event'
 			}
@@ -242,20 +233,32 @@ const app = new Elysia()
 
 	.delete(
 		'/events/:eventId/followers',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { eventId } = params
+			const { token, userId } = body
+
+			// // Check if event exists
+			// const event = await db.select().from(events).where(eq(events.eventId, eventId)).first()
+			// if (!event) {
+			//   return { statusCode: 404 }
+			// }
+			// // Check if user exists
+			// const user = await db.select().from(users).where(eq(users.userId, userId)).first()
+			// if (!user) {
+			//   return { statusCode: 404 }
+			// }
+
+			await db.delete(eventFollows).where(and(eq(eventFollows.eventId, eventId), eq(eventFollows.userId, userId)))
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.event.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number()
+				userId: model.select.user.id
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Removes a user from followers of an event'
 			}
@@ -268,7 +271,6 @@ const app = new Elysia()
 			const res = await db.select().from(forms).where(eq(forms.eventId, params.eventId))
 
 			return {
-				statusCode: 200,
 				forms: res
 			}
 		},
@@ -277,7 +279,6 @@ const app = new Elysia()
 				eventId: model.select.form.eventId
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
 				forms: t.Array(t.Object(model.select.form))
 			}),
 			detail: {
@@ -288,29 +289,14 @@ const app = new Elysia()
 
 	.get(
 		'/orgs',
-		() => {
-			return {
-				statusCode: 200,
-				organisations: [
-					{
-						orgId: 1,
-						name: 'organisation Name',
-						description: 'organisation Description',
-						avatarURI: 'organisation Banner URI'
-					},
-					{
-						orgId: 2,
-						name: 'organisation Name',
-						description: 'organisation Description',
-						avatarURI: 'organisation Banner URI'
-					}
-				]
-			}
+		async () => {
+			const organisationList = await db.select().from(organisations)
+
+			return { organisations: organisationList }
 		},
 		{
 			response: t.Object({
-				statusCode: t.Number(),
-				organisations: t.Array(OrganisationPreview)
+				organisations: t.Array(t.Object(model.select.organisation))
 			}),
 			detail: {
 				description: 'Get all organisations'
@@ -320,26 +306,22 @@ const app = new Elysia()
 
 	.get(
 		'/orgs/:orgId',
-		() => {
-			return {
-				statusCode: 200,
-				organisation: {
-					orgId: 1,
-					name: 'organisation Name',
-					description: 'organisation Description',
-					avatarURI: 'organisation Banner URI',
-					bannerURI: 'organisation Banner URI',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { orgId } = params
+
+			const organisation = await db.select().from(organisations).where(eq(organisations.id, orgId))
+			// if (!organisation) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { organisation: organisation[0] }
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				organisation: Organisation
+				organisation: t.Object(model.select.organisation)
 			}),
 			detail: {
 				description: 'Get full organisation details by id'
@@ -349,46 +331,19 @@ const app = new Elysia()
 
 	.get(
 		'/orgs/:orgId/events',
-		() => {
-			return {
-				statusCode: 200,
-				events: [
-					{
-						eventId: 1,
-						orgId: 1,
-						title: 'Event Title',
-						description: 'Event Description',
-						isPublic: true,
-						timeStart: 1630000000,
-						timeEnd: 1630000000,
-						location: 'Event Location',
-						tags: ['tag1', 'tag2'],
-						bannerURI: 'Event Banner URI',
-						createdAt: 1630000000
-					},
-					{
-						eventId: 2,
-						orgId: 2,
-						title: 'Event Title',
-						description: 'Event Description very long yes asdklasjdaksdjkasjd;ljlkjdfkljasdklfjklsdajfklsdjafklja lkfjsdlkf j;klsajf lkajsf kljdslk',
-						isPublic: true,
-						timeStart: 1630000000,
-						timeEnd: 1630000000,
-						location: 'Event Location',
-						tags: ['tag1', 'tag2'],
-						bannerURI: 'Event Banner URI',
-						createdAt: 1630000000
-					}
-				]
-			}
+		async ({ params }) => {
+			const { orgId } = params
+
+			const eventsList = await db.select().from(events).where(eq(events.organisationId, orgId))
+
+			return { events: eventsList }
 		},
 		{
 			params: t.Object({
-				orgId: t.String()
+				orgId: model.select.organisation.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				events: t.Array(Event)
+				events: t.Array(t.Object(model.select.event))
 			}),
 			detail: {
 				description: 'Get all events for an organisation'
@@ -398,21 +353,21 @@ const app = new Elysia()
 
 	.get(
 		'/orgs/:orgId/followers',
-		() => {
-			return {
-				statusCode: 200,
-				followerCount: 1000
-			}
+		async ({ params }) => {
+			const { orgId } = params
+
+			const followerCount = await db.select().from(eventFollows).where(eq(eventFollows.eventId, orgId))
+
+			return { followerCount: followerCount.length }
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
 				followerCount: t.Number()
 			}),
 			detail: {
@@ -423,20 +378,40 @@ const app = new Elysia()
 
 	.post(
 		'/orgs/:orgId/followers',
-		() => {
-			return {
-				statusCode: 200
+		async ({ params, body }) => {
+			const { orgId } = params
+			const { token, userId } = body
+
+			// Check if organisation exists
+			const organisation = await db.select().from(organisations).where(eq(organisations.id, orgId))
+			if (organisation.length === 0) {
+				return error(404, errorMap.get(404))
 			}
+
+			// Check if user exists
+			const user = await db.select().from(users).where(eq(users.id, userId))
+			if (user.length === 0) {
+				return error(404, errorMap.get(404))
+			}
+
+			// // Check if user is already following the organisation
+			// const existingFollower = await db.select().from(followers).where(and(eq(followers.orgId, orgId), eq(followers.userId, userId))).first()
+			// if (existingFollower) {
+			// 	return { statusCode: 409 }
+			// }
+
+			await db.insert(organisationRoles).values({ organisationId: orgId, userId: userId, role: 'follower' })
+			return {}
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number()
+				userId: model.select.user.id
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Adds a user to followers of an organisation'
 			}
@@ -445,21 +420,34 @@ const app = new Elysia()
 
 	.delete(
 		'/orgs/:orgId/followers',
-		() => {
-			return {
-				statusCode: 200
+		async ({ params, body }) => {
+			const { orgId } = params
+			const { token, userId } = body
+
+			// Check if organisation exists
+			const organisation = await db.select().from(organisations).where(eq(organisations.id, orgId))
+			if (organisation.length === 0) {
+				return error(404, errorMap.get(404))
 			}
+
+			// Check if user exists
+			const user = await db.select().from(users).where(eq(users.id, userId))
+			if (user.length === 0) {
+				return error(404, errorMap.get(404))
+			}
+
+			await db.delete(organisationRoles).where(and(eq(organisationRoles.organisationId, orgId), eq(organisationRoles.userId, userId), eq(organisationRoles.role, 'follower')))
+			return {}
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number(),
-				role: t.String()
+				userId: model.select.user.id
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Removes a user from followers of an organisation'
 			}
@@ -468,24 +456,14 @@ const app = new Elysia()
 
 	.post(
 		'/admin/events',
-		() => {
+		async ({ body }) => {
+			const newEvent = await db.insert(events).values(body).returning()
 			return {
-				statusCode: 200,
-				eventId: 1
+				eventId: newEvent[0].id
 			}
 		},
 		{
-			body: t.Object({
-				token: t.String(),
-				organisationId: t.Number(),
-				title: t.String(),
-				description: t.String(),
-				isPublic: t.Boolean(),
-				timeStart: t.Number(),
-				timeEnd: t.Number(),
-				location: t.String(),
-				bannerURI: t.String()
-			}),
+			body: t.Object(model.insert.event),
 			response: EventCreateReturn,
 			detail: {
 				description: 'Create an event'
@@ -495,26 +473,19 @@ const app = new Elysia()
 
 	.put(
 		'/admin/events/:eventId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { eventId } = params
+
+			await db.update(events).set(body).where(eq(events.id, eventId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.event.id
 			}),
-			body: t.Object({
-				token: t.String(),
-				title: t.String(),
-				description: t.String(),
-				isPublic: t.Boolean(),
-				timeStart: t.Number(),
-				timeEnd: t.Number(),
-				location: t.String(),
-				bannerURI: t.String()
-			}),
-			response: StatusCodeReturn,
+			body: t.Object(model.insert.event),
+			response: EmptyReturn,
 			detail: {
 				description: 'Update an event'
 			}
@@ -523,19 +494,22 @@ const app = new Elysia()
 
 	.delete(
 		'/admin/events/:eventId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params }) => {
+			const { eventId } = params
+
+			await db.delete(events).where(eq(events.id, eventId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.event.id
 			}),
 			body: t.Object({
-				token: t.String()
+				token: t.String(),
+				userId: model.select.user.id
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete an event'
 			}
@@ -544,21 +518,21 @@ const app = new Elysia()
 
 	.get(
 		'/admin/events/:eventId/followers',
-		() => {
-			return {
-				statusCode: 200,
-				followerCount: 1000
-			}
+		async ({ params }) => {
+			const { eventId } = params
+
+			const followerCount = await db.select().from(eventFollows).where(eq(eventFollows.eventId, eventId))
+
+			return { followerCount: followerCount.length }
 		},
 		{
 			params: t.Object({
-				eventId: t.Number()
+				eventId: model.select.event.id
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
 				followerCount: t.Number()
 			}),
 			detail: {
@@ -569,20 +543,14 @@ const app = new Elysia()
 
 	.post(
 		'/admin/orgs',
-		() => {
+		async ({ body }) => {
+			const newOrganisation = await db.insert(organisations).values(body).returning()
 			return {
-				statusCode: 200,
-				orgId: 1
+				orgId: newOrganisation[0].id
 			}
 		},
 		{
-			body: t.Object({
-				token: t.String(),
-				name: t.String(),
-				description: t.String(),
-				avatarURI: t.String(),
-				bannerURI: t.String()
-			}),
+			body: t.Object(model.insert.organisation),
 			response: OrganisationCreateReturn,
 			detail: {
 				description: 'Create an organisation'
@@ -592,23 +560,19 @@ const app = new Elysia()
 
 	.put(
 		'/admin/orgs/:orgId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { orgId } = params
+
+			await db.update(organisations).set(body).where(eq(organisations.id, orgId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
-			body: t.Object({
-				token: t.String(),
-				name: t.String(),
-				description: t.String(),
-				avatarURI: t.String(),
-				bannerURI: t.String()
-			}),
-			response: StatusCodeReturn,
+			body: t.Object(model.insert.organisation),
+			response: EmptyReturn,
 			detail: {
 				description: 'Update an organisation'
 			}
@@ -617,19 +581,21 @@ const app = new Elysia()
 
 	.delete(
 		'/admin/orgs/:orgId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { orgId } = params
+
+			await db.delete(organisations).where(eq(organisations.id, orgId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete an organisation'
 			}
@@ -638,42 +604,31 @@ const app = new Elysia()
 
 	.get(
 		'/admin/orgs/:orgId/admins',
-		() => {
-			return {
-				statusCode: 200,
-				managers: [
-					{
-						userId: 1,
-						role: 'manager'
-					},
-					{
-						userId: 2,
-						role: 'manager'
-					}
-				],
-				moderators: [
-					{
-						userId: 3,
-						role: 'moderator'
-					},
-					{
-						userId: 4,
-						role: 'moderator'
-					}
-				]
-			}
+		async ({ params }) => {
+			const { orgId } = params
+
+			const managers = await db
+				.select()
+				.from(organisationRoles)
+				.where(and(eq(organisationRoles.organisationId, orgId), eq(organisationRoles.role, 'manager')))
+
+			const moderators = await db
+				.select()
+				.from(organisationRoles)
+				.where(and(eq(organisationRoles.organisationId, orgId), eq(organisationRoles.role, 'moderator')))
+
+			return { managers: managers, moderators: moderators }
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				managers: t.Array(UserRole),
-				moderators: t.Array(UserRole)
+				managers: t.Array(t.Object(model.select.organisationRole)),
+				moderators: t.Array(t.Object(model.select.organisationRole))
 			}),
 			detail: {
 				description: 'Get all administrators of an organisation'
@@ -683,21 +638,46 @@ const app = new Elysia()
 
 	.post(
 		'/admin/orgs/:orgId/admins',
-		() => {
-			return {
-				statusCode: 200
+		async ({ params, body }) => {
+			const { orgId } = params
+			const { token, userId, role } = body
+
+			// Check if organisation exists
+			const organisation = await db.select().from(organisations).where(eq(organisations.id, orgId))
+			if (organisation.length === 0) {
+				return error(404, errorMap.get(404))
 			}
+
+			// Check if user exists
+			const user = await db.select().from(users).where(eq(users.id, userId))
+			if (user.length === 0) {
+				return error(404, errorMap.get(404))
+			}
+
+			// Check if role is valid
+			if (role !== 'manager' && role !== 'moderator') {
+				return error(400, errorMap.get(400))
+			}
+
+			// Check if user is already an admin
+			// const existingRole = await db.select().from(organisationRoles).where(and(eq(organisationRoles.organisationId, orgId), eq(organisationRoles.userId, userId), eq(organisationRoles.role, role)).first()
+			// if (existingRole) {
+			// 	return error(409, errorMap.get(409))
+			// }
+
+			await db.insert(organisationRoles).values({ organisationId: orgId, userId: userId, role: role })
+			return {}
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number(),
-				role: t.String()
+				userId: model.select.user.id,
+				role: model.select.organisationRole.role
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Add a role to a user in an organisation'
 			}
@@ -706,21 +686,40 @@ const app = new Elysia()
 
 	.delete(
 		'/admin/orgs/:orgId/admins',
-		() => {
-			return {
-				statusCode: 200
+		async ({ params, body }) => {
+			const { orgId } = params
+			const { token, userId, role } = body
+
+			// Check if organisation exists
+			const organisation = await db.select().from(organisations).where(eq(organisations.id, orgId))
+			if (organisation.length === 0) {
+				return error(404, errorMap.get(404))
 			}
+
+			// Check if user exists
+			const user = await db.select().from(users).where(eq(users.id, userId))
+			if (user.length === 0) {
+				return error(404, errorMap.get(404))
+			}
+
+			// Check if role is valid
+			if (role !== 'manager' && role !== 'moderator') {
+				return error(400, errorMap.get(400))
+			}
+
+			await db.delete(organisationRoles).where(and(eq(organisationRoles.organisationId, orgId), eq(organisationRoles.userId, userId), eq(organisationRoles.role, role)))
+			return {}
 		},
 		{
 			params: t.Object({
-				orgId: t.Number()
+				orgId: model.select.organisation.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number(),
-				role: t.String()
+				userId: model.select.user.id,
+				role: model.select.organisationRole.role
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Remove a role from a user in an organisation'
 			}
@@ -1088,17 +1087,14 @@ const app = new Elysia()
 
 	.post(
 		'/users',
-		() => {
+		async ({ body }) => {
+			const newUser = await db.insert(users).values(body).returning()
 			return {
-				statusCode: 200,
-				userId: 1
+				userId: newUser[0].id
 			}
 		},
 		{
-			body: t.Object({
-				name: t.String(),
-				email: t.String()
-			}),
+			body: t.Object(model.insert.user),
 			response: UserCreateReturn,
 			detail: {
 				description: 'Create a user'
@@ -1108,25 +1104,23 @@ const app = new Elysia()
 
 	.get(
 		'/users/:userId',
-		() => {
-			return {
-				statusCode: 200,
-				user: {
-					userId: 1,
-					name: 'User Name',
-					email: 'User Email',
-					avatarURI: 'User Avatar URI',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { userId } = params
+
+			// Check if user exists
+			const user = await db.select().from(users).where(eq(users.id, userId))
+			// if (user.length === 0) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { user: user[0] }
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: model.select.user.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				user: User
+				user: t.Object(model.select.user)
 			}),
 			detail: {
 				description: 'Get user details'
@@ -1136,22 +1130,19 @@ const app = new Elysia()
 
 	.put(
 		'/users/:userId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { userId } = params
+
+			await db.update(users).set(body).where(eq(users.id, userId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: model.select.user.id
 			}),
-			body: t.Object({
-				token: t.String(),
-				name: t.String(),
-				email: t.String(),
-				avatarURI: t.String()
-			}),
-			response: StatusCodeReturn,
+			body: t.Object(model.insert.user),
+			response: EmptyReturn,
 			detail: {
 				description: 'Update user details'
 			}
@@ -1160,19 +1151,21 @@ const app = new Elysia()
 
 	.delete(
 		'/users/:userId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { userId } = params
+
+			await db.delete(users).where(eq(users.id, userId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: model.select.user.id
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete user'
 			}
@@ -1181,35 +1174,29 @@ const app = new Elysia()
 
 	.get(
 		'/users/:userId/adminOrgs',
-		() => {
-			return {
-				statusCode: 200,
-				organisations: [
-					{
-						orgId: 1,
-						name: 'organisation Name',
-						description: 'organisation Description',
-						avatarURI: 'organisation Banner URI'
-					},
-					{
-						orgId: 2,
-						name: 'organisation Name',
-						description: 'organisation Description',
-						avatarURI: 'organisation Banner URI'
-					}
-				]
+		async ({ params }) => {
+			const { userId } = params
+			const userOrgs = await db
+				.select()
+				.from(organisationRoles)
+				.where(or(and(eq(organisationRoles.userId, userId), eq(organisationRoles.role, 'manager')), and(eq(organisationRoles.userId, userId), eq(organisationRoles.role, 'moderator'))))
+
+			const userOrgIds = []
+			for (const org of userOrgs) {
+				userOrgIds.push(org.organisationId)
 			}
+
+			return { organisations: userOrgIds }
 		},
 		{
 			params: t.Object({
 				userId: t.Number()
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				organisations: t.Array(OrganisationPreview)
+				organisations: t.Array(model.select.organisation.id)
 			}),
 			detail: {
-				description: 'Get all organisations a user is an admin of'
+				description: 'Get all organisation ids a user is an admin of'
 			}
 		}
 	)
@@ -1290,7 +1277,7 @@ const app = new Elysia()
 				token: t.String(),
 				notificationIds: t.Array(model.select.notification.id)
 			}),
-			response: t.Object({}),
+			response: EmptyReturn,
 			detail: {
 				description: 'Mark a notification as read'
 			}
@@ -1323,20 +1310,23 @@ const app = new Elysia()
 
 	.get(
 		'/users/:userId/autofill/:fieldType',
-		() => {
-			return {
-				statusCode: 200,
-				value: 'z1234567'
-			}
+		async ({ params }) => {
+			const { userId, fieldType } = params
+
+			const autofill = await db
+				.select()
+				.from(userAutofills)
+				.where(and(eq(userAutofills.userId, userId), eq(userAutofills.fieldType, fieldType)))
+
+			return { value: autofill[0].value }
 		},
 		{
 			params: t.Object({
-				userId: t.Number(),
-				fieldType: t.String()
+				userId: model.select.userAutofill.userId,
+				fieldType: model.select.userAutofill.fieldType
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				value: t.String()
+				value: model.select.userAutofill.value
 			}),
 			detail: {
 				description: 'Get autofill data for a user'
@@ -1346,21 +1336,24 @@ const app = new Elysia()
 
 	.post(
 		'/users/:userId/autofill/:fieldType',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { userId, fieldType } = params
+			const { token, value } = body
+
+			await db.insert(userAutofills).values({ userId: userId, fieldType: fieldType, value: value })
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number(),
-				fieldType: t.String()
+				userId: model.select.userAutofill.userId,
+				fieldType: model.select.userAutofill.fieldType
 			}),
 			body: t.Object({
 				token: t.String(),
-				value: t.String()
+				value: model.select.userAutofill.value
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Create autofill field for a user'
 			}
@@ -1369,21 +1362,27 @@ const app = new Elysia()
 
 	.put(
 		'/users/:userId/autofill/:fieldType',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { userId, fieldType } = params
+			const { token, value } = body
+
+			await db
+				.update(userAutofills)
+				.set({ value: value })
+				.where(and(eq(userAutofills.userId, userId), eq(userAutofills.fieldType, fieldType)))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number(),
-				fieldType: t.String()
+				userId: model.select.userAutofill.userId,
+				fieldType: model.select.userAutofill.fieldType
 			}),
 			body: t.Object({
 				token: t.String(),
-				value: t.String()
+				value: model.select.userAutofill.value
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update autofill field for a user'
 			}
@@ -1392,20 +1391,22 @@ const app = new Elysia()
 
 	.delete(
 		'/users/:userId/autofill/:fieldType',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params }) => {
+			const { userId, fieldType } = params
+
+			await db.delete(userAutofills).where(and(eq(userAutofills.userId, userId), eq(userAutofills.fieldType, fieldType)))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number(),
-				fieldType: t.String()
+				userId: model.select.userAutofill.userId,
+				fieldType: model.select.userAutofill.fieldType
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete autofill field for a user'
 			}
@@ -1414,19 +1415,23 @@ const app = new Elysia()
 
 	.get(
 		'/users/:userId/notificationRules',
-		() => {
-			return {
-				statusCode: 200,
-				keywords: ['anime', 'gooning', 'fortnite']
+		async ({ params }) => {
+			const { userId } = params
+
+			const notificationRuleArray = await db.select().from(notificationRules).where(eq(notificationRules.userId, userId))
+			const keywordArray = []
+			for (const rule of notificationRuleArray) {
+				keywordArray.push(rule.keyword)
 			}
+
+			return { keywords: keywordArray }
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: model.select.notificationRule.userId
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				keywords: t.Array(t.String())
+				keywords: t.Array(model.select.notificationRule.keyword)
 			}),
 			detail: {
 				description: 'Get all notification rules for a user'
@@ -1436,20 +1441,22 @@ const app = new Elysia()
 
 	.post(
 		'/users/:userId/notificationRules',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { userId } = params
+			const { keyword } = body
+
+			await db.insert(notificationRules).values({ userId: userId, keyword: keyword })
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: model.select.notificationRule.userId
 			}),
 			body: t.Object({
-				token: t.String(),
-				keyword: t.String()
+				keyword: model.select.notificationRule.keyword
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Create notification rule for a user'
 			}
@@ -1458,20 +1465,22 @@ const app = new Elysia()
 
 	.delete(
 		'/users/:userId/notificationRules',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { userId } = params
+			const { keyword } = body
+
+			await db.delete(notificationRules).where(and(eq(notificationRules.userId, userId), eq(notificationRules.keyword, keyword)))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
+				userId: model.select.notificationRule.userId
 			}),
 			body: t.Object({
-				token: t.String(),
-				keyword: t.String()
+				keyword: model.select.notificationRule.keyword
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete notification rule for a user'
 			}
