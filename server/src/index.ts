@@ -729,20 +729,21 @@ const app = new Elysia()
 	.post(
 		'/admin/forms',
 		async ({ body }) => {
-			return {
-				statusCode: 200,
-				formId: 1
-			}
+			const { token, form } = body
+
+			const newForm = await db
+				.insert(forms)
+				.values(form)
+				.returning()
+
+			return { formId: newForm[0].id }
 		},
 		{
 			body: t.Object({
 				token: t.String(),
-				...model.insert.form
+				form: t.Object(model.insert.form)
 			}),
-			response: {
-				statusCode: t.Number(),
-				formId: t.Number()
-			},
+			response: FormCreateReturn,
 			detail: {
 				description: 'Create a form'
 			}

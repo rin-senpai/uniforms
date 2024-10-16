@@ -25,7 +25,18 @@ export const model = {
 			}),
 			eventTag: table.eventTags,
 			eventFollow: table.eventFollows,
-			form: table.forms,
+			form: createInsertSchema(table.forms, {
+				fields: t.Object({
+						blocks: t.Array(t.Object({
+							type: t.Union([t.Literal('short'), t.Literal('long'), t.Literal('radio'), t.Literal('checkbox'), t.Literal('dropdown'), t.Literal('slider'), t.Literal('radioGrid'), t.Literal('checkboxGrid')]),
+							id: t.Number(),
+							templateFieldId: t.Union([t.Number(), t.Undefined()]),
+							header: t.String(),
+							description: t.Union([t.String(), t.Undefined()]),
+							options: t.Any()
+					}))
+				})
+			}),
 			template: table.templates,
 			formSubmission: table.formSubmissions,
 			spotlight: table.spotlights

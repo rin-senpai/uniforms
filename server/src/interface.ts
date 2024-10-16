@@ -137,7 +137,6 @@ export const FormSubmissionList = t.Object(
 
 export const FormCreateReturn = t.Object(
 	{
-		statusCode: t.Number(),
 		formId: t.Number()
 	},
 	{
