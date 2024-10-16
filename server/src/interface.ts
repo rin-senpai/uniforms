@@ -18,6 +18,24 @@ export const OrganisationCreateReturn = t.Object(
 	}
 )
 
+export const EventCreateReturn = t.Object(
+	{
+		eventId: t.Number()
+	},
+	{
+		description: 'Event creation return object'
+	}
+)
+
+export const FormCreateReturn = t.Object(
+	{
+		formId: t.Number()
+	},
+	{
+		description: 'Form creation return object'
+	}
+)
+
 export const Event = t.Object(
 	{
 		eventId: t.Number(),
@@ -34,15 +52,6 @@ export const Event = t.Object(
 	},
 	{
 		description: 'Event details object'
-	}
-)
-
-export const EventCreateReturn = t.Object(
-	{
-		eventId: t.Number()
-	},
-	{
-		description: 'Event creation return object'
 	}
 )
 
@@ -95,51 +104,4 @@ export const FormTemplateFieldAutofill = t.Object(
 	}
 )
 
-export const Form = t.Object(
-	{
-		formId: t.Number(),
-		eventId: t.Number(),
-		templateId: t.Optional(t.Number()),
-		title: t.String(),
-		description: t.String(),
-		role: t.String(),
-		canEditResponses: t.Boolean(),
-		isPublic: t.Boolean(),
-		fields: t.String(), // json
-		createdAt: t.Number()
-	},
-	{
-		description: 'Form details object'
-	}
-)
-
-export const FormSubmission = t.Object(
-	{
-		userId: t.Number(),
-		fields: t.String(), // json
-		createdAt: t.Number()
-	},
-	{
-		description: 'Form submission details object'
-	}
-)
-
-export const FormCreateReturn = t.Object(
-	{
-		formId: t.Number()
-	},
-	{
-		description: 'Form creation return object'
-	}
-)
-
 export const EmptyReturn = t.Object({}, { description: 'Empty return object' })
-
-export const StatusCodeReturn = t.Object(
-	{
-		statusCode: t.Number()
-	},
-	{
-		description: 'Status code return object'
-	}
-)

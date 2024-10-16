@@ -10,9 +10,6 @@ import {
 	EventCreateReturn,
 	OrganisationCreateReturn,
 	UserCreateReturn,
-	StatusCodeReturn,
-	Form,
-	FormSubmission,
 	FormCreateReturn,
 	FormTemplatePreview,
 	FormTemplateCreateReturn,
@@ -975,9 +972,7 @@ const app = new Elysia()
 	.put(
 		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -993,7 +988,7 @@ const app = new Elysia()
 				isPublic: t.Boolean(),
 				fields: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update a form template'
 			}
@@ -1003,9 +998,7 @@ const app = new Elysia()
 	.delete(
 		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1015,7 +1008,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete a form template'
 			}
@@ -1627,9 +1620,7 @@ const app = new Elysia()
 	.post(
 		'/users/:userId/templateAutofill/:templateId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1641,7 +1632,7 @@ const app = new Elysia()
 				templateFieldId: t.Number(),
 				value: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Create autofill field for a user'
 			}
@@ -1651,9 +1642,7 @@ const app = new Elysia()
 	.put(
 		'/users/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1665,7 +1654,7 @@ const app = new Elysia()
 				token: t.String(),
 				value: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update template autofill field for a user'
 			}
@@ -1675,9 +1664,7 @@ const app = new Elysia()
 	.delete(
 		'/users/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1688,7 +1675,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete template autofill field for a user'
 			}
