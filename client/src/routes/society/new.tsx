@@ -3,7 +3,7 @@ import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextF
 import { createSignal, Show, } from "solid-js";
 import { Organisation } from '../../../../server/src/interface'
 import { createForm } from "@tanstack/solid-form";
-import { useNavigate } from "@solidjs/router";
+import { redirect, useNavigate } from "@solidjs/router";
 
 const url = 'localhost'
 const dev_port = 60000
@@ -11,7 +11,6 @@ const SERVER_URL = `${url}:${dev_port}`
 
 export default function New() {
 	const navigate = useNavigate();
-
 	const form = createForm(() => ({
 		defaultValues: {
 			name: '',
@@ -37,11 +36,11 @@ export default function New() {
 
 			if (!response.ok) {
 				throw new Error(`Response status: ${response.status}`);
-			}
+			} 
 
 			const body = JSON.parse(await response.json())
 
-			navigate(`/society/${body.orgId}/edit`, { replace: true })
+			throw redirect("/")
 		}
 	}));
 
@@ -69,6 +68,12 @@ export default function New() {
 			};
 			reader.readAsDataURL(file);
 		}
+	}
+
+	const onSubmitWrapper = (e: SubmitEvent) => {
+		e.preventDefault()
+		e.stopPropagation()
+		form.handleSubmit()
 	}
 
 	return (<>

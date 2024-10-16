@@ -1,11 +1,12 @@
 import { Button } from "~/components/ui/button";
 import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextFieldTextArea } from "~/components/ui/text-field"
-import { createSignal, Show, } from "solid-js";
+import { createSignal, Show, Suspense } from "solid-js";
 import { Organisation } from '../../../../../server/src/interface'
 import { createForm } from "@tanstack/solid-form";
 import { createQuery, QueryClient } from "@tanstack/solid-query";
 import { useNavigate, useParams } from "@solidjs/router";
 import { QueryClientProvider } from "@tanstack/solid-query";
+import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -17,12 +18,13 @@ export default function Edit() {
     return ( 
     <QueryClientProvider client={queryClient}>
         <EditQuery/>
+        <SolidQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>)
 }
 
 function EditQuery() {
 	const navigate = useNavigate();
-    const params = useParams()
+    const params = useParams();
 
     const query = createQuery(() => ({
         queryKey: ['data'],
@@ -35,26 +37,28 @@ function EditQuery() {
 				throw new Error(`Response status: ${response.status}`);
 			}
 
-            const body = JSON.parse(await response.json())
+            const body = await response.json()
 
-          return { 
-            name: body.organisation.name,
-            description: body.organisation.description,
-            avatarURI: body.organisation.avaterURI,
-            bannerURI: body.organisation.bannerURI,
-        };
+            return { 
+                name: body.organisation.name,
+                description: body.organisation.description,
+                avatarURI: body.organisation.avatarURI,
+                bannerURI: body.organisation.bannerURI,
+            };
         },
     }));
 
 	const form = createForm(() => ({
+       
 		defaultValues: {
 			name: query.data?.name,
 			description: query.data?.description,
 			avatar: query.data?.avatarURI,
-			banner: query.data?.bannerURI,
+			banner: query.data?.bannerURI
 		},
 
 		onSubmit: async ({value}) => {
+            console.log(value)
 			const response = await fetch(`http://${SERVER_URL}/admin/orgs/${params.id}`, {
 				method: "PUT",
 				body: JSON.stringify({ 
@@ -104,7 +108,7 @@ function EditQuery() {
 	}
 
 	return (
-        <>
+     <Suspense fallback={'Loading...'}>
 		<form onSubmit={(e) => {
 			e.preventDefault()
 			e.stopPropagation()
@@ -120,7 +124,7 @@ function EditQuery() {
 					onInput={(e) => field().handleChange(e.target.value)}
 					validationState={field().state.value == "" ? "invalid" : "valid"}>
 						<TextFieldLabel>Name</TextFieldLabel>
-						<TextFieldInput type='text' name={field().name}/>
+						<TextFieldInput type='text' name={field().name} value={field().state.value}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -140,7 +144,7 @@ function EditQuery() {
 					onInput={(e) => field().handleChange(e.target.value)}
 					validationState={field().state.value == "" ? "invalid" : "valid"}>
 						<TextFieldLabel>Description</TextFieldLabel>
-						<TextFieldTextArea name={field().name} autoResize/>
+						<TextFieldTextArea value={field().state.value} name={field().name} autoResize/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -160,7 +164,7 @@ function EditQuery() {
 					validationState={field().state.value == "" ? "invalid" : "valid"}
 					class='gap-4'>
 						<TextFieldLabel>Avatar</TextFieldLabel>
-						<input name={field().name} type="file" accept="image/*" onChange={onAvatarUpload}/>
+						<TextFieldInput name={field().name} type="file" accept="image/*" onChange={onAvatarUpload}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -181,7 +185,7 @@ function EditQuery() {
 					validationState={field().state.value == "" ? "invalid" : "valid"}
 					class='gap-4'>
 						<TextFieldLabel>Banner</TextFieldLabel>
-						<input name={field().name} type="file" accept="image/*" onChange={onBannerUpload}/>
+						<TextFieldInput name={field().name} type="file" accept="image/*" onChange={onBannerUpload}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -205,6 +209,6 @@ function EditQuery() {
 				<Button type="reset">Reset</Button>
 				<Button onClick={form.handleSubmit}>Submit</Button>
 			</div>
-	</>
+    </Suspense>
     )
 }
