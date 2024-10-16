@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
+import { migrate } from 'drizzle-orm/bun-sqlite/migrator'
 import { eq } from 'drizzle-orm'
 
 import { Elysia, t } from 'elysia'
@@ -29,7 +30,7 @@ import {
 
 import { model } from './db/model'
 import { users, notifications } from './db/schema'
-const { user, notification } = model.select
+const { user, notification } = model.insert
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -40,6 +41,10 @@ const { user, notification } = model.select
 // see https://orm.drizzle.team/docs/
 
 const db = await drizzle('bun:sqlite', process.env.DB_FILE_NAME!)
+
+// Run the following command after any schema changes
+// bunx drizzle-kit generate
+migrate(db, { migrationsFolder: './drizzle' })
 
 const app = new Elysia()
 	.use(swagger())
@@ -1243,13 +1248,12 @@ const app = new Elysia()
 	.post(
 		'/users/:userId/notifications',
 		async ({ params, body }) => {
-			const userId = params.userId
 			const { token, type, eventId, formId } = body
 
 			const newNotification = await db
 				.insert(notifications)
 				.values({
-					userId: userId,
+					userId: params.userId,
 					eventId: eventId,
 					formId: formId,
 					type: type,
@@ -1261,16 +1265,16 @@ const app = new Elysia()
 		},
 		{
 			params: t.Object({
-				userId: user.id
+				userId: notification.userId
 			}),
 			body: t.Object({
 				token: t.String(),
-				type: t.Optional(t.Union([t.Literal('newEvent'), t.Literal('newForm')])),
-				eventId: t.Number(),
-				formId: t.Number()
+				type: notification.type,
+				eventId: notification.eventId,
+				formId: notification.formId
 			}),
 			response: t.Object({
-				notificationId: t.Number()
+				notificationId: notification.id
 			}),
 			detail: {
 				description: 'Create a notification for a user'

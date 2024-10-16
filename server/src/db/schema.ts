@@ -48,7 +48,6 @@ export const userAutofillsRelations = relations(userAutofills, ({ one }) => ({
 export const templateAutofills = sqliteTable(
 	'template_autofills',
 	{
-		id: integer().primaryKey({ autoIncrement: true }),
 		userId: integer()
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
@@ -85,9 +84,7 @@ export const notifications = sqliteTable('notifications', {
 	eventId: integer()
 		.notNull()
 		.references(() => events.id),
-	formId: integer()
-		.notNull()
-		.references(() => forms.id),
+	formId: integer().references(() => forms.id),
 	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
