@@ -2,6 +2,7 @@ import { Router } from '@solidjs/router'
 import { FileRoutes } from '@solidjs/start/router'
 import { Suspense } from 'solid-js'
 import Nav from '~/components/Nav'
+import { Toaster } from '~/components/ui/sonner'
 import './app.css'
 import { Separator } from './components/ui/separator'
 
@@ -13,6 +14,7 @@ export default function App() {
 					<Nav />
 					<Separator orientation='vertical' class='my-4' />
 					<Suspense>{props.children}</Suspense>
+					<Toaster />
 				</div>
 			)}
 		>
