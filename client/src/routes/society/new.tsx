@@ -38,9 +38,9 @@ export default function New() {
 				throw new Error(`Response status: ${response.status}`);
 			} 
 
-			const body = JSON.parse(await response.json())
+			const body = await response.json()
 
-			throw redirect("/")
+			navigate("/")
 		}
 	}));
 
@@ -132,7 +132,7 @@ export default function New() {
 					validationState={field().state.value == "" ? "invalid" : "valid"}
 					class='gap-4'>
 						<TextFieldLabel>Avatar</TextFieldLabel>
-						<input name={field().name} type="file" accept="image/*" onChange={onAvatarUpload}/>
+						<TextFieldInput name={field().name} type="file" accept="image/*" onChange={onAvatarUpload}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -153,7 +153,7 @@ export default function New() {
 					validationState={field().state.value == "" ? "invalid" : "valid"}
 					class='gap-4'>
 						<TextFieldLabel>Banner</TextFieldLabel>
-						<input name={field().name} type="file" accept="image/*" onChange={onBannerUpload}/>
+						<TextFieldInput name={field().name} type="file" accept="image/*" onChange={onBannerUpload}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
