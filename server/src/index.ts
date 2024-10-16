@@ -1245,6 +1245,7 @@ const app = new Elysia()
 		async ({ params, body }) => {
 			const userId = params.userId
 			const { token, type, eventId, formId } = body
+
 			const newNotification = await db
 				.insert(notifications)
 				.values({
@@ -1255,6 +1256,7 @@ const app = new Elysia()
 					createdAt: new Date() // Add created timestamp if needed
 				})
 				.returning()
+
 			return { notificationId: newNotification[0].id }
 		},
 		{
@@ -1263,9 +1265,9 @@ const app = new Elysia()
 			}),
 			body: t.Object({
 				token: t.String(),
-				type: t.String(),
-				eventId: t.Optional(t.Number()),
-				formId: t.Optional(t.Number())
+				type: t.Optional(t.Union([t.Literal('newEvent'), t.Literal('newForm')])),
+				eventId: t.Number(),
+				formId: t.Number()
 			}),
 			response: t.Object({
 				notificationId: t.Number()
