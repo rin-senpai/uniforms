@@ -277,10 +277,21 @@ export const forms = sqliteTable('forms', {
 	templateId: integer().references(() => templates.id),
 	title: text().notNull(),
 	description: text().notNull(),
-	role: text({ enum: ['short', 'long', 'radio', 'checkbox', 'dropdown', 'slider', 'radioGrid', 'checkboxGrid'] }).notNull(),
+	role: text(),
 	canEditResponses: integer({ mode: 'boolean' }).notNull().default(false),
 	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
-	fields: text({ mode: 'json' }).notNull().$type<{ blocks: { type: string; id: number; templateFieldId: number | undefined; header: string; description: string | undefined; options: any }[] }>(),
+	fields: text({ mode: 'json' })
+		.notNull()
+		.$type<{
+			blocks: {
+				type: 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
+				id: number
+				templateFieldId: number | undefined
+				header: string
+				description: string | undefined
+				options: any
+			}[]
+		}>(),
 	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
