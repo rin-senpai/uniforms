@@ -5,6 +5,7 @@ import Nav from '~/components/Nav'
 import { Toaster } from '~/components/ui/sonner'
 import './app.css'
 import { Separator } from './components/ui/separator'
+import { QueryClient, QueryClientProvider } from '@tanstack/solid-query'
 
 export default function App() {
 	return (
@@ -18,7 +19,9 @@ export default function App() {
 				</div>
 			)}
 		>
-			<FileRoutes />
+			
+				<FileRoutes />
+			
 		</Router>
 	)
 }
