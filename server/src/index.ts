@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/connect'
 import { migrate } from 'drizzle-orm/bun-sqlite/migrator'
-import { eq } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 
 import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
@@ -29,7 +29,7 @@ import {
 } from './interface'
 
 import { model } from './db/model'
-import { users, forms, notifications } from './db/schema'
+import { users, forms, notifications, events } from './db/schema'
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -43,7 +43,12 @@ const db = await drizzle('bun:sqlite', process.env.DB_FILE_NAME!)
 
 // Run the following command after any schema changes
 // bunx drizzle-kit generate
-migrate(db, { migrationsFolder: './drizzle' })
+try {
+	migrate(db, { migrationsFolder: './drizzle' })
+	console.log('Migrations applied successfully')
+} catch (error) {
+	console.error('Migration failed:', error)
+}
 
 const app = new Elysia()
 	.use(swagger())
@@ -1212,7 +1217,7 @@ const app = new Elysia()
 	.get(
 		'/users/:userId/notifications',
 		async ({ params }) => {
-			const userId = params.userId
+			const { userId } = params
 			const userNotifications = await db.select().from(notifications).where(eq(notifications.userId, userId))
 
 			return { notifications: userNotifications }
@@ -1242,7 +1247,7 @@ const app = new Elysia()
 					eventId: eventId,
 					formId: formId,
 					type: type,
-					createdAt: new Date() // Add created timestamp if needed
+					createdAt: new Date()
 				})
 				.returning()
 
@@ -1256,7 +1261,7 @@ const app = new Elysia()
 				token: t.String(),
 				type: model.select.notification.type,
 				eventId: model.select.notification.eventId,
-				formId: model.select.notification.formId
+				formId: t.Optional(model.select.notification.formId)
 			}),
 			response: t.Object({
 				notificationId: model.select.notification.id
@@ -1268,21 +1273,24 @@ const app = new Elysia()
 	)
 
 	.put(
-		'/users/:userId/notifications/:notificationId/read',
-		() => {
-			return {
-				statusCode: 200
+		'/users/:userId/notifications/read',
+		async ({ params, body }) => {
+			const { userId } = params
+			const { token, notificationIds } = body
+			for (const notificationId of notificationIds) {
+				await db.update(notifications).set({ read: true }).where(eq(notifications.id, notificationId))
 			}
+			return {}
 		},
 		{
 			params: t.Object({
-				userId: model.select.user.id,
-				notificationId: t.Number()
+				userId: model.select.notification.userId
 			}),
 			body: t.Object({
-				token: t.String()
+				token: t.String(),
+				notificationIds: t.Array(model.select.notification.id)
 			}),
-			response: StatusCodeReturn,
+			response: t.Object({}),
 			detail: {
 				description: 'Mark a notification as read'
 			}
@@ -1291,21 +1299,20 @@ const app = new Elysia()
 
 	.get(
 		'/users/:userId/notifications/unread',
-		() => {
-			return {
-				statusCode: 200,
-				unreadCount: 100
-			}
+		async ({ params }) => {
+			const { userId } = params
+			const unreadNotifs = await db
+				.select()
+				.from(notifications)
+				.where(and(eq(notifications.userId, userId), eq(notifications.read, false)))
+
+			return { unreadCount: unreadNotifs.length }
 		},
 		{
 			params: t.Object({
-				userId: t.Number()
-			}),
-			body: t.Object({
-				token: t.String()
+				userId: model.select.notification.userId
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
 				unreadCount: t.Number()
 			}),
 			detail: {
