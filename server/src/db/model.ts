@@ -38,7 +38,12 @@ export const model = {
 				})
 			}),
 			template: table.templates,
-			formSubmission: table.formSubmissions,
+			formSubmission: createInsertSchema(table.formSubmissions, {
+				answers: t.Array(t.Object({
+					id: t.Number(),
+					response: t.Any()
+				}))
+			}),
 			spotlight: table.spotlights
 		},
 		'insert'
@@ -63,7 +68,7 @@ export const model = {
 			}),
 			eventTag: table.eventTags,
 			eventFollow: table.eventFollows,
-			form: createInsertSchema(table.forms, {
+			form: createSelectSchema(table.forms, {
 				fields: t.Object({
 					blocks: t.Array(t.Object({
 						type: t.Union([t.Literal('short'), t.Literal('long'), t.Literal('radio'), t.Literal('checkbox'), t.Literal('dropdown'), t.Literal('slider'), t.Literal('radioGrid'), t.Literal('checkboxGrid')]),
@@ -76,7 +81,12 @@ export const model = {
 				})
 			}),
 			template: table.templates,
-			formSubmission: table.formSubmissions,
+			formSubmission: createSelectSchema(table.formSubmissions, {
+				answers: t.Array(t.Object({
+					id: t.Number(),
+					response: t.Any()
+				}))
+			}),
 			spotlight: table.spotlights
 		},
 		'select'

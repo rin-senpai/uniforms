@@ -124,17 +124,6 @@ export const FormSubmission = t.Object(
 	}
 )
 
-export const FormSubmissionList = t.Object(
-	{
-		userId: t.Number(),
-		userName: t.String(),
-		createdAt: t.Number()
-	},
-	{
-		description: 'Form submission details object'
-	}
-)
-
 export const FormCreateReturn = t.Object(
 	{
 		formId: t.Number()
