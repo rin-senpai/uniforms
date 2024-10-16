@@ -108,8 +108,15 @@ function EditQuery() {
 	}
 
 	return (
-     <Suspense fallback={'Loading...'}>
-		<form onSubmit={(e) => {
+     <Suspense fallback={'Loading society'}>
+        <div class='flex flex-col gap-2 m-6 w-full'>
+        <h2 class="text-3xl font-bold tracking-tight">{query.data?.name}</h2>
+
+        <div class='mx-10 my-5 flex flex-row w-full gap-8'>
+        <div class='flex flex-col gap-4 w-1/2'>
+		<form 
+        class='flex flex-col gap-4 w-full'
+        onSubmit={(e) => {
 			e.preventDefault()
 			e.stopPropagation()
 		}}>
@@ -120,11 +127,12 @@ function EditQuery() {
 				}} 
 				children={(field) => (
 					<TextField 
+                    class='w-full'
 					name={field().name} 
 					onInput={(e) => field().handleChange(e.target.value)}
 					validationState={field().state.value == "" ? "invalid" : "valid"}>
 						<TextFieldLabel>Name</TextFieldLabel>
-						<TextFieldInput type='text' name={field().name} value={field().state.value}/>
+						<TextFieldInput class='w-full' type='text' name={field().name} value={field().state.value}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -140,11 +148,12 @@ function EditQuery() {
 				}} 
 				children={(field) => (
 					<TextField 
+                    class='w-full'
 					name={field().name}
 					onInput={(e) => field().handleChange(e.target.value)}
 					validationState={field().state.value == "" ? "invalid" : "valid"}>
 						<TextFieldLabel>Description</TextFieldLabel>
-						<TextFieldTextArea value={field().state.value} name={field().name} autoResize/>
+						<TextFieldTextArea class='w-full' value={field().state.value} name={field().name} autoResize/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
@@ -162,14 +171,13 @@ function EditQuery() {
 					<TextField 
 					name={field().name} 
 					validationState={field().state.value == "" ? "invalid" : "valid"}
-					class='gap-4'>
+					class='gap-4 w-full'>
 						<TextFieldLabel>Avatar</TextFieldLabel>
-						<TextFieldInput name={field().name} type="file" accept="image/*" onChange={onAvatarUpload}/>
+						<input class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50' name={field().name} type="file" accept="image/*" onChange={onAvatarUpload}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
 					</TextField>
-					<img src={field().state.value} class='rounded-lg h-60'/>
 					</>
 				)}
 			/>
@@ -183,14 +191,14 @@ function EditQuery() {
 					<TextField 
 					name={field().name} 
 					validationState={field().state.value == "" ? "invalid" : "valid"}
-					class='gap-4'>
+					class='gap-4 w-full'>
 						<TextFieldLabel>Banner</TextFieldLabel>
-						<TextFieldInput name={field().name} type="file" accept="image/*" onChange={onBannerUpload}/>
+						<input class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50' name={field().name} type="file" accept="image/*" onChange={onBannerUpload}/>
 						<Show when={field().state.meta.errors}>
 							<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 						</Show>
 					</TextField>
-					<img src={field().state.value} class='rounded-lg h-60'/>
+					
 					</>
 				)}
 			/>
@@ -205,10 +213,30 @@ function EditQuery() {
 			<img src={banner()} class='rounded-lg h-60'/> */}
 
 		</form>
-			<div>
+			<div class='flex flex-row items-center gap-2'>
 				<Button type="reset">Reset</Button>
+
 				<Button onClick={form.handleSubmit}>Submit</Button>
 			</div>
+
+            
+        </div>
+            
+        <div class='flex flex-col gap-8'>
+            <div class='flex flex-col gap-4'>
+            <h2 class="text-xl font-bold tracking-tight">Avatar</h2>
+            <img src={form.state.values.avatar} class='rounded-lg h-60 w-60'/>
+            </div>
+           
+            <div class='flex flex-col gap-4'>
+            <h2 class="text-xl font-bold tracking-tight">Banner</h2>
+            <img src={form.state.values.banner} class='rounded-lg h-60 w-60'/>
+            </div>
+        </div>
+
+        </div>
+        </div>
+        
     </Suspense>
     )
 }
