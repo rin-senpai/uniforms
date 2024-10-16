@@ -43,7 +43,7 @@ export default function SocietyView(props: object) {
 								<CardTitle class='justify-self-center'>{item.name}</CardTitle>
 							</div>
 
-							<EventsView events={eventsListDefault} numberOfEvents={3} displayDescription={false} class='h-5/6' compact={true} />
+							<EventsView events={eventsListDefault} numberOfEvents={2} displayDescription={false} class='h-5/6' compact={true} />
 						</CardContent>
 					</Card>
 				)}

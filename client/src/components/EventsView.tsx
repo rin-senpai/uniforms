@@ -47,13 +47,13 @@ export default function EventsView(props: any) {
 		const dateEnd = new Date(unixEnd * 1000)
 		return dateStart.getHours().toString() + '-' + dateEnd.getHours().toString()
 	}
-
+	// grid-cols-2 md:grid-cols-3 lg:grid-cols-5
 	const [local, others] = splitProps(props, ['class'])
 	return (
-		<div class={cn('grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 m-4', local.class)} {...others}>
+		<div class={cn('flex flex-col sm:flex-row flex-wrap gap-4 m-4', local.class)} {...others}>
 			<For each={eventsList()}>
 				{(item) => (
-					<Card class=''>
+					<Card class='w-48'>
 						<CardHeader class='relative inset-x-0 top-0 p-0'>
 							<div class='*:rounded-lg relative'>
 								<img class='object-contain' src={item.bannerURI} />
