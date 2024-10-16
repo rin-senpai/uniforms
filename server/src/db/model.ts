@@ -27,22 +27,26 @@ export const model = {
 			eventFollow: table.eventFollows,
 			form: createInsertSchema(table.forms, {
 				fields: t.Object({
-						blocks: t.Array(t.Object({
+					blocks: t.Array(
+						t.Object({
 							type: t.Union([t.Literal('short'), t.Literal('long'), t.Literal('radio'), t.Literal('checkbox'), t.Literal('dropdown'), t.Literal('slider'), t.Literal('radioGrid'), t.Literal('checkboxGrid')]),
 							id: t.Number(),
 							templateFieldId: t.Union([t.Number(), t.Undefined()]),
 							header: t.String(),
 							description: t.Union([t.String(), t.Undefined()]),
 							options: t.Any()
-					}))
+						})
+					)
 				})
 			}),
 			template: table.templates,
 			formSubmission: createInsertSchema(table.formSubmissions, {
-				answers: t.Array(t.Object({
-					id: t.Number(),
-					response: t.Any()
-				}))
+				answers: t.Array(
+					t.Object({
+						id: t.Number(),
+						response: t.Any()
+					})
+				)
 			}),
 			spotlight: table.spotlights
 		},
@@ -70,22 +74,26 @@ export const model = {
 			eventFollow: table.eventFollows,
 			form: createSelectSchema(table.forms, {
 				fields: t.Object({
-					blocks: t.Array(t.Object({
-						type: t.Union([t.Literal('short'), t.Literal('long'), t.Literal('radio'), t.Literal('checkbox'), t.Literal('dropdown'), t.Literal('slider'), t.Literal('radioGrid'), t.Literal('checkboxGrid')]),
-						id: t.Number(),
-						templateFieldId: t.Union([t.Number(), t.Undefined()]),
-						header: t.String(),
-						description: t.Union([t.String(), t.Undefined()]),
-						options: t.Any()
-					}))
+					blocks: t.Array(
+						t.Object({
+							type: t.Union([t.Literal('short'), t.Literal('long'), t.Literal('radio'), t.Literal('checkbox'), t.Literal('dropdown'), t.Literal('slider'), t.Literal('radioGrid'), t.Literal('checkboxGrid')]),
+							id: t.Number(),
+							templateFieldId: t.Union([t.Number(), t.Undefined()]),
+							header: t.String(),
+							description: t.Union([t.String(), t.Undefined()]),
+							options: t.Any()
+						})
+					)
 				})
 			}),
 			template: table.templates,
 			formSubmission: createSelectSchema(table.formSubmissions, {
-				answers: t.Array(t.Object({
-					id: t.Number(),
-					response: t.Any()
-				}))
+				answers: t.Array(
+					t.Object({
+						id: t.Number(),
+						response: t.Any()
+					})
+				)
 			}),
 			spotlight: table.spotlights
 		},

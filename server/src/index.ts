@@ -5,34 +5,12 @@ import { eq, lte, gt, and, or } from 'drizzle-orm'
 
 import { Elysia, t, error } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
-import {
-	EmptyReturn,
-	EventCreateReturn,
-	OrganisationCreateReturn,
-	UserCreateReturn,
-	FormCreateReturn,
-	FormTemplatePreview,
-	FormTemplateCreateReturn,
-	FormTemplateFieldAutofill,
-	FormTemplate
-} from './interface'
+import { EmptyReturn, EventCreateReturn, OrganisationCreateReturn, UserCreateReturn, FormCreateReturn, FormTemplatePreview, FormTemplateCreateReturn, FormTemplateFieldAutofill, FormTemplate } from './interface'
 
 import { errorMap } from './errorCodes'
 
 import { model } from './db/model'
-import {
-	users,
-	forms,
-	notifications,
-	events,
-	spotlights,
-	eventFollows,
-	organisations,
-	organisationRoles,
-	userAutofills,
-	notificationRules,
-	formSubmissions
-} from './db/schema'
+import { users, forms, notifications, events, spotlights, eventFollows, organisations, organisationRoles, userAutofills, notificationRules, formSubmissions } from './db/schema'
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -739,10 +717,7 @@ const app = new Elysia()
 		async ({ body }) => {
 			const { token, form } = body
 
-			const newForm = await db
-				.insert(forms)
-				.values(form)
-				.returning()
+			const newForm = await db.insert(forms).values(form).returning()
 
 			return { formId: newForm[0].id }
 		},
@@ -861,7 +836,10 @@ const app = new Elysia()
 		async ({ params }) => {
 			const { formId, userId } = params
 
-			const submission = await db.select().from(formSubmissions).where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
+			const submission = await db
+				.select()
+				.from(formSubmissions)
+				.where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
 			// if (!submission) {
 			// 	return error(404, errorMap.get(404))
 			// }
@@ -1506,10 +1484,7 @@ const app = new Elysia()
 			const { formId } = params
 			const { token, userId, answers } = body
 
-			const newSubmission = await db
-				.insert(formSubmissions)
-				.values({ formId: formId, userId: userId, answers: answers, createdAt: new Date() })
-				.returning()
+			const newSubmission = await db.insert(formSubmissions).values({ formId: formId, userId: userId, answers: answers, createdAt: new Date() }).returning()
 
 			return {}
 		},
@@ -1534,7 +1509,10 @@ const app = new Elysia()
 		async ({ params }) => {
 			const { formId, userId } = params
 
-			const submission = await db.select().from(formSubmissions).where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
+			const submission = await db
+				.select()
+				.from(formSubmissions)
+				.where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
 			// if (!submission) {
 			// 	return error(404, errorMap.get(404))
 			// }
