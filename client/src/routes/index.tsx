@@ -29,8 +29,8 @@ export default function Home() {
 	]
 
 	return (
-		<main class='text-center mx-auto text-gray-700 p-4'>
-			<h1 class='max-w-xs text-6xl text-sky-700 font-thin uppercase my-16'>Hello world!</h1>
+		<main class='text-center mx-auto text-gray-700 p-10 flex-1'>
+			<h1 class='max-6-xs text-6xl text-sky-700 font-thin uppercase my-16'>Hello world!</h1>
 			<Counter />
 			<p class='my-4'>
 				<span>Home</span>
@@ -64,7 +64,7 @@ export default function Home() {
 							<For each={notifications}>
 								{(notification) => (
 									<div class='mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0'>
-										<span class='flex h-2 w-2 translate-y-1 rounded-full bg-sky-500' />
+										<span class='flex h-2 w-2 translate-y-1 rounded-full bg-sky-500 relative z-1' />
 										<div class='space-y-1'>
 											<p class='text-sm font-medium leading-none'>{notification.title}</p>
 											<p class='text-sm text-muted-foreground'>{notification.description}</p>
