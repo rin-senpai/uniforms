@@ -5,26 +5,12 @@ import { eq, lte, gt, and, or } from 'drizzle-orm'
 
 import { Elysia, t, error } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
-import {
-	EmptyReturn,
-	EventCreateReturn,
-	OrganisationCreateReturn,
-	UserCreateReturn,
-	StatusCodeReturn,
-	Form,
-	FormSubmission,
-	FormCreateReturn,
-	FormSubmissionList,
-	FormTemplatePreview,
-	FormTemplateCreateReturn,
-	FormTemplateFieldAutofill,
-	FormTemplate
-} from './interface'
+import { EmptyReturn, EventCreateReturn, OrganisationCreateReturn, UserCreateReturn, FormCreateReturn, FormTemplatePreview, FormTemplateCreateReturn, FormTemplateFieldAutofill, FormTemplate } from './interface'
 
 import { errorMap } from './errorCodes'
 
 import { model } from './db/model'
-import { users, forms, notifications, events, spotlights, eventFollows, organisations, organisationRoles, userAutofills, notificationRules } from './db/schema'
+import { users, forms, notifications, events, spotlights, eventFollows, organisations, organisationRoles, userAutofills, notificationRules, formSubmissions } from './db/schema'
 
 // get types from db for route params and responses:
 // const { User } = model.insert (or select)
@@ -729,20 +715,18 @@ const app = new Elysia()
 	.post(
 		'/admin/forms',
 		async ({ body }) => {
-			return {
-				statusCode: 200,
-				formId: 1
-			}
+			const { token, form } = body
+
+			const newForm = await db.insert(forms).values(form).returning()
+
+			return { formId: newForm[0].id }
 		},
 		{
 			body: t.Object({
 				token: t.String(),
-				...model.insert.form
+				form: t.Object(model.insert.form)
 			}),
-			response: {
-				statusCode: t.Number(),
-				formId: t.Number()
-			},
+			response: FormCreateReturn,
 			detail: {
 				description: 'Create a form'
 			}
@@ -751,26 +735,23 @@ const app = new Elysia()
 
 	.put(
 		'/admin/forms/:formId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { formId } = params
+			const { token, form } = body
+
+			await db.update(forms).set(form).where(eq(forms.id, formId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				formId: t.Number()
+				formId: model.select.form.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				eventId: t.Number(),
-				title: t.String(),
-				description: t.String(),
-				role: t.String(),
-				canEditResponses: t.Boolean(),
-				isPublic: t.Boolean(),
-				fields: t.String()
+				form: t.Object(model.insert.form)
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update a form'
 			}
@@ -779,19 +760,21 @@ const app = new Elysia()
 
 	.delete(
 		'/admin/forms/:formId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params }) => {
+			const { formId } = params
+
+			await db.delete(forms).where(eq(forms.id, formId))
+
+			return {}
 		},
 		{
 			params: t.Object({
-				formId: t.Number()
+				formId: model.select.form.id
 			}),
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete a form'
 			}
@@ -800,30 +783,22 @@ const app = new Elysia()
 
 	.get(
 		'/admin/forms/:formId',
-		() => {
-			return {
-				statusCode: 200,
-				form: {
-					formId: 1,
-					eventId: 1,
-					templateId: 1,
-					title: 'Form Title',
-					description: 'Form Description',
-					role: 'attendance',
-					canEditResponses: true,
-					isPublic: true,
-					fields: '{}',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { formId } = params
+
+			const form = await db.select().from(forms).where(eq(forms.id, formId))
+			// if (!form) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { form: form[0] }
 		},
 		{
 			params: t.Object({
-				formId: t.Number()
+				formId: model.select.form.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				form: Form
+				form: t.Object(model.select.form)
 			}),
 			detail: {
 				description: 'Get a form'
@@ -833,30 +808,22 @@ const app = new Elysia()
 
 	.get(
 		'/admin/forms/:formId/submissions',
-		() => {
-			return {
-				statusCode: 200,
-				submissions: [
-					{
-						userId: 1,
-						userName: 'User Name',
-						createdAt: 1630000000
-					},
-					{
-						userId: 2,
-						userName: 'User Name',
-						createdAt: 163000000
-					}
-				]
-			}
+		async ({ params }) => {
+			const { formId } = params
+
+			const submissions = await db.select().from(formSubmissions).where(eq(forms.id, formId))
+			// if (!submissions) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { submissions: submissions }
 		},
 		{
 			params: t.Object({
-				formId: t.Number()
+				formId: model.select.form.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				submissions: t.Array(FormSubmissionList)
+				submissions: t.Array(t.Object(model.select.formSubmission))
 			}),
 			detail: {
 				description: 'Get list of submissions for a form'
@@ -866,24 +833,26 @@ const app = new Elysia()
 
 	.get(
 		'/admin/forms/:formId/submissions/:userId',
-		() => {
-			return {
-				statusCode: 200,
-				submission: {
-					userId: 1,
-					fields: '{}',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { formId, userId } = params
+
+			const submission = await db
+				.select()
+				.from(formSubmissions)
+				.where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
+			// if (!submission) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { submission: submission[0] }
 		},
 		{
 			params: t.Object({
-				formId: t.Number(),
-				userId: t.Number()
+				formId: model.select.formSubmission.formId,
+				userId: model.select.formSubmission.userId
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				submission: FormSubmission
+				submission: t.Object(model.select.formSubmission)
 			}),
 			detail: {
 				description: 'Get a form submission'
@@ -893,10 +862,12 @@ const app = new Elysia()
 
 	.delete(
 		'/admin/forms/:formId/submissions/:userId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params }) => {
+			const { formId, userId } = params
+
+			await db.delete(formSubmissions).where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
+
+			return {}
 		},
 		{
 			params: t.Object({
@@ -906,7 +877,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete a form submission'
 			}
@@ -979,9 +950,7 @@ const app = new Elysia()
 	.put(
 		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -997,7 +966,7 @@ const app = new Elysia()
 				isPublic: t.Boolean(),
 				fields: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update a form template'
 			}
@@ -1007,9 +976,7 @@ const app = new Elysia()
 	.delete(
 		'/admin/orgs/:orgId/templates/:templateId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1019,7 +986,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete a form template'
 			}
@@ -1065,7 +1032,6 @@ const app = new Elysia()
 		'/admin/orgs/:orgId/templates/:templateId/createForm',
 		() => {
 			return {
-				statusCode: 200,
 				formId: 1
 			}
 		},
@@ -1489,29 +1455,22 @@ const app = new Elysia()
 
 	.get(
 		'/forms/:formId',
-		() => {
-			return {
-				statusCode: 200,
-				form: {
-					formId: 1,
-					eventId: 1,
-					title: 'Form Title',
-					description: 'Form Description',
-					role: 'role',
-					canEditResponses: true,
-					isPublic: true,
-					fields: '{}',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { formId } = params
+
+			const form = await db.select().from(forms).where(eq(forms.id, formId))
+			// if (!form) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { form: form[0] }
 		},
 		{
 			params: t.Object({
-				formId: t.Number()
+				formId: model.select.form.id
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				form: Form
+				form: t.Object(model.select.form)
 			}),
 			detail: {
 				description: 'Get form details by id'
@@ -1521,21 +1480,24 @@ const app = new Elysia()
 
 	.post(
 		'/forms/:formId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { formId } = params
+			const { token, userId, answers } = body
+
+			const newSubmission = await db.insert(formSubmissions).values({ formId: formId, userId: userId, answers: answers, createdAt: new Date() }).returning()
+
+			return {}
 		},
 		{
 			params: t.Object({
-				formId: t.Number()
+				formId: model.select.form.id
 			}),
 			body: t.Object({
 				token: t.String(),
-				userId: t.Number(),
-				fields: t.String()
+				userId: model.select.formSubmission.userId,
+				answers: model.select.formSubmission.answers
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Create a form submission'
 			}
@@ -1544,24 +1506,26 @@ const app = new Elysia()
 
 	.get(
 		'/forms/:formId/:userId',
-		() => {
-			return {
-				statusCode: 200,
-				submission: {
-					userId: 1,
-					fields: '{}',
-					createdAt: 1630000000
-				}
-			}
+		async ({ params }) => {
+			const { formId, userId } = params
+
+			const submission = await db
+				.select()
+				.from(formSubmissions)
+				.where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
+			// if (!submission) {
+			// 	return error(404, errorMap.get(404))
+			// }
+
+			return { submission: submission[0] }
 		},
 		{
 			params: t.Object({
-				formId: t.Number(),
-				userId: t.Number()
+				formId: model.select.formSubmission.formId,
+				userId: model.select.formSubmission.userId
 			}),
 			response: t.Object({
-				statusCode: t.Number(),
-				submission: FormSubmission
+				submission: t.Object(model.select.formSubmission)
 			}),
 			detail: {
 				description: 'Get form submission details of a user'
@@ -1571,21 +1535,26 @@ const app = new Elysia()
 
 	.put(
 		'/forms/:formId/:userId',
-		() => {
-			return {
-				statusCode: 200
-			}
+		async ({ params, body }) => {
+			const { formId, userId } = params
+			const { token, answers } = body
+
+			await db
+				.update(formSubmissions)
+				.set({ answers: answers })
+				.where(and(eq(formSubmissions.formId, formId), eq(formSubmissions.userId, userId)))
+			return {}
 		},
 		{
 			params: t.Object({
-				formId: t.Number(),
-				userId: t.Number()
+				formId: model.select.formSubmission.formId,
+				userId: model.select.formSubmission.userId
 			}),
 			body: t.Object({
 				token: t.String(),
-				fields: t.String()
+				answers: model.select.formSubmission.answers
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update a form submission'
 			}
@@ -1629,9 +1598,7 @@ const app = new Elysia()
 	.post(
 		'/users/:userId/templateAutofill/:templateId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1643,7 +1610,7 @@ const app = new Elysia()
 				templateFieldId: t.Number(),
 				value: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Create autofill field for a user'
 			}
@@ -1653,9 +1620,7 @@ const app = new Elysia()
 	.put(
 		'/users/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1667,7 +1632,7 @@ const app = new Elysia()
 				token: t.String(),
 				value: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Update template autofill field for a user'
 			}
@@ -1677,9 +1642,7 @@ const app = new Elysia()
 	.delete(
 		'/users/:userId/templateAutofill/:templateId/:templateFieldId',
 		() => {
-			return {
-				statusCode: 200
-			}
+			return {}
 		},
 		{
 			params: t.Object({
@@ -1690,7 +1653,7 @@ const app = new Elysia()
 			body: t.Object({
 				token: t.String()
 			}),
-			response: StatusCodeReturn,
+			response: EmptyReturn,
 			detail: {
 				description: 'Delete template autofill field for a user'
 			}
