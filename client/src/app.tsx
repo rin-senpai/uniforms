@@ -19,9 +19,7 @@ export default function App() {
 				</div>
 			)}
 		>
-			
-				<FileRoutes />
-			
+			<FileRoutes />
 		</Router>
 	)
 }
