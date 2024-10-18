@@ -71,7 +71,6 @@ function IndividualOrgsQuery() {
 	const orgQuery = createQuery(() => ({
 		queryKey: ['org'],
 		queryFn: async () => {
-			
 			const response = await fetch(`http://${SERVER_URL}/orgs/${await eventQuery.data?.organisationId}`, {
 				method: 'GET'
 			})
@@ -123,7 +122,7 @@ function IndividualOrgsQuery() {
 			return body
 		},
 		refetchOnWindowFocus: true, // Refetch when window gains focus
-		refetchOnMount: true, // Refetch when the component mounts
+		refetchOnMount: true // Refetch when the component mounts
 	}))
 
 	return (
