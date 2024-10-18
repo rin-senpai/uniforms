@@ -9,19 +9,21 @@ export const model = {
 		{
 			user: createInsertSchema(table.users, {
 				email: t.String({ format: 'email' }),
-				avatarURI: t.String({ format: 'uri' })
+				avatarURI: t.String()
 			}),
 			userAutofill: table.userAutofills,
 			templateAutofill: table.templateAutofills,
 			notification: table.notifications,
 			notificationRule: table.notificationRules,
 			organisation: createInsertSchema(table.organisations, {
-				avatarURI: t.String({ format: 'uri' }),
-				bannerURI: t.String({ format: 'uri' })
+				avatarURI: t.String(),
+				bannerURI: t.String()
 			}),
 			organisationRole: table.organisationRoles,
 			event: createInsertSchema(table.events, {
-				bannerURI: t.String({ format: 'uri' })
+				timeStart: t.Number(),
+				timeEnd: t.Number(),
+				bannerURI: t.String()
 			}),
 			eventTag: table.eventTags,
 			eventFollow: table.eventFollows,
@@ -56,19 +58,21 @@ export const model = {
 		{
 			user: createSelectSchema(table.users, {
 				email: t.String({ format: 'email' }),
-				avatarURI: t.String({ format: 'uri' })
+				avatarURI: t.String()
 			}),
 			userAutofill: table.userAutofills,
 			templateAutofill: table.templateAutofills,
 			notification: table.notifications,
 			notificationRule: table.notificationRules,
 			organisation: createSelectSchema(table.organisations, {
-				avatarURI: t.String({ format: 'uri' }),
-				bannerURI: t.String({ format: 'uri' })
+				avatarURI: t.String(),
+				bannerURI: t.String()
 			}),
 			organisationRole: table.organisationRoles,
 			event: createSelectSchema(table.events, {
-				bannerURI: t.String({ format: 'uri' })
+				timeStart: t.Number(),
+				timeEnd: t.Number(),
+				bannerURI: t.String()
 			}),
 			eventTag: table.eventTags,
 			eventFollow: table.eventFollows,

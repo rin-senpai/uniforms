@@ -201,7 +201,7 @@ export default function New() {
 											type='datetime-local'
 											value={new Date(field().state.value).toISOString().slice(0, -8)}
 											onChange={(e) => {
-												form.setFieldValue(field().name, e.target.value)
+												form.setFieldValue(field().name, new Date(e.target.value).getTime())
 											}}
 										/>
 										<Show when={field().state.meta.errors}>
@@ -225,8 +225,8 @@ export default function New() {
 											type='datetime-local'
 											value={new Date(field().state.value).toISOString().slice(0, -8)}
 											onChange={(e) => {
-												console.log(new Date(e.target.value))
-												form.setFieldValue(field().name, e.target.value)
+												console.log(new Date(e.target.value).getTime())
+												form.setFieldValue(field().name, new Date(e.target.value).getTime())
 											}}
 										/>
 										<Show when={field().state.meta.errors}>

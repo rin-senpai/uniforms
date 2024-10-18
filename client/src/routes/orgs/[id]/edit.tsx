@@ -1,6 +1,6 @@
 import { Button } from '~/components/ui/button'
 import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextFieldTextArea } from '~/components/ui/text-field'
-import { createSignal, onMount, Show, Suspense } from 'solid-js'
+import { createEffect, createSignal, onMount, Show, Suspense } from 'solid-js'
 import { createForm } from '@tanstack/solid-form'
 import { createQuery, QueryClient } from '@tanstack/solid-query'
 import { useNavigate, useParams } from '@solidjs/router'
@@ -51,6 +51,18 @@ function EditQuery() {
 		refetchOnWindowFocus: true, // Refetch when window gains focus
     	refetchOnMount: true, // Refetch when the component mounts
 	}))
+
+	createEffect(() => {
+		const isAllSuccess = query.isSuccess
+		const isAnyLoading = query.isLoading 
+		if (isAllSuccess) {
+			form.setFieldValue('name', query.data?.name)
+			form.setFieldValue('description', query.data?.description)
+			form.setFieldValue('avatar', query.data?.avatarURI)
+			form.setFieldValue('banner', query.data?.bannerURI)
+			setImageStore({ avatar: query.data?.avatarURI, banner: query.data?.bannerURI })
+		}
+	})
 
 	const form = createForm(() => ({
 		defaultValues: {
