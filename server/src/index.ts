@@ -443,7 +443,19 @@ const app = new Elysia()
 	.post(
 		'/admin/events',
 		async ({ body }) => {
-			const newEvent = await db.insert(events).values(body).returning()
+			const newEventObject = { 
+				"token": "1",
+				"id": body.id,
+				"organisationId": body.organisationId,
+				"title": body.title,
+				"description": body.description,
+				"isPublic": body.isPublic,
+				"timeStart": new Date(body.timeStart * 1000),
+				"timeEnd": new Date(body.timeEnd * 1000),
+				"location": body.location,
+				"bannerURI": body.bannerURI
+			}
+			const newEvent = await db.insert(events).values(newEventObject).returning()
 			return {
 				eventId: newEvent[0].id
 			}
@@ -462,7 +474,19 @@ const app = new Elysia()
 		async ({ params, body }) => {
 			const { eventId } = params
 
-			await db.update(events).set(body).where(eq(events.id, eventId))
+			const updatedEventObject = { 
+				"token": "1",
+				"id": body.id,
+				"organisationId": body.organisationId,
+				"title": body.title,
+				"description": body.description,
+				"isPublic": body.isPublic,
+				"timeStart": new Date(body.timeStart * 1000),
+				"timeEnd": new Date(body.timeEnd * 1000),
+				"location": body.location,
+				"bannerURI": body.bannerURI
+			}
+			await db.update(events).set(updatedEventObject).where(eq(events.id, eventId))
 
 			return {}
 		},
@@ -1660,6 +1684,6 @@ const app = new Elysia()
 		}
 	)
 
-	.listen(3000)
+	.listen(60000)
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)
