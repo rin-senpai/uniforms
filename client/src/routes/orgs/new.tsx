@@ -185,7 +185,7 @@ export default function New() {
 					</div>
 
 					<div class='flex flex-col gap-8'>
-						<div class='flex flex-col gap-4 align-items-start'>
+						<div class='flex flex-col gap-4 items-start'>
 							<h2 class='text-xl font-bold tracking-tight'>Avatar</h2>
 							<img src={imageStore.avatar} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
