@@ -13,7 +13,6 @@ export default function App() {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<SolidQueryDevtools />
 			<Router
 				root={(props) => (
 					<div class='flex flex-row'>
