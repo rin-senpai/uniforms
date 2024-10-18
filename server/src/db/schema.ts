@@ -192,8 +192,8 @@ export const events = sqliteTable('events', {
 	title: text().notNull(),
 	description: text().notNull(),
 	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
-	timeStart: integer({ mode: 'timestamp' }),
-	timeEnd: integer({ mode: 'timestamp' }),
+	timeStart: integer({ mode: 'timestamp' }).notNull(),
+	timeEnd: integer({ mode: 'timestamp' }).notNull(),
 	location: text(),
 	bannerURI: text(),
 	createdAt: integer({ mode: 'timestamp' })
