@@ -18,12 +18,13 @@ import SocietyView from '~/components/SocietyView'
 // Notifications data
 const notifications = [
 	{ title: 'Event | AUNSW x BESS x BoulderSoc Bouldering Event! 🧗‍♂️😱', description: 'Join AUNSW, BESS, and BoulderSoc for an exciting evening of bouldering at Nomad in Annandale!' },
-	{ title: 'Society | AUNSW has 3 newly added Events!!!! 😱', description: 'Check out all the new Events' }
+	{ title: 'Society | DevSoc has 3 new events', description: 'Check out all the new Events' },
+	{ title: 'Event | Arc Fun-A-Thon', description: 'New event matching your query "social" - Click for more info' }
 ]
 
 export default function Home(props: any) {
 	const [value, setValue] = createSignal('')
-	const selectedEvent = eventsListDefault[1]
+	const selectedEvent = eventsListDefault[3]
 
 	return (
 		<main class='text-center mx-auto text-gray-700 p-10 flex-1 overflow-x-hidden'>
@@ -81,7 +82,7 @@ export default function Home(props: any) {
 						<CardContent class='text-left mt-2'>
 							<p class='text-md text-gray-600'>{selectedEvent.description}</p>
 							<p class='text-sm text-gray-500 mt-2'>
-								<strong>Date:</strong> {new Date(selectedEvent.timeStart).toLocaleString()} - {new Date(selectedEvent.timeEnd).toLocaleString()}
+								<strong>Date:</strong> {new Date(selectedEvent.timeStart * 1000).toLocaleString()} - {new Date(selectedEvent.timeEnd * 1000).toLocaleString()}
 							</p>
 							<p class='text-sm text-gray-500'>
 								<strong>Location:</strong> {selectedEvent.location}
