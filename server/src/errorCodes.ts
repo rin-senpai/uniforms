@@ -1,4 +1,4 @@
-const errorMap: Map<number, string> = new Map([
+export const errorMap: Map<number, string> = new Map([
 	[400, 'Bad Request'],
 	[401, 'Unauthorized'],
 	[403, 'Forbidden'],
