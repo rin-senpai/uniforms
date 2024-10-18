@@ -2,11 +2,15 @@ import { A } from '@solidjs/router'
 import Counter from '~/components/Counter'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
-import { For, splitProps } from 'solid-js'
+import { Switch, SwitchControl, SwitchThumb } from '~/components/ui/switch'
+import { createSignal, For, splitProps } from 'solid-js'
+import { Checkbox } from '~/components/ui/checkbox'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import QRCodeButton from '~/components/QRCodeButton'
 import { boulderingURI } from '~/components/URItest'
 import { Event } from '../../../server/src/interface'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '~/components/ui/hover-card'
-import { SwitchControl, SwitchThumb, Switch } from '~/components/ui/switch'
 import EventsView from '~/components/EventsView'
 import { eventsListDefault } from '~/components/eventsTest'
 import SocietyView from '~/components/SocietyView'
@@ -18,6 +22,7 @@ const notifications = [
 ]
 
 export default function Home(props: any) {
+	const [value, setValue] = createSignal('')
 	const selectedEvent = eventsListDefault[1]
 
 	return (
@@ -29,7 +34,7 @@ export default function Home(props: any) {
 				{' - '}
 				<A href='/about' class='text-sky-600 hover:underline'>
 					About Page
-				</A>{' '}
+				</A>
 			</p>
 
 			{/* Notifications Section */}
@@ -69,6 +74,11 @@ export default function Home(props: any) {
 				<div class='flex flex-col justify-start'>
 					<h2 class='text-xl font-bold mb-4 justify-start'>Upcoming Events</h2>
 					<EventsView class='w-[1200px] gap-10' events={eventsListDefault} numberOfEvents={3} />
+				</div>
+
+				{/* QR Code test */}
+				<div>
+					<QRCodeButton link='https://rin.vin' />
 				</div>
 			</div>
 
