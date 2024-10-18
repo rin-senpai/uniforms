@@ -66,15 +66,7 @@ export default function NewForm() {
 							mode='array'
 							defaultValue={variant() === 'slider' ? [(block().options.min.value + block().options.max.value) / 2] : undefined}
 							children={(field) => (
-								<EditBlock
-									name={field().name}
-									variant={variant}
-									setVariant={setVariant}
-									value={field().state.value}
-									onBlur={field().handleBlur}
-									onInput={(e: any) => field().handleChange(e.target.value)}
-									{...block()}
-								/>
+								<EditBlock name={field().name} variant={variant} setVariant={setVariant} value={field().state.value} onBlur={field().handleBlur} onInput={(e: any) => field().handleChange(e.target.value)} {...block()} />
 							)}
 						/>
 					)
