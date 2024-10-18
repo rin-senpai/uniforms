@@ -23,10 +23,10 @@ export default function Events() {
             return eventsListDefault
         }
     }
-        
+
 	return (
-        <div class="w-full">
-            <h1 class="text-center">Events</h1>
+        <div class="w-full m-5">
+            <h1 class="text-center max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Events</h1>
             <div class="flex flex-row">
                 <TextField class="flex-1 p-3">
                     <TextFieldInput type="search" placeholder="Search Events" onInput={(e) => setSearchItem(e.currentTarget.value)}>Search</TextFieldInput>
@@ -43,7 +43,7 @@ export default function Events() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-           
+
             <EventsView class='text-center' events={filteredEvents()}/>
         </div>
     )

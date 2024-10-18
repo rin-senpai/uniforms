@@ -51,32 +51,15 @@ export default function Nav(props: object) {
 			</NavigationMenuItem>
 
 			<NavigationMenuItem>
-				<NavigationMenuTrigger class=''>
-					Event
-					<NavigationMenuIcon />
+				<NavigationMenuTrigger as='a' href='/events' class={buttonVariants({ variant: activeButton('/events') })}>
+					Events
 				</NavigationMenuTrigger>
+			</NavigationMenuItem>
 
-				<NavigationMenuContent class='grid grid-flow-col grid-rows-3 gap-3 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] [&>li:first-child]:row-span-3'>
-					<NavigationMenuLink class='box-border flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline focus:shadow-md' href='https://solid-ui.com'>
-						<NavigationMenuLabel class='mb-2 mt-4 text-lg font-medium'>SolidUI</NavigationMenuLabel>
-						<NavigationMenuDescription class='text-sm leading-tight text-muted-foreground'>Beautifully designed components. Built with Kobalte & corvu. Styled with Tailwind CSS.</NavigationMenuDescription>
-					</NavigationMenuLink>
-
-					<NavigationMenuLink href='/docs'>
-						<NavigationMenuLabel>Introduction</NavigationMenuLabel>
-						<NavigationMenuDescription>Re-usable components. Built with Kobalte & corvu. Styled with Tailwind CSS.</NavigationMenuDescription>
-					</NavigationMenuLink>
-
-					<NavigationMenuLink href='/docs/installation/overview'>
-						<NavigationMenuLabel>Installation</NavigationMenuLabel>
-						<NavigationMenuDescription>How to install dependencies and structure your app.</NavigationMenuDescription>
-					</NavigationMenuLink>
-
-					<NavigationMenuLink href='/docs/dark-mode/overview'>
-						<NavigationMenuLabel>Dark Mode</NavigationMenuLabel>
-						<NavigationMenuDescription>Adding dark mode to your site.</NavigationMenuDescription>
-					</NavigationMenuLink>
-				</NavigationMenuContent>
+			<NavigationMenuItem>
+				<NavigationMenuTrigger as='a' href='/orgs' class={buttonVariants({ variant: activeButton('/orgs') })}>
+					Organisations
+				</NavigationMenuTrigger>
 			</NavigationMenuItem>
 
 			<NavigationMenuItem>

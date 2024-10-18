@@ -1,38 +1,29 @@
-import { For } from 'solid-js'
+import { For, splitProps } from 'solid-js'
 import { Card, CardContent, CardDescription, CardTitle } from './ui/card'
-import { boulderingURI, skullimgURI } from './URItest'
+
 import EventsView from './EventsView'
 import { eventsListDefault } from './eventsTest'
 import { NavigationMenu } from './ui/navigation-menu'
 import { NavigationMenuItem } from '@kobalte/core/src/navigation-menu/navigation-menu-item.jsx'
 import { NavigationMenuTrigger } from '@kobalte/core/src/navigation-menu/navigation-menu-trigger.jsx'
+import { cn } from '~/lib/utils'
 
 interface SocietyViewProps {}
 
-interface Society {
-	name: string
-	imageUrl: string
-}
+export default function SocietyView(props: any) {
+	const [local, others] = splitProps(props, ['class'])
+	
+	const numberOfOrgs = () => ('numberOfOrgs' in props ? props.numberOfOrgs : -1)
 
-const societies: Society[] = [
-	{
-		name: 'AnimeUNSW',
-		imageUrl: boulderingURI
-	},
-	{
-		name: 'CSESoc',
-		imageUrl: skullimgURI
-	},
-	{
-		name: 'DevSoc',
-		imageUrl: skullimgURI
+	let orgsList
+	if (numberOfOrgs() != -1) {
+		orgsList = () => ('orgs' in props ? props.orgs.slice(0, numberOfOrgs()) : [])
+	} else {
+		orgsList = () => ('orgs' in props ? props.orgs : [])
 	}
-]
-
-export default function SocietyView(props: object) {
 	return (
-		<div class='flex flex-col p-4'>
-			<For each={societies}>
+		<div  class={cn('flex flex-col p-4', local.class)} {...others}>
+			<For each={orgsList()}>
 				{(item) => (
 					<Card class='m-2 h-64'>
 						<CardContent class='grid grid-cols-2 pl-0'>
