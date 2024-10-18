@@ -71,13 +71,15 @@ function EditQuery() {
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			}).then(() => navigate(`/society/${params.id}/edit`, { replace: false })
-            ).catch((value) => {throw new Error(`Response failed.`)})
-			
+			})
+				.then(() => navigate(`/society/${params.id}/edit`, { replace: false }))
+				.catch((value) => {
+					throw new Error(`Response failed.`)
+				})
 		}
 	}))
 
-	const [ imageStore, setImageStore ] = createStore({avatar: query.data?.avatarURI, banner: query.data?.bannerURI})
+	const [imageStore, setImageStore] = createStore({ avatar: query.data?.avatarURI, banner: query.data?.bannerURI })
 
 	const onAvatarUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
@@ -218,13 +220,13 @@ function EditQuery() {
 					</div>
 
 					<div class='flex flex-col gap-8'>
-                        <div class='flex flex-col gap-4 items-start'>
-                            <label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Avatar</label>
+						<div class='flex flex-col gap-4 items-start'>
+							<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Avatar</label>
 							<img src={imageStore.avatar} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 
 						<div class='flex flex-col gap-4 items-start'>
-                            <label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Banner</label>
+							<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Banner</label>
 							<img src={imageStore.banner} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 					</div>

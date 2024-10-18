@@ -8,7 +8,7 @@ import { useNavigate, useParams } from '@solidjs/router'
 import { QueryClientProvider } from '@tanstack/solid-query'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { createStore } from 'solid-js/store'
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -44,18 +44,17 @@ function EditQuery() {
 
 			return {
 				title: body.event.title,
-                description: body.event.description,
-                isPublic: body.event.isPublic,
-                timeStart: body.event.timeStart,
-                timeEnd: body.event.timeEnd,
-                location: body.event.location,
-                bannerURI: body.event.bannerURI
-
+				description: body.event.description,
+				isPublic: body.event.isPublic,
+				timeStart: body.event.timeStart,
+				timeEnd: body.event.timeEnd,
+				location: body.event.location,
+				bannerURI: body.event.bannerURI
 			}
 		}
 	}))
 
-    const orgQuery = createQuery(() => ({
+	const orgQuery = createQuery(() => ({
 		queryKey: ['org'],
 		queryFn: async () => {
 			const response = await fetch(`http://${SERVER_URL}/orgs/${params.id}`, {
@@ -80,12 +79,12 @@ function EditQuery() {
 	const form = createForm(() => ({
 		defaultValues: {
 			name: eventQuery.data?.title,
-            description: eventQuery.data?.description,
-            visibility: eventQuery.data?.isPublic ? 'Public' : 'Private',
-            timeStart: eventQuery.data?.timeStart * 1000,
-            timeEnd: eventQuery.data?.timeEnd * 1000,
-            location: eventQuery.data?.location,
-            banner: eventQuery.data?.bannerURI
+			description: eventQuery.data?.description,
+			visibility: eventQuery.data?.isPublic ? 'Public' : 'Private',
+			timeStart: eventQuery.data?.timeStart * 1000,
+			timeEnd: eventQuery.data?.timeEnd * 1000,
+			location: eventQuery.data?.location,
+			banner: eventQuery.data?.bannerURI
 		},
 
 		onSubmit: async ({ value }) => {
@@ -105,9 +104,11 @@ function EditQuery() {
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			}).then(() => navigate(`/society/${params.id}/events/${params.eventId}/edit`, { replace: false })
-            ).catch((value) => {throw new Error(`Response failed.`)})
-
+			})
+				.then(() => navigate(`/society/${params.id}/events/${params.eventId}/edit`, { replace: false }))
+				.catch((value) => {
+					throw new Error(`Response failed.`)
+				})
 		}
 	}))
 
@@ -126,7 +127,7 @@ function EditQuery() {
 		}
 	}
 
-    console.log(form.state.values)
+	console.log(form.state.values)
 
 	// const onFormSelect = (e: Event) => {
 	// 	const target = e.target as HTMLInputElement;
@@ -143,13 +144,13 @@ function EditQuery() {
 		<Suspense fallback={'Loading...'}>
 			<div class='flex flex-col gap-2 m-6 w-full'>
 				<h2 class='text-3xl font-bold tracking-tight'>Edit event</h2>
-                <div class='flex flex-row items-center'>
-                 <h3 class='text-xl font-bold tracking-tight'>Belongs to {orgQuery.data?.name}</h3>
-                 <Avatar>
-                    <AvatarImage src={orgQuery.data?.avatarURI} />
-                    <AvatarFallback>EK</AvatarFallback>
-                </Avatar>
-                </div>
+				<div class='flex flex-row items-center'>
+					<h3 class='text-xl font-bold tracking-tight'>Belongs to {orgQuery.data?.name}</h3>
+					<Avatar>
+						<AvatarImage src={orgQuery.data?.avatarURI} />
+						<AvatarFallback>EK</AvatarFallback>
+					</Avatar>
+				</div>
 				<div class='mx-10 my-5 flex flex-row w-full gap-8'>
 					<div class='flex flex-col gap-4 w-1/2'>
 						<form
@@ -263,21 +264,23 @@ function EditQuery() {
 								}}
 								children={(field) => (
 									<TextField name={field().name} validationState={isNaN(new Date(field().state.value).getTime()) ? 'invalid' : 'valid'} class='gap-4 w-full'>
-											<TextFieldLabel>Start Date</TextFieldLabel>
-											<input
-												class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-												name={field().name}
-												type='datetime-local'
-												value={isNaN(new Date(field().state.value).getTime()) ? new Date().toISOString().slice(0, -8) : new Date(field().state.value).toISOString().slice(0, -8)}
-												onChange={(e) => {form.setFieldValue(field().name, e.target.value)}}
-											/>
-											<Show when={field().state.meta.errors}>
-												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
-											</Show>
-										</TextField>
+										<TextFieldLabel>Start Date</TextFieldLabel>
+										<input
+											class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+											name={field().name}
+											type='datetime-local'
+											value={isNaN(new Date(field().state.value).getTime()) ? new Date().toISOString().slice(0, -8) : new Date(field().state.value).toISOString().slice(0, -8)}
+											onChange={(e) => {
+												form.setFieldValue(field().name, e.target.value)
+											}}
+										/>
+										<Show when={field().state.meta.errors}>
+											<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+										</Show>
+									</TextField>
 								)}
 							/>
-                            
+
 							<form.Field
 								name='timeEnd'
 								validators={{
@@ -285,20 +288,23 @@ function EditQuery() {
 								}}
 								children={(field) => (
 									<TextField name={field().name} validationState={isNaN(new Date(field().state.value).getTime()) ? 'invalid' : 'valid'} class='gap-4 w-full'>
-											<TextFieldLabel>End Date</TextFieldLabel>
-											<input
-												class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-												name={field().name}
-												type='datetime-local'
-												value={isNaN(new Date(field().state.value).getTime()) ? new Date().toISOString().slice(0, -8) : new Date(field().state.value).toISOString().slice(0, -8)}
-												onChange={(e) => {console.log(new Date(e.target.value));form.setFieldValue(field().name, e.target.value)}}
-											/>
-											<Show when={field().state.meta.errors}>
-												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
-											</Show>
-										</TextField>
+										<TextFieldLabel>End Date</TextFieldLabel>
+										<input
+											class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+											name={field().name}
+											type='datetime-local'
+											value={isNaN(new Date(field().state.value).getTime()) ? new Date().toISOString().slice(0, -8) : new Date(field().state.value).toISOString().slice(0, -8)}
+											onChange={(e) => {
+												console.log(new Date(e.target.value))
+												form.setFieldValue(field().name, e.target.value)
+											}}
+										/>
+										<Show when={field().state.meta.errors}>
+											<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+										</Show>
+									</TextField>
 								)}
-							/> 
+							/>
 
 							{/* <TextField class='gap-4'>
 				<TextFieldLabel>Banner</TextFieldLabel>

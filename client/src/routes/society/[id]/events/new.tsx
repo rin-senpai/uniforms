@@ -65,7 +65,6 @@ export default function New() {
 		}
 	}
 
-
 	// const onFormSelect = (e: Event) => {
 	// 	const target = e.target as HTMLInputElement;
 	// 	const value = target.value
@@ -195,18 +194,20 @@ export default function New() {
 								}}
 								children={(field) => (
 									<TextField name={field().name} validationState={isNaN(new Date(field().state.value).getTime()) ? 'invalid' : 'valid'} class='gap-4 w-full'>
-											<TextFieldLabel>Start Date</TextFieldLabel>
-											<input
-												class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-												name={field().name}
-												type='datetime-local'
-												value={new Date(field().state.value).toISOString().slice(0, -8)}
-												onChange={(e) => {form.setFieldValue(field().name, e.target.value)}}
-											/>
-											<Show when={field().state.meta.errors}>
-												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
-											</Show>
-										</TextField>
+										<TextFieldLabel>Start Date</TextFieldLabel>
+										<input
+											class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+											name={field().name}
+											type='datetime-local'
+											value={new Date(field().state.value).toISOString().slice(0, -8)}
+											onChange={(e) => {
+												form.setFieldValue(field().name, e.target.value)
+											}}
+										/>
+										<Show when={field().state.meta.errors}>
+											<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+										</Show>
+									</TextField>
 								)}
 							/>
 
@@ -217,18 +218,21 @@ export default function New() {
 								}}
 								children={(field) => (
 									<TextField name={field().name} validationState={isNaN(new Date(field().state.value).getTime()) ? 'invalid' : 'valid'} class='gap-4 w-full'>
-											<TextFieldLabel>End Date</TextFieldLabel>
-											<input
-												class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-												name={field().name}
-												type='datetime-local'
-												value={new Date(field().state.value).toISOString().slice(0, -8)}
-												onChange={(e) => {console.log(new Date(e.target.value));form.setFieldValue(field().name, e.target.value)}}
-											/>
-											<Show when={field().state.meta.errors}>
-												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
-											</Show>
-										</TextField>
+										<TextFieldLabel>End Date</TextFieldLabel>
+										<input
+											class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+											name={field().name}
+											type='datetime-local'
+											value={new Date(field().state.value).toISOString().slice(0, -8)}
+											onChange={(e) => {
+												console.log(new Date(e.target.value))
+												form.setFieldValue(field().name, e.target.value)
+											}}
+										/>
+										<Show when={field().state.meta.errors}>
+											<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+										</Show>
+									</TextField>
 								)}
 							/>
 
@@ -261,7 +265,8 @@ export default function New() {
 	)
 }
 
-{/* <div class='flex flex-row gap-4'>
+{
+	/* <div class='flex flex-row gap-4'>
 										<div>
 											<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Day</label>
 											<NumberField
@@ -340,4 +345,5 @@ export default function New() {
 											</NumberField>
 										</div>
 										
-									</div> */}
+									</div> */
+}

@@ -39,12 +39,10 @@ export default function New() {
 			}
 
 			await response.json().then((body) => navigate(`/society/${body.orgId}/edit`, { replace: false }))
-
-			
 		}
 	}))
 
-	const [ imageStore, setImageStore ] = createStore({avatar: '', banner: ''})
+	const [imageStore, setImageStore] = createStore({ avatar: '', banner: '' })
 
 	const onAvatarUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
@@ -199,7 +197,6 @@ export default function New() {
 					</div>
 				</div>
 			</div>
-			
 		</>
 	)
 }
