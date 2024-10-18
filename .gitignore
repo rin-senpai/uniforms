@@ -37,3 +37,6 @@ vite.config.ts.timestamp*
 
 .nitro
 .output
+
+# API Checker
+.bruno
