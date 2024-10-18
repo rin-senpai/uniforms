@@ -45,12 +45,6 @@ export default function Nav(props: object) {
 			</NavigationMenuItem>
 
 			<NavigationMenuItem>
-				<NavigationMenuTrigger as='a' href='/about' class={buttonVariants({ variant: activeButton('/about') })}>
-					About
-				</NavigationMenuTrigger>
-			</NavigationMenuItem>
-
-			<NavigationMenuItem>
 				<NavigationMenuTrigger as='a' href='/events' class={buttonVariants({ variant: activeButton('/events') })}>
 					Events
 				</NavigationMenuTrigger>

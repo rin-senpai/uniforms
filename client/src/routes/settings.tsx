@@ -4,7 +4,7 @@ import { TextField, TextFieldInput } from '../components/ui/text-field'
 import { Label } from '../components/ui/label'
 
 const Settings = () => {
-	const [field, setField] = createSignal('')
+	const [field, setField] = createSignal('Notification Triggers')
 	return (
 		<div class='flex flex-row w-full'>
 			<div class='flex flex-col'>
@@ -44,7 +44,7 @@ const Settings = () => {
 							<TextFieldInput type='text' />
 						</TextField>
 						<Label class='text-left my-3'>Active Triggers</Label>
-						<For each={['Apple', 'Orange', 'Watermelon']}>{(elem) => <p class='my-2 w-full p-3 bg-gray-300 text-left rounded-xl'>{elem}</p>}</For>
+						<For each={['software', 'social', 'valorant']}>{(elem) => <p class='my-2 w-full p-3 bg-gray-300 text-left rounded-xl'>{elem}</p>}</For>
 					</div>
 				</div>
 			:	null}

@@ -93,28 +93,6 @@ function IndividualOrgsQuery() {
 		enabled: eventQuery.isSuccess
 	}))
 
-	const formQuery = createQuery(() => ({
-		queryKey: ['forms'],
-		queryFn: async () => {
-			const response = await fetch(`http://${SERVER_URL}/events/${await eventQuery.data?.organisationId}/forms`, {
-				method: 'GET'
-			})
-
-			if (!response.ok) {
-				throw new Error(`Response status: ${response.status}`)
-			}
-
-			const body = await response.json()
-
-			return {
-				forms: body.forms
-			}
-		},
-		refetchOnWindowFocus: true, // Refetch when window gains focus
-		refetchOnMount: true, // Refetch when the component mounts
-		enabled: eventQuery.isSuccess
-	}))
-
 	const [dateStore, setDateStore] = createStore({
 		timeStart: eventQuery.data?.timeStart,
 		timeEnd: eventQuery.data?.timeEnd
@@ -128,7 +106,24 @@ function IndividualOrgsQuery() {
 		}
 	})
 
-	console.log(eventQuery.data?.timeStart)
+	const formQuery = createQuery(() => ({
+		queryKey: ['forms'],
+		queryFn: async () => {
+			const response = await fetch(`http://${SERVER_URL}/events/${params.eventId}/forms`, {
+				method: 'GET'
+			})
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`)
+			}
+
+			const body = await response.json()
+
+			return body
+		},
+		refetchOnWindowFocus: true, // Refetch when window gains focus
+		refetchOnMount: true // Refetch when the component mounts
+	}))
 
 	return (
 		<Suspense fallback={'Loading...'}>
@@ -164,7 +159,7 @@ function IndividualOrgsQuery() {
 							</Button>
 
 							<div class='flex flex-col'>
-								<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Forms</label>
+								<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 pb-2'>Forms</label>
 								<div class='flex flex-col gap-2'>
 									<For each={formQuery.data?.forms}>
 										{(item) => (

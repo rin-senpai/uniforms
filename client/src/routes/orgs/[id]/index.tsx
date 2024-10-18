@@ -6,6 +6,9 @@ import { createSignal, onMount, Show, Suspense } from 'solid-js'
 import { useNavigate, useParams } from '@solidjs/router'
 import { Button } from '~/components/ui/button'
 import { showToast, Toaster } from '~/components/ui/toast'
+import EventsView from '~/components/EventsView'
+import { eventsListDefault } from '~/components/eventsTest'
+import { Separator } from '~/components/ui/separator'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -61,13 +64,34 @@ function IndividualOrgsQuery() {
 		refetchOnWindowFocus: true, // Refetch when window gains focus
 		refetchOnMount: true // Refetch when the component mounts
 	}))
+
+	const eventsQuery = createQuery(() => ({
+		queryKey: ['events'],
+		queryFn: async () => {
+			const response = await fetch(`http://${SERVER_URL}/orgs/${params.id}/events`, {
+				method: 'GET'
+			})
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`)
+			}
+
+			const body = await response.json()
+			const eventsList: Event[] = body.events
+
+			return eventsList
+		}
+	}))
+
+	console.log(eventsQuery.data)
+
 	return (
 		<Suspense fallback={'Loading...'}>
 			<div class='w-full m-5 flex flex-col gap-4'>
 				<div class='*:rounded-xl relative'>
 					<img class='object-contain w-full h-auto' src={query.data?.bannerURI} />
 					<div class='object-contain absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>
-					<h2 class='absolute inset-x-5 bottom-5 text-white text-sm lg:text-6xl'>{query.data?.name}</h2>
+					<h2 class='absolute inset-x-5 bottom-5 text-white text-sm lg:text-6xl font-bold'>{query.data?.name}</h2>
 				</div>
 
 				<div class='w-full flex flex-row gap-4'>
@@ -80,6 +104,12 @@ function IndividualOrgsQuery() {
 							Edit this society
 						</Button>
 					</div>
+				</div>
+
+				<Separator />
+				<div class='flex flex-col w-full'>
+					<h2 class='text-lg font-bold'>All Events</h2>
+					<EventsView events={eventsQuery.data} />
 				</div>
 			</div>
 			<Toaster />
