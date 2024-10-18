@@ -6,6 +6,9 @@ import { createSignal, onMount, Show, Suspense } from 'solid-js'
 import { useNavigate, useParams } from '@solidjs/router'
 import { Button } from '~/components/ui/button'
 import { showToast, Toaster } from '~/components/ui/toast'
+import EventsView from '~/components/EventsView'
+import { eventsListDefault } from '~/components/eventsTest'
+import { Separator } from '~/components/ui/separator'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -67,7 +70,7 @@ function IndividualOrgsQuery() {
 				<div class='*:rounded-xl relative'>
 					<img class='object-contain w-full h-auto' src={query.data?.bannerURI} />
 					<div class='object-contain absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>
-					<h2 class='absolute inset-x-5 bottom-5 text-white text-sm lg:text-6xl'>{query.data?.name}</h2>
+					<h2 class='absolute inset-x-5 bottom-5 text-white text-sm lg:text-6xl font-bold'>{query.data?.name}</h2>
 				</div>
 
 				<div class='w-full flex flex-row gap-4'>
@@ -81,6 +84,13 @@ function IndividualOrgsQuery() {
 						</Button>
 					</div>
 				</div>
+
+				<Separator/>
+				<div class='flex flex-col w-full'>
+					<h2 class='text-lg font-bold'>All events</h2>
+					<EventsView events={eventsListDefault}/>
+				</div>
+				
 			</div>
 			<Toaster />
 		</Suspense>
