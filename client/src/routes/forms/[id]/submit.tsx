@@ -4,6 +4,7 @@ import { createForm } from '@tanstack/solid-form'
 import { useNavigate, useParams } from '@solidjs/router'
 import { createQuery } from '@tanstack/solid-query'
 import { Button } from '~/components/ui/button'
+import QRCodeButton from '~/components/QRCodeButton'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -60,7 +61,10 @@ export default function NewForm() {
 				<Match when={queriedForm.isPending}>Loading...</Match>
 				<Match when={queriedForm.error}>what the</Match>
 				<Match when={queriedForm.data !== undefined}>
-					<h2 class='m-4 text-3xl font-bold tracking-tight'>{queriedForm.data.form.title}</h2>
+					<div class='flex flex-row justify-between items-center'>
+						<h2 class='m-4 text-3xl font-bold tracking-tight'>{queriedForm.data.form.title}</h2>
+						<QRCodeButton link={'http://localhost:3000/forms/1/submit'} />
+					</div>
 
 					<Index each={queriedForm.data.form.fields.blocks}>
 						{(block, i) => (

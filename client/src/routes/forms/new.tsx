@@ -3,10 +3,9 @@ import { createStore } from 'solid-js/store'
 import { EditBlock, BlockVariant } from '~/components/EditBlock'
 import { createForm } from '@tanstack/solid-form'
 import { useNavigate } from '@solidjs/router'
-import { createQuery } from '@tanstack/solid-query'
-import { Separator } from '~/components/ui/separator'
 import { Button } from '~/components/ui/button'
 import Plus from 'lucide-solid/icons/plus'
+import QRCodeButton from '~/components/QRCodeButton'
 
 export default function NewForm() {
 	const [blocks, setBlocks] = createStore<
@@ -52,7 +51,10 @@ export default function NewForm() {
 
 	return (
 		<main class='flex flex-col gap-3 text-center mx-auto text-gray-700 p-4'>
-			<h2 class='m-4 text-3xl font-bold tracking-tight'>Untitled Form</h2>
+			<div class='flex flex-row justify-between items-center'>
+				<h2 class='m-4 text-3xl font-bold tracking-tight'>New Form</h2>
+				<QRCodeButton link={'http://localhost:3000/forms/1/submit'} />
+			</div>
 
 			<Index each={blocks}>
 				{(block, i) => {
