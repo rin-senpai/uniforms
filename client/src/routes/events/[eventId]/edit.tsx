@@ -362,6 +362,8 @@ function EditQuery() {
 							<Button onClick={form.handleSubmit}>Submit</Button>
 
 							<Button onClick={() => console.log(form.state.values)}>Print</Button>
+
+							<Button as='a' href={`/events/${params.eventId}`}>Back</Button>
 						</div>
 					</div>
 
