@@ -11,7 +11,7 @@ import { Slider, SliderTrack, SliderFill, SliderThumb, SliderLabel, SliderValueL
 
 export type BlockVariant = 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
 
-export const EditBlock: Component<{ name: string, value: any, onBlur: any, onInput: any, onChange: any, variant: any, setVariant: any, header: string, description?: string, options?: any }> = (props) =>  {
+export const EditBlock: Component<{ name: string; value: any; onBlur: any; onInput: any; onChange: any; variant: any; setVariant: any; header: string; description?: string; options?: any }> = (props) => {
 	const blockVariants = [
 		{ value: 'short', label: 'Short Answer' },
 		{ value: 'long', label: 'Long Answer' },
@@ -20,24 +20,24 @@ export const EditBlock: Component<{ name: string, value: any, onBlur: any, onInp
 		{ value: 'dropdown', label: 'Dropdown Select' },
 		{ value: 'slider', label: 'Slider' },
 		{ value: 'radioGrid', label: 'Radio Select Grid' },
-		{ value: 'checkboxGrid', label: 'Checkbox Grid' },
+		{ value: 'checkboxGrid', label: 'Checkbox Grid' }
 	]
 
 	return (
 		<Card class='w-[95%] lg:w-[512px]'>
 			<CardHeader class='text-left'>
-				<TextField name={props.name} value={props.value} onBlur={props.onBlur} onInput={props.onInput} >
+				<TextField name={props.name} value={props.value} onBlur={props.onBlur} onInput={props.onInput}>
 					<TextFieldLabel>Question</TextFieldLabel>
 					<TextFieldInput placeholder='Enter a question...' type='text' />
 				</TextField>
-				<TextField name={props.name} value={props.value} onBlur={props.onBlur} onInput={props.onInput} >
-				<TextFieldLabel>Description</TextFieldLabel>
-				<TextFieldTextArea placeholder='Enter a description...' />
+				<TextField name={props.name} value={props.value} onBlur={props.onBlur} onInput={props.onInput}>
+					<TextFieldLabel>Description</TextFieldLabel>
+					<TextFieldTextArea placeholder='Enter a description...' />
 				</TextField>
 			</CardHeader>
 			<CardContent>
-				{ props.variant() === 'radio' && (
-					<RadioGroup name={props.name} onBlur={props.onBlur} onInput={props.onInput} >
+				{props.variant() === 'radio' && (
+					<RadioGroup name={props.name} onBlur={props.onBlur} onInput={props.onInput}>
 						<Index each={props.options}>
 							{(option, i) => (
 								<RadioGroupItem value={option().value} id={`${props.name}-${i}`}>
@@ -46,20 +46,22 @@ export const EditBlock: Component<{ name: string, value: any, onBlur: any, onInp
 							)}
 						</Index>
 					</RadioGroup>
-				) }
-				{ props.variant() === 'checkbox' && (
-					<div class='flex flex-col gap-2'>
-						<Index each={props.options}>
-							{(option, i) => (
-								<div class="items-top flex space-x-2">
-									<Checkbox name={props.name} value={props.value} id={`${props.name}-${i}`} />
-									<Label for={`${props.name}-${i}-input`}>{ option().label }</Label>
-								</div>
-							)}
-						</Index>
-					</div>
-				 ) /* would need to make field mode array and wrap each checkbox in a field to fix */ }
-				{ props.variant() === 'dropdown' && (
+				)}
+				{
+					props.variant() === 'checkbox' && (
+						<div class='flex flex-col gap-2'>
+							<Index each={props.options}>
+								{(option, i) => (
+									<div class='items-top flex space-x-2'>
+										<Checkbox name={props.name} value={props.value} id={`${props.name}-${i}`} />
+										<Label for={`${props.name}-${i}-input`}>{option().label}</Label>
+									</div>
+								)}
+							</Index>
+						</div>
+					) /* would need to make field mode array and wrap each checkbox in a field to fix */
+				}
+				{props.variant() === 'dropdown' && (
 					<Select
 						name={props.name}
 						onBlur={props.onBlur}
@@ -68,17 +70,15 @@ export const EditBlock: Component<{ name: string, value: any, onBlur: any, onInp
 						optionValue='value'
 						optionTextValue='label'
 						placeholder='Select an option...'
-						itemComponent={(props) => (
-							<SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>
-						)}
+						itemComponent={(props) => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
 					>
 						<SelectTrigger>
 							<SelectValue>{props.value !== undefined && props.options.find((e: any) => e.value === props.value).label}</SelectValue>
 						</SelectTrigger>
 						<SelectContent />
 					</Select>
-				) }
-				{ props.variant() === 'slider' && (
+				)}
+				{props.variant() === 'slider' && (
 					<Slider
 						name={props.name}
 						id={props.name}
@@ -90,8 +90,10 @@ export const EditBlock: Component<{ name: string, value: any, onBlur: any, onInp
 						defaultValue={[(props.options.min.value + props.options.max.value) / 2]}
 						class='space-y-3'
 					>
-						<div class="flex w-full justify-between">
-							<SliderLabel for={`${props.name}-input`}>{props.options.min.value} - {props.options.max.value}</SliderLabel>
+						<div class='flex w-full justify-between'>
+							<SliderLabel for={`${props.name}-input`}>
+								{props.options.min.value} - {props.options.max.value}
+							</SliderLabel>
 							<SliderValueLabel for={`${props.name}-input`} />
 						</div>
 						<SliderTrack>
@@ -99,9 +101,9 @@ export const EditBlock: Component<{ name: string, value: any, onBlur: any, onInp
 							<SliderThumb />
 						</SliderTrack>
 					</Slider>
-				) }
-				{ props.variant() === 'radioGrid' && <Button>Radio Grid</Button> }
-				{ props.variant() === 'checkboxGrid' && <Button>Checkbox Grid</Button> }
+				)}
+				{props.variant() === 'radioGrid' && <Button>Radio Grid</Button>}
+				{props.variant() === 'checkboxGrid' && <Button>Checkbox Grid</Button>}
 
 				<Select
 					value={props.variant()}

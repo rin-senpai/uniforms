@@ -1,9 +1,9 @@
-import { Index, Match, Switch } from "solid-js"
-import { Block, BlockVariant } from "~/components/Block"
-import { createForm } from "@tanstack/solid-form"
-import { useNavigate, useParams } from "@solidjs/router"
+import { Index, Match, Switch } from 'solid-js'
+import { Block, BlockVariant } from '~/components/Block'
+import { createForm } from '@tanstack/solid-form'
+import { useNavigate, useParams } from '@solidjs/router'
 import { createQuery } from '@tanstack/solid-query'
-import { Button } from "~/components/ui/button"
+import { Button } from '~/components/ui/button'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -52,7 +52,6 @@ export default function NewForm() {
 
 			navigate(`/events/${queriedForm.data.form.eventId}`, { replace: true })
 		}
-
 	}))
 
 	return (
@@ -61,7 +60,7 @@ export default function NewForm() {
 				<Match when={queriedForm.isPending}>Loading...</Match>
 				<Match when={queriedForm.error}>what the</Match>
 				<Match when={queriedForm.data !== undefined}>
-					<h2 class="m-4 text-3xl font-bold tracking-tight">{queriedForm.data.form.title}</h2>
+					<h2 class='m-4 text-3xl font-bold tracking-tight'>{queriedForm.data.form.title}</h2>
 
 					<Index each={queriedForm.data.form.fields.blocks}>
 						{(block, i) => (
@@ -87,12 +86,7 @@ export default function NewForm() {
 							isSubmitting: state.isSubmitting
 						})}
 						children={(state) => (
-							<Button
-								class='w-full'
-								type='submit'
-								onClick={form.handleSubmit}
-								disabled={!state().canSubmit}
-							>
+							<Button class='w-full' type='submit' onClick={form.handleSubmit} disabled={!state().canSubmit}>
 								{state().isSubmitting ? '...' : 'Save'}
 							</Button>
 						)}
