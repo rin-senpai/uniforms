@@ -3,7 +3,6 @@ import Counter from '~/components/Counter'
 import EventsView from '~/components/EventsView'
 import SocietyView from '~/components/SocietyView'
 import { eventsListDefault } from '~/components/eventsTest'
-import Settings from '~/components/Settings'
 
 export default function About() {
 	return (
@@ -29,7 +28,6 @@ export default function About() {
 
 			<EventsView events={eventsListDefault} />
 			<SocietyView />
-			<Settings/>
 		</main>
 	)
 }
