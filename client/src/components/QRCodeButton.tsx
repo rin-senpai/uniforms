@@ -3,6 +3,7 @@ import { Button } from '~/components/ui/button'
 import { generateQRCode } from '~/lib/utils'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
 import { toast } from 'solid-sonner'
+import QrCode from 'lucide-solid/icons/qr-code'
 
 const QRCodeButton: Component<{ link: string }> = (props) => {
 	const [qrCodeUrl, setQrCodeUrl] = createSignal('')
@@ -39,7 +40,7 @@ const QRCodeButton: Component<{ link: string }> = (props) => {
 	return (
 		<Dialog>
 			<DialogTrigger as={Button<'button'>} onClick={async () => setQrCodeUrl(await generateQRCode(link()))}>
-				View QR Code
+				<QrCode />
 			</DialogTrigger>
 
 			<DialogContent>
