@@ -1,7 +1,7 @@
 import { Button } from '~/components/ui/button'
 import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextFieldTextArea } from '~/components/ui/text-field'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
-import { createSignal, Show, Suspense } from 'solid-js'
+import { createEffect, createSignal, Show, Suspense } from 'solid-js'
 import { createForm } from '@tanstack/solid-form'
 import { createQuery, QueryClient } from '@tanstack/solid-query'
 import { useNavigate, useParams } from '@solidjs/router'
@@ -9,7 +9,8 @@ import { QueryClientProvider } from '@tanstack/solid-query'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { createStore } from 'solid-js/store'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-
+import { onMount } from 'solid-js'
+import { showToast, Toaster } from '~/components/ui/toast'
 const url = 'localhost'
 const dev_port = 60000
 const SERVER_URL = `${url}:${dev_port}`
@@ -28,6 +29,18 @@ export default function Edit() {
 function EditQuery() {
 	const navigate = useNavigate()
 	const params = useParams()
+
+	const [isEdited, setIsEdited] = createSignal(false);
+
+	// Check local storage on mount to set the initial state
+	onMount(() => {
+		const savedVisibility = localStorage.getItem('organisationEdited');
+		if (savedVisibility === 'true') {
+			showToast({title: "Wahoo!", description: "Successfully edited the society", variant: 'success'})
+			setIsEdited(false);
+			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+		}
+	});
 
 	const eventQuery = createQuery(() => ({
 		queryKey: ['data'],
@@ -58,7 +71,7 @@ function EditQuery() {
 	const orgQuery = createQuery(() => ({
 		queryKey: ['org'],
 		queryFn: async () => {
-			const response = await fetch(`http://${SERVER_URL}/orgs/${eventQuery.data?.organisationId}`, {
+			const response = await fetch(`http://${SERVER_URL}/orgs/${await eventQuery.data?.organisationId}`, {
 				method: 'GET'
 			})
 
@@ -74,8 +87,26 @@ function EditQuery() {
 				avatarURI: body.organisation.avatarURI,
 				bannerURI: body.organisation.bannerURI
 			}
-		}
+		},
+		refetchOnWindowFocus: true, // Refetch when window gains focus
+    	refetchOnMount: true, // Refetch when the component mounts
+		enabled: eventQuery.isSuccess
 	}))
+
+	createEffect(() => {
+		const isAllSuccess = orgQuery.isSuccess && eventQuery.isSuccess
+		const isAnyLoading = orgQuery.isLoading || eventQuery.isLoading
+		if (isAllSuccess) {
+			form.setFieldValue('name', eventQuery.data?.title)
+			form.setFieldValue('description', eventQuery.data?.description)
+			form.setFieldValue('visibility', eventQuery.data?.isPublic ? 'Public' : 'Private')
+			form.setFieldValue('timeStart', eventQuery.data?.timeStart * 1000)
+			form.setFieldValue('timeEnd', eventQuery.data?.timeEnd * 1000)
+			form.setFieldValue('location', eventQuery.data?.location)
+			form.setFieldValue('banner', eventQuery.data?.bannerURI)
+			setBanner(eventQuery.data.bannerURI)
+		}
+	})
 
 	const form = createForm(() => ({
 		defaultValues: {
@@ -89,11 +120,12 @@ function EditQuery() {
 		},
 
 		onSubmit: async ({ value }) => {
-			console.log(value)
+			console.log(value.timeStart)
 			const response = await fetch(`http://${SERVER_URL}/admin/events/${params.eventId}`, {
 				method: 'PUT',
 				body: JSON.stringify({
 					token: 'a',
+					organisationId: eventQuery.data?.organisationId,
 					title: value.name,
 					description: value.description,
 					isPublic: value.visibility === 'Public' ? true : false,
@@ -106,14 +138,22 @@ function EditQuery() {
 					'Content-Type': 'application/json'
 				}
 			})
-				.then(() => navigate(`/events/${params.eventId}/edit`, { replace: false }))
+				.then(() => {
+					setIsEdited(true);
+					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+					// navigate(`/orgs/${params.id}/edit`, { replace: false })
+					location.reload()
+				
+				})
 				.catch((value) => {
 					throw new Error(`Response failed.`)
 				})
-		}
+		},
+		refetchOnWindowFocus: true, // Refetch when window gains focus
+    	refetchOnMount: true, // Refetch when the component mounts
 	}))
 
-	const [banner, setBanner] = createSignal('')
+	const [banner, setBanner] = createSignal(eventQuery.data?.bannerURI)
 	const onBannerUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
 		const file = target.files?.[0]
@@ -127,8 +167,6 @@ function EditQuery() {
 			reader.readAsDataURL(file)
 		}
 	}
-
-	console.log(form.state.values)
 
 	// const onFormSelect = (e: Event) => {
 	// 	const target = e.target as HTMLInputElement;
@@ -182,7 +220,9 @@ function EditQuery() {
 								validators={{
 									onChangeAsync: async ({ value }) => (value === '' ? 'Please enter a description!' : undefined)
 								}}
-								children={(field) => (
+								children={(field) => {
+									console.log(field().state.value)
+									return (
 									<TextField class='w-full' name={field().name} onInput={(e) => field().handleChange(e.target.value)} validationState={field().state.value == '' ? 'invalid' : 'valid'}>
 										<TextFieldLabel>Description</TextFieldLabel>
 										<TextFieldTextArea class='w-full' value={field().state.value} name={field().name} autoResize />
@@ -190,7 +230,8 @@ function EditQuery() {
 											<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
 										</Show>
 									</TextField>
-								)}
+									)}
+								}
 							/>
 
 							<form.Field
@@ -332,6 +373,7 @@ function EditQuery() {
 					</div>
 				</div>
 			</div>
+			<Toaster/>
 		</Suspense>
 	)
 }
