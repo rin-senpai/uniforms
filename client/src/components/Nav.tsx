@@ -43,7 +43,7 @@ export default function Nav(props: object) {
 					Home
 				</NavigationMenuTrigger>
 			</NavigationMenuItem>
-			
+
 			<NavigationMenuItem>
 				<NavigationMenuTrigger as='a' href='/events' class={buttonVariants({ variant: activeButton('/events') })}>
 					Events

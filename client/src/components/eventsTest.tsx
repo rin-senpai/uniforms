@@ -6,7 +6,8 @@ export const eventsListDefault: Event[] = [
 		id: 1,
 		organisationId: 0,
 		title: 'Transport Heritage Weekend',
-		description: 'Once again, the Transport Heritage Weekend is upon us! As one of the biggest railway events of the year, we\'re going to be running a couple of meetups and events where you\'ll get to ride trains, take photos of trains and enjoy, well, trains :D',
+		description:
+			"Once again, the Transport Heritage Weekend is upon us! As one of the biggest railway events of the year, we're going to be running a couple of meetups and events where you'll get to ride trains, take photos of trains and enjoy, well, trains :D",
 		isPublic: true,
 		timeStart: 1728095400,
 		timeEnd: 1728183600,
@@ -43,8 +44,7 @@ export const eventsListDefault: Event[] = [
 		id: 4,
 		organisationId: 0,
 		title: 'DevSoc TechSpire Industry Conference',
-		description:
-			"Join DevSoc as we host an invaluable industry talk with speakers from your favourite tech companies.",
+		description: 'Join DevSoc as we host an invaluable industry talk with speakers from your favourite tech companies.',
 		isPublic: true,
 		timeStart: 1730779200,
 		timeEnd: 1730790000,

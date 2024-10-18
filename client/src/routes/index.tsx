@@ -81,8 +81,12 @@ export default function Home(props: any) {
 				<div class='flex flex-col items-center'>
 					<h2 class='text-xl font-bold'>Managed Socs</h2>
 					<div class='flex flex-col max-w-md w-[200px] grid-cols-3 gap-6 mt-4 text-3xl'>
-						<a href='/orgs/1'><Button class='w-full h-10'>AnimeUNSW</Button></a>
-						<a href='/orgs/2'><Button class='w-full h-15'>Software Development Society</Button></a>
+						<a href='/orgs/1'>
+							<Button class='w-full h-10'>AnimeUNSW</Button>
+						</a>
+						<a href='/orgs/2'>
+							<Button class='w-full h-15'>Software Development Society</Button>
+						</a>
 					</div>
 				</div>
 			</div>

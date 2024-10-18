@@ -57,7 +57,7 @@ export default function EventsView(props: any) {
 						<a href={`/events/${item.id}`}>
 							<CardHeader class='relative inset-x-0 top-0 p-0'>
 								<div class='*:rounded-lg relative'>
-									<div class="h-48">
+									<div class='h-48'>
 										<img class='absolute inset-0 object-cover w-full h-full' src={item.bannerURI} />
 									</div>
 									<div class='absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>

@@ -65,7 +65,6 @@ function IndividualOrgsQuery() {
 		refetchOnMount: true // Refetch when the component mounts
 	}))
 
-
 	const eventsQuery = createQuery(() => ({
 		queryKey: ['events'],
 		queryFn: async () => {
@@ -107,12 +106,11 @@ function IndividualOrgsQuery() {
 					</div>
 				</div>
 
-				<Separator/>
+				<Separator />
 				<div class='flex flex-col w-full'>
 					<h2 class='text-lg font-bold'>All Events</h2>
-					<EventsView events={eventsQuery.data}/>
+					<EventsView events={eventsQuery.data} />
 				</div>
-				
 			</div>
 			<Toaster />
 		</Suspense>
