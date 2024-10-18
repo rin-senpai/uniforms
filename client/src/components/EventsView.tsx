@@ -54,40 +54,40 @@ export default function EventsView(props: any) {
 			<For each={eventsList()}>
 				{(item) => (
 					<Card class='w-48'>
-						<CardHeader class='relative inset-x-0 top-0 p-0'>
-							<div class='*:rounded-lg relative'>
-								<img class='object-contain' src={item.bannerURI} />
-								<Show when={!compact()}>
+						<a href={`/events/${item.id}`}>
+							<CardHeader class='relative inset-x-0 top-0 p-0'>
+								<div class='*:rounded-lg relative'>
+									<img class='object-contain' src={item.bannerURI} />
 									<div class='absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>
 									<CardTitle class='absolute inset-x-0 bottom-5 text-white text-sm xl:text-lg'>{item.title}</CardTitle>
-								</Show>
-							</div>
-						</CardHeader>
-
-						<Show when={!compact()}>
-							<CardDescription class='justify-center mx-5 mt-5 flex flex-row flex-wrap gap-4'>
-								<div class='flex flex-col md:flex-row gap-2 items-center'>
-									<Clock />
-									<p class='font-bold'>
-										{dateFormat(item.timeStart)} {dateFormatHour(item.timeStart, item.timeEnd)}
-									</p>
 								</div>
+							</CardHeader>
 
-								<div class='flex flex-col md:flex-row gap-2 items-center'>
-									<Map />
-									<p class='font-bold'>{item.location}</p>
-								</div>
-							</CardDescription>
+							<Show when={!compact()}>
+								<CardDescription class='justify-center mx-5 mt-5 flex flex-row flex-wrap gap-4'>
+									<div class='flex flex-col md:flex-row gap-2 items-center'>
+										<Clock />
+										<p class='font-bold'>
+											{dateFormat(item.timeStart)} {dateFormatHour(item.timeStart, item.timeEnd)}
+										</p>
+									</div>
 
-							<CardContent class='p-4 px-8'>
-								<HoverCard>
-									<HoverCardTrigger as={Button<'button'>} variant='link'>
-										Event Details
-									</HoverCardTrigger>
-									<HoverCardContent>{description() ? item.description : ''}</HoverCardContent>
-								</HoverCard>
-							</CardContent>
-						</Show>
+									<div class='flex flex-col md:flex-row gap-2 items-center'>
+										<Map />
+										<p class='font-bold'>{item.location}</p>
+									</div>
+								</CardDescription>
+
+								<CardContent class='p-4 px-8'>
+									<HoverCard>
+										<HoverCardTrigger as={Button<'button'>} variant='link'>
+											Event Details
+										</HoverCardTrigger>
+										<HoverCardContent>{description() ? item.description : ''}</HoverCardContent>
+									</HoverCard>
+								</CardContent>
+							</Show>
+						</a>
 					</Card>
 				)}
 			</For>

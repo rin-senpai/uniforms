@@ -4,6 +4,7 @@ import { migrate } from 'drizzle-orm/bun-sqlite/migrator'
 import { eq, lte, gt, and, or } from 'drizzle-orm'
 
 import { Elysia, t, error } from 'elysia'
+import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import { EmptyReturn, EventCreateReturn, OrganisationCreateReturn, UserCreateReturn, FormCreateReturn, FormTemplatePreview, FormTemplateCreateReturn, FormTemplateFieldAutofill, FormTemplate, Event } from './interface'
 
@@ -32,16 +33,17 @@ try {
 }
 
 function convertTimesToUnix(objectsArray: any[]): Event[] {
-    return objectsArray.map(obj => {
-        return {
-            ...obj,
-            timeStart: Math.floor(new Date(obj.timeStart).getTime() / 1000),
-            timeEnd: Math.floor(new Date(obj.timeEnd).getTime() / 1000)
-        };
-    });
+	return objectsArray.map((obj) => {
+		return {
+			...obj,
+			timeStart: Math.floor(new Date(obj.timeStart).getTime() / 1000),
+			timeEnd: Math.floor(new Date(obj.timeEnd).getTime() / 1000)
+		}
+	})
 }
 
 const app = new Elysia()
+	.use(cors())
 	.use(swagger())
 	.get('/', () => 'Hello Elysia')
 
@@ -455,17 +457,17 @@ const app = new Elysia()
 	.post(
 		'/admin/events',
 		async ({ body }) => {
-			const newEventObject = { 
-				"token": "1",
-				"id": body.id,
-				"organisationId": body.organisationId,
-				"title": body.title,
-				"description": body.description,
-				"isPublic": body.isPublic,
-				"timeStart": new Date(body.timeStart * 1000),
-				"timeEnd": new Date(body.timeEnd * 1000),
-				"location": body.location,
-				"bannerURI": body.bannerURI
+			const newEventObject = {
+				token: '1',
+				id: body.id,
+				organisationId: body.organisationId,
+				title: body.title,
+				description: body.description,
+				isPublic: body.isPublic,
+				timeStart: new Date(body.timeStart * 1000),
+				timeEnd: new Date(body.timeEnd * 1000),
+				location: body.location,
+				bannerURI: body.bannerURI
 			}
 			const newEvent = await db.insert(events).values(newEventObject).returning()
 			return {
@@ -486,17 +488,17 @@ const app = new Elysia()
 		async ({ params, body }) => {
 			const { eventId } = params
 
-			const updatedEventObject = { 
-				"token": "1",
-				"id": body.id,
-				"organisationId": body.organisationId,
-				"title": body.title,
-				"description": body.description,
-				"isPublic": body.isPublic,
-				"timeStart": new Date(body.timeStart * 1000),
-				"timeEnd": new Date(body.timeEnd * 1000),
-				"location": body.location,
-				"bannerURI": body.bannerURI
+			const updatedEventObject = {
+				token: '1',
+				id: body.id,
+				organisationId: body.organisationId,
+				title: body.title,
+				description: body.description,
+				isPublic: body.isPublic,
+				timeStart: new Date(body.timeStart * 1000),
+				timeEnd: new Date(body.timeEnd * 1000),
+				location: body.location,
+				bannerURI: body.bannerURI
 			}
 			await db.update(events).set(updatedEventObject).where(eq(events.id, eventId))
 

@@ -24,20 +24,25 @@ export default function SocietyView(props: any) {
 		<div class={cn('flex flex-col p-4', local.class)} {...others}>
 			<For each={orgsList()}>
 				{(item) => (
-					<Card class='m-2 h-64'>
-						<CardContent class='grid grid-cols-2 pl-0'>
-							<div class='flex flex-row'>
-								<a href='/'>
-									<img class='h-64 rounded-lg relative inset-y-0 left-0' src={item.avatarURI} />
-								</a>
-								<div class='justify-self-center'>
-									<CardHeader>{item.name}</CardHeader>
-									<CardDescription class='justify-center mx-6 gap-4'>{item.description}</CardDescription>
+					<Card class='flex-1 m-2'>
+						<a href={`/orgs/${item.id}`}>
+							<CardContent class='grid grid-cols-2 p-2'>
+								<div class='flex flex-row'>
+									<div class='flex items-center'>
+										<img class='h-48 rounded-lg relative inset-y-0 left-0' src={item.avatarURI} />
+									</div>
+									<div class='flex-1'>
+										<div class='justify-self-center'>
+											<CardHeader>{item.name}</CardHeader>
+											<CardDescription class='justify-center mx-6 gap-4'>{item.description}</CardDescription>
+										</div>
+									</div>
 								</div>
-							</div>
-
-							<EventsView events={eventsListDefault} numberOfEvents={2} displayDescription={false} class='h-5/6' compact={true} />
-						</CardContent>
+								<div class='text-center'>
+									<EventsView events={eventsListDefault} numberOfEvents={3} displayDescription={false} class='h-5/6' compact={true} />
+								</div>
+							</CardContent>
+						</a>
 					</Card>
 				)}
 			</For>

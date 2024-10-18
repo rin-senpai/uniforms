@@ -22,7 +22,7 @@ export default function Edit() {
 }
 
 function Events() {
-    const eventQuery = createQuery(() => ({
+	const eventQuery = createQuery(() => ({
 		queryKey: ['data'],
 		queryFn: async () => {
 			const response = await fetch(`http://${SERVER_URL}/events`, {
@@ -34,9 +34,9 @@ function Events() {
 			}
 
 			const body = await response.json()
-            const eventsList: Event[] = body.events;
+			const eventsList: Event[] = body.events
 
-			return eventsList;
+			return eventsList
 		}
 	}))
 
@@ -73,7 +73,7 @@ function Events() {
 				</DropdownMenu>
 			</div>
 
-			<EventsView class='text-center' events={filteredEvents()}/>
+			<EventsView class='text-center' events={filteredEvents()} />
 		</div>
 	)
 }

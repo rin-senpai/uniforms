@@ -57,9 +57,9 @@ function Orgs() {
 			}
 
 			const body = await response.json()
-            const orgsList: Organisation[] = body.organisations;
+			const orgsList: Organisation[] = body.organisations
 
-			return orgsList;
+			return orgsList
 		}
 	}))
 
