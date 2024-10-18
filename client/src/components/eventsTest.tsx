@@ -3,7 +3,7 @@ import { boulderingURI, devsocTechspire, hackathon, raoliSoc, skullimgURI } from
 
 export const eventsListDefault: Event[] = [
 	{
-		id: 0,
+		id: 1,
 		organisationId: 0,
 		title: 'Transport Heritage Weekend',
 		description: 'Once again, the Transport Heritage Weekend is upon us! As one of the biggest railway events of the year, we\'re going to be running a couple of meetups and events where you\'ll get to ride trains, take photos of trains and enjoy, well, trains :D',
@@ -15,7 +15,7 @@ export const eventsListDefault: Event[] = [
 		createdAt: new Date()
 	},
 	{
-		id: 1,
+		id: 2,
 		organisationId: 0,
 		title: 'Blueprint Hackathon',
 		description: 'Get ready to code, design, and develop! From 11 October to 19 October, we’re hosting a hackathon (theme to be disclosed on day). Surprise yourself with what you can make in a week!',
@@ -27,7 +27,7 @@ export const eventsListDefault: Event[] = [
 		createdAt: new Date()
 	},
 	{
-		id: 2,
+		id: 3,
 		organisationId: 0,
 		title: 'AUNSW x BESS x BoulderSoc Bouldering Event',
 		description:
@@ -40,7 +40,7 @@ export const eventsListDefault: Event[] = [
 		createdAt: new Date()
 	},
 	{
-		id: 3,
+		id: 4,
 		organisationId: 0,
 		title: 'DevSoc TechSpire Industry Conference',
 		description:
@@ -53,7 +53,7 @@ export const eventsListDefault: Event[] = [
 		createdAt: new Date()
 	},
 	{
-		id: 4,
+		id: 5,
 		organisationId: 0,
 		title: 'title4',
 		description: 'description4',
@@ -65,7 +65,7 @@ export const eventsListDefault: Event[] = [
 		createdAt: new Date()
 	},
 	{
-		id: 5,
+		id: 6,
 		organisationId: 1,
 		title: 'title5',
 		description: 'description5',
