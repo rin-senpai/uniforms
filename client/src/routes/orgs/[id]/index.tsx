@@ -64,6 +64,28 @@ function IndividualOrgsQuery() {
 		refetchOnWindowFocus: true, // Refetch when window gains focus
 		refetchOnMount: true // Refetch when the component mounts
 	}))
+
+
+	const eventsQuery = createQuery(() => ({
+		queryKey: ['events'],
+		queryFn: async () => {
+			const response = await fetch(`http://${SERVER_URL}/orgs/${params.id}/events`, {
+				method: 'GET'
+			})
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`)
+			}
+
+			const body = await response.json()
+			const eventsList: Event[] = body.events
+
+			return eventsList
+		}
+	}))
+
+	console.log(eventsQuery.data)
+
 	return (
 		<Suspense fallback={'Loading...'}>
 			<div class='w-full m-5 flex flex-col gap-4'>
@@ -87,8 +109,8 @@ function IndividualOrgsQuery() {
 
 				<Separator/>
 				<div class='flex flex-col w-full'>
-					<h2 class='text-lg font-bold'>All events</h2>
-					<EventsView events={eventsListDefault}/>
+					<h2 class='text-lg font-bold'>All Events</h2>
+					<EventsView events={eventsQuery.data}/>
 				</div>
 				
 			</div>
