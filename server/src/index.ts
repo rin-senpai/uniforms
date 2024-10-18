@@ -4,6 +4,7 @@ import { migrate } from 'drizzle-orm/bun-sqlite/migrator'
 import { eq, lte, gt, and, or } from 'drizzle-orm'
 
 import { Elysia, t, error } from 'elysia'
+import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import { EmptyReturn, EventCreateReturn, OrganisationCreateReturn, UserCreateReturn, FormCreateReturn, FormTemplatePreview, FormTemplateCreateReturn, FormTemplateFieldAutofill, FormTemplate, Event } from './interface'
 
@@ -42,6 +43,7 @@ function convertTimesToUnix(objectsArray: any[]): Event[] {
 }
 
 const app = new Elysia()
+	.use(cors())
 	.use(swagger())
 	.get('/', () => 'Hello Elysia')
 

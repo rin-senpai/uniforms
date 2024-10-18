@@ -1,17 +1,51 @@
 import { eventsListDefault } from '~/components/eventsTest'
+import { Event } from '../../../../server/src/interface'
 import EventsView from '~/components/EventsView'
 import { TextField, TextFieldInput } from '~/components/ui/text-field'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
 import { Button } from '~/components/ui/button'
 import { createSignal } from 'solid-js'
+import { createQuery, QueryClient, QueryClientProvider } from '@tanstack/solid-query'
 
-export default function Events() {
+const url = 'localhost'
+const dev_port = 60000
+const SERVER_URL = `${url}:${dev_port}`
+
+const queryClient = new QueryClient()
+
+export default function Edit() {
+	return (
+		<QueryClientProvider client={queryClient}>
+			<Events />
+		</QueryClientProvider>
+	)
+}
+
+function Events() {
+	const eventQuery = createQuery(() => ({
+		queryKey: ['data'],
+		queryFn: async () => {
+			const response = await fetch(`http://${SERVER_URL}/events`, {
+				method: 'GET'
+			})
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`)
+			}
+
+			const body = await response.json()
+			const eventsList: Event[] = body.events
+
+			return eventsList
+		}
+	}))
+
 	const [searchItem, setSearchItem] = createSignal('')
 	const filteredEvents = () => {
 		if (searchItem() !== '') {
-			return eventsListDefault.filter((event) => event.title.toLowerCase().includes(searchItem().toLowerCase()))
+			return eventQuery.data?.filter((event) => event.title.toLowerCase().includes(searchItem().toLowerCase()))
 		} else {
-			return eventsListDefault
+			return eventQuery.data
 		}
 	}
 
