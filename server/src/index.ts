@@ -4,6 +4,7 @@ import { migrate } from 'drizzle-orm/bun-sqlite/migrator'
 import { eq } from 'drizzle-orm'
 
 import { Elysia, t } from 'elysia'
+import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import {
 	Event,
@@ -47,6 +48,7 @@ migrate(db, { migrationsFolder: './drizzle' })
 
 const app = new Elysia()
 	.use(swagger())
+	.use(cors())
 	.get('/', () => 'Hello Elysia')
 
 	.get(
@@ -1681,6 +1683,6 @@ const app = new Elysia()
 		}
 	)
 
-	.listen(3000)
+	.listen(60000)
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)

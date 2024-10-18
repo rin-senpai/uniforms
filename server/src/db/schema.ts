@@ -282,8 +282,7 @@ export const forms = sqliteTable('forms', {
 	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
 	fields: text({ mode: 'json' }).notNull().$type<{
 		blocks: {
-			type: 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
-			id: number
+			variant: 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
 			templateFieldId: number | undefined
 			header: string
 			description: string | undefined
@@ -342,7 +341,7 @@ export const formSubmissions = sqliteTable(
 		userId: integer()
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		answers: text().notNull().$type<{ id: number; response: any }[]>(),
+		answers: text().notNull().$type<{ answers: { id: number; response: any }[] }>(),
 		createdAt: integer({ mode: 'timestamp' })
 			.notNull()
 			.default(sql`(strftime('%s', 'now'))`)
