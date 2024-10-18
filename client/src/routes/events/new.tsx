@@ -28,7 +28,7 @@ export default function New() {
 				method: 'POST',
 				body: JSON.stringify({
 					token: 'a',
-					organisationId: parseInt(params.id),
+					organisationId: 1,
 					title: value.name,
 					description: value.description,
 					isPublic: value.visibility === 'Public' ? true : false,
@@ -46,7 +46,7 @@ export default function New() {
 				throw new Error(`Response status: ${response.status}`)
 			}
 
-			await response.json().then((body) => navigate(`/society/${params.id}/events/${body.eventId}/edit`, { replace: false }))
+			await response.json().then((body) => navigate(`/events/${body.eventId}/edit`, { replace: false }))
 		}
 	}))
 

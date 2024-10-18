@@ -1,7 +1,7 @@
 import SocietyView from '~/components/SocietyView'
-import { boulderingURI, skullimgURI } from '../components/URItest'
+import { boulderingURI, skullimgURI } from '~/components/URItest'
 
-import { Organisation } from '../../../server/src/interface'
+import { Organisation } from '../../../../server/src/interface'
 
 const societies: Organisation[] = [
 	{

@@ -1,27 +1,69 @@
 import { Button } from '~/components/ui/button'
 import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextFieldTextArea } from '~/components/ui/text-field'
-import { createSignal, Show } from 'solid-js'
+import { createSignal, onMount, Show, Suspense } from 'solid-js'
 import { createForm } from '@tanstack/solid-form'
-import { redirect, useNavigate } from '@solidjs/router'
+import { createQuery, QueryClient } from '@tanstack/solid-query'
+import { useNavigate, useParams } from '@solidjs/router'
+import { QueryClientProvider } from '@tanstack/solid-query'
+import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { createStore } from 'solid-js/store'
+import { showToast, Toaster } from "~/components/ui/toast"
 
 const url = 'localhost'
 const dev_port = 60000
 const SERVER_URL = `${url}:${dev_port}`
 
-export default function New() {
+const queryClient = new QueryClient()
+
+export default function Edit() {
+	return (
+		<QueryClientProvider client={queryClient}>
+			<EditQuery />
+			<SolidQueryDevtools initialIsOpen={false} />
+		</QueryClientProvider>
+	)
+}
+
+function EditQuery() {
 	const navigate = useNavigate()
+	const params = useParams()
+
+	const query = createQuery(() => ({
+		queryKey: ['data'],
+		queryFn: async () => {
+			const response = await fetch(`http://${SERVER_URL}/orgs/${params.id}`, {
+				method: 'GET'
+			})
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`)
+			}
+
+			const body = await response.json()
+
+			return {
+				name: body.organisation.name,
+				description: body.organisation.description,
+				avatarURI: body.organisation.avatarURI,
+				bannerURI: body.organisation.bannerURI
+			}
+		},
+		refetchOnWindowFocus: true, // Refetch when window gains focus
+    	refetchOnMount: true, // Refetch when the component mounts
+	}))
+
 	const form = createForm(() => ({
 		defaultValues: {
-			name: '',
-			description: '',
-			avatar: '',
-			banner: ''
+			name: query.data?.name,
+			description: query.data?.description,
+			avatar: query.data?.avatarURI,
+			banner: query.data?.bannerURI
 		},
 
 		onSubmit: async ({ value }) => {
-			const response = await fetch(`http://${SERVER_URL}/admin/orgs`, {
-				method: 'POST',
+			console.log(value)
+			const response = await fetch(`http://${SERVER_URL}/admin/orgs/${params.id}`, {
+				method: 'PUT',
 				body: JSON.stringify({
 					token: 'a',
 					name: value.name,
@@ -33,16 +75,20 @@ export default function New() {
 					'Content-Type': 'application/json'
 				}
 			})
-
-			if (!response.ok) {
-				throw new Error(`Response status: ${response.status}`)
-			}
-
-			await response.json().then((body) => navigate(`/society/${body.orgId}/edit`, { replace: false }))
+				.then(() => {
+					setIsEdited(true);
+					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+					// navigate(`/orgs/${params.id}/edit`, { replace: false })
+					location.reload()
+				})
+				.catch((value) => {
+					showToast({title: "Uh-oh...", description: "Failed to edit the society...", variant: 'error'})
+					throw new Error(`Response failed.`)
+				})
 		}
 	}))
 
-	const [imageStore, setImageStore] = createStore({ avatar: '', banner: '' })
+	const [imageStore, setImageStore] = createStore({ avatar: query.data?.avatarURI, banner: query.data?.bannerURI })
 
 	const onAvatarUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
@@ -73,10 +119,22 @@ export default function New() {
 		}
 	}
 
+	const [isEdited, setIsEdited] = createSignal(false);
+
+	// Check local storage on mount to set the initial state
+	onMount(() => {
+		const savedVisibility = localStorage.getItem('organisationEdited');
+		if (savedVisibility === 'true') {
+			showToast({title: "Wahoo!", description: "Successfully edited the society", variant: 'success'})
+			setIsEdited(false);
+			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+		}
+	});
+
 	return (
-		<>
+		<Suspense fallback={'Loading society'}>
 			<div class='flex flex-col gap-2 m-6 w-full'>
-				<h2 class='text-3xl font-bold tracking-tight'>Create new society</h2>
+				<h2 class='text-3xl font-bold tracking-tight'>{query.data?.name}</h2>
 
 				<div class='mx-10 my-5 flex flex-row w-full gap-8'>
 					<div class='flex flex-col gap-4 w-1/2'>
@@ -179,24 +237,23 @@ export default function New() {
 							<Button type='reset'>Reset</Button>
 
 							<Button onClick={form.handleSubmit}>Submit</Button>
-
-							<Button onClick={() => console.log(form.state.values)}>Print</Button>
 						</div>
 					</div>
 
 					<div class='flex flex-col gap-8'>
-						<div class='flex flex-col gap-4 align-items-start'>
-							<h2 class='text-xl font-bold tracking-tight'>Avatar</h2>
+						<div class='flex flex-col gap-4 items-start'>
+							<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Avatar</label>
 							<img src={imageStore.avatar} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 
-						<div class='flex flex-col gap-4'>
-							<h2 class='text-xl font-bold tracking-tight'>Banner</h2>
+						<div class='flex flex-col gap-4 items-start'>
+							<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Banner</label>
 							<img src={imageStore.banner} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 					</div>
 				</div>
 			</div>
-		</>
+			<Toaster/>
+		</Suspense>
 	)
 }

@@ -44,6 +44,7 @@ function EditQuery() {
 
 			return {
 				title: body.event.title,
+				organisationId: body.event.organisationId,
 				description: body.event.description,
 				isPublic: body.event.isPublic,
 				timeStart: body.event.timeStart,
@@ -57,7 +58,7 @@ function EditQuery() {
 	const orgQuery = createQuery(() => ({
 		queryKey: ['org'],
 		queryFn: async () => {
-			const response = await fetch(`http://${SERVER_URL}/orgs/${params.id}`, {
+			const response = await fetch(`http://${SERVER_URL}/orgs/${eventQuery.data?.organisationId}`, {
 				method: 'GET'
 			})
 
@@ -105,7 +106,7 @@ function EditQuery() {
 					'Content-Type': 'application/json'
 				}
 			})
-				.then(() => navigate(`/society/${params.id}/events/${params.eventId}/edit`, { replace: false }))
+				.then(() => navigate(`/events/${params.eventId}/edit`, { replace: false }))
 				.catch((value) => {
 					throw new Error(`Response failed.`)
 				})
