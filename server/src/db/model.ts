@@ -70,6 +70,8 @@ export const model = {
 			}),
 			organisationRole: table.organisationRoles,
 			event: createSelectSchema(table.events, {
+				timeStart: t.Number(),
+				timeEnd: t.Number(),
 				bannerURI: t.String()
 			}),
 			eventTag: table.eventTags,
