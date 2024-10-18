@@ -51,7 +51,7 @@ function Events() {
 
 	return (
 		<div class='w-full m-5'>
-			<h1 class='text-center max-6-xs text-6xl text-sky-700 font-thin uppercase my-16'>Events</h1>
+			<h1 class='m-8 text-5xl text-center font-bold tracking-tight'>Events</h1>
 			<div class='flex flex-row'>
 				<TextField class='flex-1 p-3'>
 					<TextFieldInput type='search' placeholder='Search Events' onInput={(e) => setSearchItem(e.currentTarget.value)}>

@@ -65,7 +65,7 @@ function Orgs() {
 
 	return (
 		<div class='w-full m-5'>
-			<h1 class='text-center max-6-xs text-6xl text-sky-700 font-thin uppercase my-16'>Organisations</h1>
+			<h1 class='m-8 text-5xl text-center font-bold tracking-tight'>Organisations</h1>
 			<SocietyView orgs={orgsQuery.data} />
 		</div>
 	)

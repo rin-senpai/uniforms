@@ -28,7 +28,7 @@ export default function Home(props: any) {
 
 	return (
 		<main class='text-center mx-auto text-gray-700 p-10 flex-1 overflow-x-hidden'>
-			<h1 class='max-6-xs text-6xl text-sky-700 font-thin uppercase my-16'>Hello world!</h1>
+			<h1 class='m-8 text-5xl font-bold tracking-tight'>Uniforms</h1>
 
 			{/* Notifications Section */}
 			<Card class='w-full max-w-[1100px] mx-auto'>
