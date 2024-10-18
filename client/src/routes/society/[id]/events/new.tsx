@@ -6,9 +6,6 @@ import { createForm } from '@tanstack/solid-form'
 import { redirect, useNavigate, useParams } from '@solidjs/router'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
 
-import { NumberField, NumberFieldDecrementTrigger, NumberFieldErrorMessage, NumberFieldGroup, NumberFieldIncrementTrigger, NumberFieldInput } from '~/components/ui/number-field'
-import { createStore } from 'solid-js/store'
-
 const url = 'localhost'
 const dev_port = 60000
 const SERVER_URL = `${url}:${dev_port}`
@@ -21,8 +18,8 @@ export default function New() {
 			name: '',
 			description: '',
 			visibility: 'Public',
-			timeStart: Math.floor(Date.now() / 1000),
-			timeEnd: Math.floor(Date.now() / 1000 + 3600),
+			timeStart: Date.now(),
+			timeEnd: Date.now() + 3600000,
 			location: '',
 			banner: ''
 		},
@@ -32,12 +29,12 @@ export default function New() {
 				method: 'POST',
 				body: JSON.stringify({
 					token: 'a',
-					organisationId: params.id,
+					organisationId: parseInt(params.id),
 					title: value.name,
 					description: value.description,
 					isPublic: value.visibility === 'Public' ? true : false,
-					timeStart: value.timeStart,
-					timeEnd: value.timeEnd,
+					timeStart: Math.floor(value.timeStart / 1000),
+					timeEnd: Math.floor(value.timeEnd / 1000),
 					location: value.location,
 					bannerURI: value.banner
 				}),
@@ -50,12 +47,11 @@ export default function New() {
 				throw new Error(`Response status: ${response.status}`)
 			}
 
-			const body = await response.json()
-
-			navigate(`/society/${params.id}/events/${body.eventId}`, { replace: true })
+			await response.json().then((body) => navigate(`/society/${params.id}/events/${body.eventId}/edit`, { replace: false }))
 		}
 	}))
 
+	const [banner, setBanner] = createSignal('')
 	const onBannerUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
 		const file = target.files?.[0]
@@ -63,80 +59,13 @@ export default function New() {
 		if (file) {
 			const reader = new FileReader()
 			reader.onloadend = () => {
+				setBanner(reader.result as string)
 				form.setFieldValue('banner', reader.result as string)
 			}
 			reader.readAsDataURL(file)
 		}
 	}
 
-	const prefixWithZero = (num: number) => {
-		return num < 10 ? '0' + num : num.toString()
-	}
-
-	const [currentDateState, setCurrentDateState] = createStore({
-		year: new Date().getFullYear(),
-		month: new Date().getMonth() + 1,
-		day: new Date().getDate(),
-		hour: new Date().getHours(),
-		minute: new Date().getMinutes()
-	})
-
-	const [endDateState, setEndDateState] = createStore({
-		year: new Date().getFullYear(),
-		month: new Date().getMonth() + 1,
-		day: new Date().getDate(),
-		hour: (new Date().getHours() + 1) % 24,
-		minute: new Date().getMinutes()
-	})
-
-	createEffect(() => {
-		onStartDateUpdate(currentDateState.year, currentDateState.month, currentDateState.day, currentDateState.hour, currentDateState.minute)
-	})
-
-	createEffect(() => {
-		onEndDateUpdate(endDateState.year, endDateState.month, endDateState.day, endDateState.hour, endDateState.minute)
-	})
-
-	const isValidDate = (day: number, month: number, year: number) => {
-		// Create a date object with the provided day, month (0-indexed), and year
-		const date = new Date(year, month - 1, day) // month is 0-indexed in Date object
-		return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
-	}
-
-	const getMonthName = (monthNumber: number) => {
-		const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-		// Ensure the month number is between 1 and 12
-		if (monthNumber < 1 || monthNumber > 12) {
-			return null // or throw an error, or return a default value
-		}
-
-		return monthNames[monthNumber - 1] // monthNumber is 1-indexed
-	}
-
-	const getMonthNumber = (monthName: string) => {
-		const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-		// Find the index of the month name
-		const monthIndex = monthNames.indexOf(monthName)
-
-		// Return the month number (1-12) or null if not found
-		return monthIndex !== -1 ? monthIndex + 1 : 0 // +1 to convert from 0-indexed to 1-indexed
-	}
-
-	const onStartDateUpdate = (year: number, month: number, day: number, hour: number, minute: number) => {
-		const dateString = `${year}-${prefixWithZero(month)}-${prefixWithZero(day)}T${prefixWithZero(hour)}:${prefixWithZero(minute)}:00Z` // Example date string in ISO format
-		const date = new Date(dateString) // Convert string to Date object
-		const timestamp = Math.floor(date.getTime() / 1000) // Convert to UNIX timestamp (seconds)
-		form.setFieldValue('timeStart', timestamp as number)
-	}
-
-	const onEndDateUpdate = (year: number, month: number, day: number, hour: number, minute: number) => {
-		const dateString = `${year}-${prefixWithZero(month)}-${prefixWithZero(day)}T${prefixWithZero(hour)}:${prefixWithZero(minute)}:00Z` // Example date string in ISO format
-		const date = new Date(dateString) // Convert string to Date object
-		const timestamp = Math.floor(date.getTime() / 1000) // Convert to UNIX timestamp (seconds)
-		form.setFieldValue('timeEnd', timestamp as number)
-	}
 
 	// const onFormSelect = (e: Event) => {
 	// 	const target = e.target as HTMLInputElement;
@@ -149,7 +78,6 @@ export default function New() {
 	// 	form.handleSubmit()
 	// }
 
-	const [value, setValue] = createSignal('')
 	return (
 		<>
 			<div class='flex flex-col gap-2 m-6 w-full'>
@@ -199,7 +127,7 @@ export default function New() {
 							<form.Field
 								name='banner'
 								validators={{
-									onChangeAsync: async ({ value }) => (value === '' ? 'Please upload a society banner!' : undefined)
+									onChangeAsync: async ({ value }) => (value === '' ? 'Please upload an event banner!' : undefined)
 								}}
 								children={(field) => (
 									<>
@@ -264,10 +192,77 @@ export default function New() {
 							<form.Field
 								name='timeStart'
 								validators={{
-									onChangeAsync: async ({ value }) => (value === 0 ? 'Please enter a date!' : undefined)
+									onChangeAsync: async ({ value }) => (isNaN(new Date(value).getTime()) ? 'Please enter a start date!' : undefined)
 								}}
 								children={(field) => (
-									<div class='flex flex-row gap-4'>
+									<TextField name={field().name} validationState={isNaN(new Date(field().state.value).getTime()) ? 'invalid' : 'valid'} class='gap-4 w-full'>
+											<TextFieldLabel>Start Date</TextFieldLabel>
+											<input
+												class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+												name={field().name}
+												type='datetime-local'
+												value={new Date(field().state.value).toISOString().slice(0, -8)}
+												onChange={(e) => {form.setFieldValue(field().name, e.target.value)}}
+											/>
+											<Show when={field().state.meta.errors}>
+												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+											</Show>
+										</TextField>
+								)}
+							/>
+
+							<form.Field
+								name='timeEnd'
+								validators={{
+									onChangeAsync: async ({ value }) => (isNaN(new Date(value).getTime()) ? 'Please enter a end date!' : undefined)
+								}}
+								children={(field) => (
+									<TextField name={field().name} validationState={isNaN(new Date(field().state.value).getTime()) ? 'invalid' : 'valid'} class='gap-4 w-full'>
+											<TextFieldLabel>End Date</TextFieldLabel>
+											<input
+												class='flex h-10 w-1/2 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+												name={field().name}
+												type='datetime-local'
+												value={new Date(field().state.value).toISOString().slice(0, -8)}
+												onChange={(e) => {console.log(new Date(e.target.value));form.setFieldValue(field().name, e.target.value)}}
+											/>
+											<Show when={field().state.meta.errors}>
+												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+											</Show>
+										</TextField>
+								)}
+							/>
+
+							{/* <TextField class='gap-4'>
+				<TextFieldLabel>Banner</TextFieldLabel>
+
+				<input type="file" accept="image/*" onChange={onBannerUpload}/>
+			</TextField>
+
+			<img src={banner()} class='rounded-lg h-60'/> */}
+						</form>
+						<div class='flex flex-row items-center gap-2'>
+							<Button type='reset'>Reset</Button>
+
+							<Button onClick={form.handleSubmit}>Submit</Button>
+
+							<Button onClick={() => console.log(form.state.values)}>Print</Button>
+						</div>
+					</div>
+
+					<div class='flex flex-col gap-8'>
+						<div class='flex flex-col gap-4'>
+							<h2 class='text-xl font-bold tracking-tight'>Event Banner</h2>
+							<img src={banner()} class='rounded-lg max-h-60 max-w-96 h-auto w-auto object-scale-down' />
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
+	)
+}
+
+{/* <div class='flex flex-row gap-4'>
 										<div>
 											<label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Day</label>
 											<NumberField
@@ -346,35 +341,4 @@ export default function New() {
 											</NumberField>
 										</div>
 										
-									</div>
-								)}
-							/>
-
-							{/* <TextField class='gap-4'>
-				<TextFieldLabel>Banner</TextFieldLabel>
-
-				<input type="file" accept="image/*" onChange={onBannerUpload}/>
-			</TextField>
-
-			<img src={banner()} class='rounded-lg h-60'/> */}
-						</form>
-						<div class='flex flex-row items-center gap-2'>
-							<Button type='reset'>Reset</Button>
-
-							<Button onClick={form.handleSubmit}>Submit</Button>
-
-							<Button onClick={() => console.log(form.state.values)}>Print</Button>
-						</div>
-					</div>
-
-					<div class='flex flex-col gap-8'>
-						<div class='flex flex-col gap-4'>
-							<h2 class='text-xl font-bold tracking-tight'>Event Banner</h2>
-							<img src={form.state.values.banner} class='rounded-lg h-60 w-60' />
-						</div>
-					</div>
-				</div>
-			</div>
-		</>
-	)
-}
+									</div> */}

@@ -4,6 +4,7 @@ import { createSignal, Show } from 'solid-js'
 import { Organisation } from '../../../../server/src/interface'
 import { createForm } from '@tanstack/solid-form'
 import { redirect, useNavigate } from '@solidjs/router'
+import { createStore } from 'solid-js/store'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -38,11 +39,13 @@ export default function New() {
 				throw new Error(`Response status: ${response.status}`)
 			}
 
-			const body = await response.json()
+			await response.json().then((body) => navigate(`/society/${body.orgId}/edit`, { replace: false }))
 
-			navigate(`/society/${body.orgId}/edit`, { replace: true })
+			
 		}
 	}))
+
+	const [ imageStore, setImageStore ] = createStore({avatar: '', banner: ''})
 
 	const onAvatarUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
@@ -51,6 +54,7 @@ export default function New() {
 		if (file) {
 			const reader = new FileReader()
 			reader.onloadend = () => {
+				setImageStore('avatar', reader.result as string)
 				form.setFieldValue('avatar', reader.result as string)
 			}
 			reader.readAsDataURL(file)
@@ -64,16 +68,12 @@ export default function New() {
 		if (file) {
 			const reader = new FileReader()
 			reader.onloadend = () => {
+				setImageStore('banner', reader.result as string)
 				form.setFieldValue('banner', reader.result as string)
 			}
 			reader.readAsDataURL(file)
+			console.log(form.state.values.banner)
 		}
-	}
-
-	const onSubmitWrapper = (e: SubmitEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
-		form.handleSubmit()
 	}
 
 	return (
@@ -182,22 +182,25 @@ export default function New() {
 							<Button type='reset'>Reset</Button>
 
 							<Button onClick={form.handleSubmit}>Submit</Button>
+
+							<Button onClick={() => console.log(form.state.values)}>Print</Button>
 						</div>
 					</div>
 
 					<div class='flex flex-col gap-8'>
-						<div class='flex flex-col gap-4'>
+						<div class='flex flex-col gap-4 align-items-start'>
 							<h2 class='text-xl font-bold tracking-tight'>Avatar</h2>
-							<img src={form.state.values.avatar} class='rounded-lg h-60 w-60' />
+							<img src={imageStore.avatar} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 
 						<div class='flex flex-col gap-4'>
 							<h2 class='text-xl font-bold tracking-tight'>Banner</h2>
-							<img src={form.state.values.banner} class='rounded-lg h-60 w-60' />
+							<img src={imageStore.banner} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 					</div>
 				</div>
 			</div>
+			
 		</>
 	)
 }

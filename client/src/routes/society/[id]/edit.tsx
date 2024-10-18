@@ -7,6 +7,7 @@ import { createQuery, QueryClient } from '@tanstack/solid-query'
 import { useNavigate, useParams } from '@solidjs/router'
 import { QueryClientProvider } from '@tanstack/solid-query'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
+import { createStore } from 'solid-js/store'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -71,15 +72,13 @@ function EditQuery() {
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			})
-
-			if (!response.ok) {
-				throw new Error(`Response status: ${response.status}`)
-			}
-
-			navigate(`/society/${params.id}/edit`, { replace: true })
+			}).then(() => navigate(`/society/${params.id}/edit`, { replace: false })
+            ).catch((value) => {throw new Error(`Response failed.`)})
+			
 		}
 	}))
+
+	const [ imageStore, setImageStore ] = createStore({avatar: query.data?.avatarURI, banner: query.data?.bannerURI})
 
 	const onAvatarUpload = (e: Event) => {
 		const target = e.target as HTMLInputElement
@@ -88,6 +87,7 @@ function EditQuery() {
 		if (file) {
 			const reader = new FileReader()
 			reader.onloadend = () => {
+				setImageStore('avatar', reader.result as string)
 				form.setFieldValue('avatar', reader.result as string)
 			}
 			reader.readAsDataURL(file)
@@ -101,9 +101,11 @@ function EditQuery() {
 		if (file) {
 			const reader = new FileReader()
 			reader.onloadend = () => {
+				setImageStore('banner', reader.result as string)
 				form.setFieldValue('banner', reader.result as string)
 			}
 			reader.readAsDataURL(file)
+			console.log(form.state.values.banner)
 		}
 	}
 
@@ -217,14 +219,14 @@ function EditQuery() {
 					</div>
 
 					<div class='flex flex-col gap-8'>
-						<div class='flex flex-col gap-4'>
-							<h2 class='text-xl font-bold tracking-tight'>Avatar</h2>
-							<img src={form.state.values.avatar} class='rounded-lg h-60 w-60' />
+                        <div class='flex flex-col gap-4 items-start'>
+                            <label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Avatar</label>
+							<img src={imageStore.avatar} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 
-						<div class='flex flex-col gap-4'>
-							<h2 class='text-xl font-bold tracking-tight'>Banner</h2>
-							<img src={form.state.values.banner} class='rounded-lg h-60 w-60' />
+						<div class='flex flex-col gap-4 items-start'>
+                            <label class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>Banner</label>
+							<img src={imageStore.banner} class='rounded-lg max-h-60 max-w-60 h-auto w-auto object-scale-down' />
 						</div>
 					</div>
 				</div>
