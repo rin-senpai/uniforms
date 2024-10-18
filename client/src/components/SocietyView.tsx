@@ -12,7 +12,7 @@ interface SocietyViewProps {}
 
 export default function SocietyView(props: any) {
 	const [local, others] = splitProps(props, ['class'])
-	
+
 	const numberOfOrgs = () => ('numberOfOrgs' in props ? props.numberOfOrgs : -1)
 
 	let orgsList
@@ -22,7 +22,7 @@ export default function SocietyView(props: any) {
 		orgsList = () => ('orgs' in props ? props.orgs : [])
 	}
 	return (
-		<div  class={cn('flex flex-col p-4', local.class)} {...others}>
+		<div class={cn('flex flex-col p-4', local.class)} {...others}>
 			<For each={orgsList()}>
 				{(item) => (
 					<Card class='m-2 h-64'>
