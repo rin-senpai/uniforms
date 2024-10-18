@@ -1,7 +1,6 @@
 import { Button } from '~/components/ui/button'
 import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextFieldTextArea } from '~/components/ui/text-field'
 import { createSignal, Show, Suspense } from 'solid-js'
-import { Organisation } from '../../../../../server/src/interface'
 import { createForm } from '@tanstack/solid-form'
 import { createQuery, QueryClient } from '@tanstack/solid-query'
 import { useNavigate, useParams } from '@solidjs/router'

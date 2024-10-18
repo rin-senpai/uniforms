@@ -1,7 +1,6 @@
 import { Button } from '~/components/ui/button'
 import { TextField, TextFieldErrorMessage, TextFieldInput, TextFieldLabel, TextFieldTextArea } from '~/components/ui/text-field'
 import { createEffect, createSignal, Show } from 'solid-js'
-import { Organisation } from '../../../../../../server/src/interface'
 import { createForm } from '@tanstack/solid-form'
 import { redirect, useNavigate, useParams } from '@solidjs/router'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
