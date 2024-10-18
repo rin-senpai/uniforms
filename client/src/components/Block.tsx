@@ -1,6 +1,5 @@
-import { Component, Index, For } from 'solid-js'
+import { Component, Index } from 'solid-js'
 import { Button } from '~/components/ui/button'
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '~/components/ui/card'
 import { TextField, TextFieldInput, TextFieldTextArea } from '~/components/ui/text-field'
 import { RadioGroup, RadioGroupItem, RadioGroupItemLabel } from '~/components/ui/radio-group'
@@ -11,7 +10,7 @@ import { Slider, SliderTrack, SliderFill, SliderThumb, SliderLabel, SliderValueL
 
 export type BlockVariant = 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
 
-export const Block: Component<{ name: string; value: any; onBlur: any; onInput: any; onChange: any; variant: BlockVariant; header: string; description?: string; options?: any }> = (props) => {
+export const Block: Component<{ name: string; value: any; onBlur: any; onInput: any; onChange: any; type: BlockVariant; header: string; description?: string; options?: any }> = (props) => {
 	return (
 		<Card class='w-[95%] lg:w-[512px]'>
 			<CardHeader>
@@ -19,17 +18,17 @@ export const Block: Component<{ name: string; value: any; onBlur: any; onInput: 
 				{props.description && <CardDescription class='text-left'>{props.description}</CardDescription>}
 			</CardHeader>
 			<CardContent>
-				{props.variant === 'short' && (
+				{props.type === 'short' && (
 					<TextField name={props.name} value={props.value} onBlur={props.onBlur} onInput={props.onInput}>
 						<TextFieldInput type='text' />
 					</TextField>
 				)}
-				{props.variant === 'long' && (
+				{props.type === 'long' && (
 					<TextField name={props.name} value={props.value} onBlur={props.onBlur} onInput={props.onInput}>
 						<TextFieldTextArea />
 					</TextField>
 				)}
-				{props.variant === 'radio' && (
+				{props.type === 'radio' && (
 					<RadioGroup name={props.name} onBlur={props.onBlur} onInput={props.onInput}>
 						<Index each={props.options}>
 							{(option, i) => (
@@ -41,7 +40,7 @@ export const Block: Component<{ name: string; value: any; onBlur: any; onInput: 
 					</RadioGroup>
 				)}
 				{
-					props.variant === 'checkbox' && (
+					props.type === 'checkbox' && (
 						<div class='flex flex-col gap-2'>
 							<Index each={props.options}>
 								{(option, i) => (
@@ -54,7 +53,7 @@ export const Block: Component<{ name: string; value: any; onBlur: any; onInput: 
 						</div>
 					) /* would need to make field mode array and wrap each checkbox in a field to fix */
 				}
-				{props.variant === 'dropdown' && (
+				{props.type === 'dropdown' && (
 					<Select
 						name={props.name}
 						onBlur={props.onBlur}
@@ -66,12 +65,12 @@ export const Block: Component<{ name: string; value: any; onBlur: any; onInput: 
 						itemComponent={(props) => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
 					>
 						<SelectTrigger>
-							<SelectValue>{props.value !== undefined && props.options.find((e: any) => e.value === props.value).label}</SelectValue>
+							<SelectValue>{props.value !== undefined && props.value?.label}</SelectValue>
 						</SelectTrigger>
 						<SelectContent />
 					</Select>
 				)}
-				{props.variant === 'slider' && (
+				{props.type === 'slider' && (
 					<Slider
 						name={props.name}
 						id={props.name}
@@ -95,8 +94,8 @@ export const Block: Component<{ name: string; value: any; onBlur: any; onInput: 
 						</SliderTrack>
 					</Slider>
 				)}
-				{props.variant === 'radioGrid' && <Button>Radio Grid</Button>}
-				{props.variant === 'checkboxGrid' && <Button>Checkbox Grid</Button>}
+				{props.type === 'radioGrid' && <Button>Radio Grid</Button>}
+				{props.type === 'checkboxGrid' && <Button>Checkbox Grid</Button>}
 			</CardContent>
 		</Card>
 	)

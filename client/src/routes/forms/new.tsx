@@ -73,7 +73,6 @@ export default function NewForm() {
 									value={field().state.value}
 									onBlur={field().handleBlur}
 									onInput={(e: any) => field().handleChange(e.target.value)}
-									onChange={(e: any) => field().handleChange(block().variant === 'dropdown' ? e.value : e)}
 									{...block()}
 								/>
 							)}

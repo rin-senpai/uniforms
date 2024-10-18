@@ -27,29 +27,33 @@ export default function NewForm() {
 	const navigate = useNavigate()
 	const form = createForm(() => ({
 		onSubmit: async ({ value }) => {
-			createQuery(() => ({
-				queryKey: [`submitForm-${params.id}`],
-				queryFn: async () => {
-					const response = await fetch(`http://${SERVER_URL}/forms/${params.id}`, {
-						method: 'POST',
-						body: JSON.stringify({
-							token: 'a',
-							userId: 1,
-							answers: {
-								answers: (value as Array<any>).map((e: any, i: number) => ({
-									id: i,
-									response: e
-								}))
+			try {
+				createQuery(() => ({
+					queryKey: [`submitForm-${params.id}`],
+					queryFn: async () => {
+						const response = await fetch(`http://${SERVER_URL}/forms/${params.id}`, {
+							method: 'POST',
+							body: JSON.stringify({
+								token: 'a',
+								userId: 1,
+								answers: {
+									answers: (value as Array<any>).map((e: any, i: number) => ({
+										id: i,
+										response: e
+									}))
+								}
+							}),
+							headers: {
+								'Content-Type': 'application/json'
 							}
-						}),
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					})
+						})
 
-					return await response.json()
-				}
-			}))
+						return await response.json()
+					}
+				}))
+			} catch {
+				console.log('error')
+			}
 
 			navigate(`/events/${queriedForm.data.form.eventId}`, { replace: true })
 		}
@@ -91,7 +95,7 @@ export default function NewForm() {
 						})}
 						children={(state) => (
 							<Button class='w-full' type='submit' onClick={form.handleSubmit} disabled={!state().canSubmit}>
-								{state().isSubmitting ? '...' : 'Save'}
+								{state().isSubmitting ? '...' : 'Submit'}
 							</Button>
 						)}
 					/>

@@ -11,7 +11,7 @@ import { Slider, SliderTrack, SliderFill, SliderThumb, SliderLabel, SliderValueL
 
 export type BlockVariant = 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
 
-export const EditBlock: Component<{ name: string; value: any; onBlur: any; onInput: any; onChange: any; variant: any; setVariant: any; header: string; description?: string; options?: any }> = (props) => {
+export const EditBlock: Component<{ name: string; value: any; onBlur: any; onInput: any; variant: any; setVariant: any; header: string; description?: string; options?: any }> = (props) => {
 	const blockVariants = [
 		{ value: 'short', label: 'Short Answer' },
 		{ value: 'long', label: 'Long Answer' },
@@ -65,7 +65,6 @@ export const EditBlock: Component<{ name: string; value: any; onBlur: any; onInp
 					<Select
 						name={props.name}
 						onBlur={props.onBlur}
-						onChange={props.onChange}
 						options={props.options}
 						optionValue='value'
 						optionTextValue='label'
@@ -84,7 +83,6 @@ export const EditBlock: Component<{ name: string; value: any; onBlur: any; onInp
 						id={props.name}
 						value={props.value}
 						onBlur={props.onBlur}
-						onChange={props.onChange}
 						minValue={props.options.min.value}
 						maxValue={props.options.max.value}
 						defaultValue={[(props.options.min.value + props.options.max.value) / 2]}
