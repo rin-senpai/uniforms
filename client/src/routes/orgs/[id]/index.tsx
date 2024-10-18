@@ -22,22 +22,21 @@ export default function IndividualOrgs() {
 	)
 }
 
-
 function IndividualOrgsQuery() {
 	const navigate = useNavigate()
 	const params = useParams()
 
-	const [isEdited, setIsEdited] = createSignal(false);
+	const [isEdited, setIsEdited] = createSignal(false)
 
 	// Check local storage on mount to set the initial state
 	onMount(() => {
-		const savedVisibility = localStorage.getItem('organisationEdited');
+		const savedVisibility = localStorage.getItem('organisationEdited')
 		if (savedVisibility === 'true') {
-			showToast({title: "Wahoo!", description: "Successfully edited the society", variant: 'success'})
-			setIsEdited(false);
-			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+			showToast({ title: 'Wahoo!', description: 'Successfully edited the society', variant: 'success' })
+			setIsEdited(false)
+			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()))
 		}
-	});
+	})
 
 	const query = createQuery(() => ({
 		queryKey: ['data'],
@@ -60,7 +59,7 @@ function IndividualOrgsQuery() {
 			}
 		},
 		refetchOnWindowFocus: true, // Refetch when window gains focus
-    	refetchOnMount: true, // Refetch when the component mounts
+		refetchOnMount: true // Refetch when the component mounts
 	}))
 	return (
 		<Suspense fallback={'Loading...'}>
@@ -74,12 +73,16 @@ function IndividualOrgsQuery() {
 				<div class='w-full flex flex-row gap-4'>
 					<p class='w-3/4'>{query.data?.description}</p>
 					<div class='flex flex-col gap-4 w-1/4'>
-						<Button class='w-full' as='a' href='/events/new'>Create a new event</Button>
-						<Button class='w-full' as='a' href={`/orgs/${params.id}/edit`}>Edit this society</Button>
+						<Button class='w-full' as='a' href='/events/new'>
+							Create a new event
+						</Button>
+						<Button class='w-full' as='a' href={`/orgs/${params.id}/edit`}>
+							Edit this society
+						</Button>
 					</div>
 				</div>
 			</div>
-			<Toaster/>
+			<Toaster />
 		</Suspense>
 	)
 }

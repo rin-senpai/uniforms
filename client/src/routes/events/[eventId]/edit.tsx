@@ -30,17 +30,17 @@ function EditQuery() {
 	const navigate = useNavigate()
 	const params = useParams()
 
-	const [isEdited, setIsEdited] = createSignal(false);
+	const [isEdited, setIsEdited] = createSignal(false)
 
 	// Check local storage on mount to set the initial state
 	onMount(() => {
-		const savedVisibility = localStorage.getItem('organisationEdited');
+		const savedVisibility = localStorage.getItem('organisationEdited')
 		if (savedVisibility === 'true') {
-			showToast({title: "Wahoo!", description: "Successfully edited the society", variant: 'success'})
-			setIsEdited(false);
-			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+			showToast({ title: 'Wahoo!', description: 'Successfully edited the society', variant: 'success' })
+			setIsEdited(false)
+			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()))
 		}
-	});
+	})
 
 	const eventQuery = createQuery(() => ({
 		queryKey: ['data'],
@@ -89,7 +89,7 @@ function EditQuery() {
 			}
 		},
 		refetchOnWindowFocus: true, // Refetch when window gains focus
-    	refetchOnMount: true, // Refetch when the component mounts
+		refetchOnMount: true, // Refetch when the component mounts
 		enabled: eventQuery.isSuccess
 	}))
 
@@ -139,18 +139,17 @@ function EditQuery() {
 				}
 			})
 				.then(() => {
-					setIsEdited(true);
-					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+					setIsEdited(true)
+					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()))
 					// navigate(`/orgs/${params.id}/edit`, { replace: false })
 					location.reload()
-				
 				})
 				.catch((value) => {
 					throw new Error(`Response failed.`)
 				})
 		},
 		refetchOnWindowFocus: true, // Refetch when window gains focus
-    	refetchOnMount: true, // Refetch when the component mounts
+		refetchOnMount: true // Refetch when the component mounts
 	}))
 
 	const [banner, setBanner] = createSignal(eventQuery.data?.bannerURI)
@@ -223,15 +222,15 @@ function EditQuery() {
 								children={(field) => {
 									console.log(field().state.value)
 									return (
-									<TextField class='w-full' name={field().name} onInput={(e) => field().handleChange(e.target.value)} validationState={field().state.value == '' ? 'invalid' : 'valid'}>
-										<TextFieldLabel>Description</TextFieldLabel>
-										<TextFieldTextArea class='w-full' value={field().state.value} name={field().name} autoResize />
-										<Show when={field().state.meta.errors}>
-											<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
-										</Show>
-									</TextField>
-									)}
-								}
+										<TextField class='w-full' name={field().name} onInput={(e) => field().handleChange(e.target.value)} validationState={field().state.value == '' ? 'invalid' : 'valid'}>
+											<TextFieldLabel>Description</TextFieldLabel>
+											<TextFieldTextArea class='w-full' value={field().state.value} name={field().name} autoResize />
+											<Show when={field().state.meta.errors}>
+												<TextFieldErrorMessage> {field().state.meta.errors}</TextFieldErrorMessage>
+											</Show>
+										</TextField>
+									)
+								}}
 							/>
 
 							<form.Field
@@ -363,7 +362,9 @@ function EditQuery() {
 
 							<Button onClick={() => console.log(form.state.values)}>Print</Button>
 
-							<Button as='a' href={`/events/${params.eventId}`}>Back</Button>
+							<Button as='a' href={`/events/${params.eventId}`}>
+								Back
+							</Button>
 						</div>
 					</div>
 
@@ -375,7 +376,7 @@ function EditQuery() {
 					</div>
 				</div>
 			</div>
-			<Toaster/>
+			<Toaster />
 		</Suspense>
 	)
 }

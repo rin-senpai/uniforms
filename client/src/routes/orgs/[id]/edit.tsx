@@ -7,7 +7,7 @@ import { useNavigate, useParams } from '@solidjs/router'
 import { QueryClientProvider } from '@tanstack/solid-query'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { createStore } from 'solid-js/store'
-import { showToast, Toaster } from "~/components/ui/toast"
+import { showToast, Toaster } from '~/components/ui/toast'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -49,12 +49,12 @@ function EditQuery() {
 			}
 		},
 		refetchOnWindowFocus: true, // Refetch when window gains focus
-    	refetchOnMount: true, // Refetch when the component mounts
+		refetchOnMount: true // Refetch when the component mounts
 	}))
 
 	createEffect(() => {
 		const isAllSuccess = query.isSuccess
-		const isAnyLoading = query.isLoading 
+		const isAnyLoading = query.isLoading
 		if (isAllSuccess) {
 			form.setFieldValue('name', query.data?.name)
 			form.setFieldValue('description', query.data?.description)
@@ -88,13 +88,13 @@ function EditQuery() {
 				}
 			})
 				.then(() => {
-					setIsEdited(true);
-					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+					setIsEdited(true)
+					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()))
 					navigate(`/orgs/${params.id}/edit`, { replace: false })
 					location.reload()
 				})
 				.catch((value) => {
-					showToast({title: "Uh-oh...", description: "Failed to edit the society...", variant: 'error'})
+					showToast({ title: 'Uh-oh...', description: 'Failed to edit the society...', variant: 'error' })
 					throw new Error(`Response failed.`)
 				})
 		}
@@ -131,17 +131,17 @@ function EditQuery() {
 		}
 	}
 
-	const [isEdited, setIsEdited] = createSignal(false);
+	const [isEdited, setIsEdited] = createSignal(false)
 
 	// Check local storage on mount to set the initial state
 	onMount(() => {
-		const savedVisibility = localStorage.getItem('organisationEdited');
+		const savedVisibility = localStorage.getItem('organisationEdited')
 		if (savedVisibility === 'true') {
-			showToast({title: "Wahoo!", description: "Successfully edited the society", variant: 'success'})
-			setIsEdited(false);
-			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+			showToast({ title: 'Wahoo!', description: 'Successfully edited the society', variant: 'success' })
+			setIsEdited(false)
+			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()))
 		}
-	});
+	})
 
 	return (
 		<Suspense fallback={'Loading society'}>
@@ -250,7 +250,9 @@ function EditQuery() {
 
 							<Button onClick={form.handleSubmit}>Submit</Button>
 
-							<Button as='a' href={`/orgs/${params.id}`}>Back</Button>
+							<Button as='a' href={`/orgs/${params.id}`}>
+								Back
+							</Button>
 						</div>
 					</div>
 
@@ -267,7 +269,7 @@ function EditQuery() {
 					</div>
 				</div>
 			</div>
-			<Toaster/>
+			<Toaster />
 		</Suspense>
 	)
 }
