@@ -45,6 +45,7 @@ function convertTimesToUnix(objectsArray: any[]): Event[] {
 const app = new Elysia()
 	.use(cors())
 	.use(swagger())
+	.use(cors())
 	.get('/', () => 'Hello Elysia')
 
 	.get(
