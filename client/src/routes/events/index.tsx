@@ -6,7 +6,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from '~/components/ui/button'
 import { createSignal } from 'solid-js'
 import { createQuery, QueryClient, QueryClientProvider } from '@tanstack/solid-query'
-import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -18,7 +17,6 @@ export default function Edit() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Events />
-			<SolidQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	)
 }
