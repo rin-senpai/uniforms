@@ -1,5 +1,5 @@
 import { sql, relations } from 'drizzle-orm'
-import { integer, sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core'
+import { check, integer, sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core'
 
 export const users = sqliteTable('users', {
 	id: integer().primaryKey({ autoIncrement: true }),
@@ -48,7 +48,6 @@ export const userAutofillsRelations = relations(userAutofills, ({ one }) => ({
 export const templateAutofills = sqliteTable(
 	'template_autofills',
 	{
-		id: integer().primaryKey({ autoIncrement: true }),
 		userId: integer()
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
@@ -75,23 +74,25 @@ export const templateAutofillsRelations = relations(templateAutofills, ({ one })
 	})
 }))
 
-export const notifications = sqliteTable('notifications', {
-	id: integer().primaryKey({ autoIncrement: true }),
-	userId: integer()
-		.notNull()
-		.references(() => users.id, { onDelete: 'cascade' }),
-	read: integer({ mode: 'boolean' }).notNull().default(false),
-	type: text({ enum: ['newEvent', 'newForm'] }),
-	eventId: integer()
-		.notNull()
-		.references(() => events.id),
-	formId: integer()
-		.notNull()
-		.references(() => forms.id),
-	createdAt: integer({ mode: 'timestamp' })
-		.notNull()
-		.default(sql`(strftime('%s', 'now'))`)
-})
+export const notifications = sqliteTable(
+	'notifications',
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		userId: integer()
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		read: integer({ mode: 'boolean' }).notNull().default(false),
+		type: text({ enum: ['newEvent', 'newForm'] }),
+		eventId: integer().references(() => events.id),
+		formId: integer().references(() => forms.id),
+		createdAt: integer({ mode: 'timestamp' })
+			.notNull()
+			.default(sql`(strftime('%s', 'now'))`)
+	},
+	(table) => ({
+		checkConstraint: check('id_null_check', sql`${table.eventId} IS NOT NULL OR ${table.formId} IS NOT NULL`)
+	})
+)
 
 export const notificationsRelations = relations(notifications, ({ one }) => ({
 	users: one(users, {
@@ -279,7 +280,16 @@ export const forms = sqliteTable('forms', {
 	role: text(),
 	canEditResponses: integer({ mode: 'boolean' }).notNull().default(false),
 	isPublic: integer({ mode: 'boolean' }).notNull().default(true),
-	fields: text({ mode: 'json' }).notNull().$type<{ type: string; id: number; templateFieldId: number | undefined; header: string; description: string | undefined; options: any }[]>(),
+	fields: text({ mode: 'json' }).notNull().$type<{
+		blocks: {
+			type: 'short' | 'long' | 'radio' | 'checkbox' | 'dropdown' | 'slider' | 'radioGrid' | 'checkboxGrid'
+			id: number
+			templateFieldId: number | undefined
+			header: string
+			description: string | undefined
+			options: any
+		}[]
+	}>(),
 	createdAt: integer({ mode: 'timestamp' })
 		.notNull()
 		.default(sql`(strftime('%s', 'now'))`)
