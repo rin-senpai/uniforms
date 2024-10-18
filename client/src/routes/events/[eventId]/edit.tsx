@@ -313,7 +313,7 @@ function EditQuery() {
 											type='datetime-local'
 											value={isNaN(new Date(field().state.value).getTime()) ? new Date().toISOString().slice(0, -8) : new Date(field().state.value).toISOString().slice(0, -8)}
 											onChange={(e) => {
-												form.setFieldValue(field().name, e.target.value)
+												form.setFieldValue(field().name, new Date(e.target.value).getTime())
 											}}
 										/>
 										<Show when={field().state.meta.errors}>
@@ -338,7 +338,7 @@ function EditQuery() {
 											value={isNaN(new Date(field().state.value).getTime()) ? new Date().toISOString().slice(0, -8) : new Date(field().state.value).toISOString().slice(0, -8)}
 											onChange={(e) => {
 												console.log(new Date(e.target.value))
-												form.setFieldValue(field().name, e.target.value)
+												form.setFieldValue(field().name, new Date(e.target.value).getTime())
 											}}
 										/>
 										<Show when={field().state.meta.errors}>
