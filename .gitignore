@@ -40,3 +40,6 @@ vite.config.ts.timestamp*
 
 # API Checker
 .bruno
+
+# Databases
+*.sqlite

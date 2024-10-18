@@ -5,7 +5,7 @@ import { eq, lte, gt, and, or } from 'drizzle-orm'
 
 import { Elysia, t, error } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
-import { EmptyReturn, EventCreateReturn, OrganisationCreateReturn, UserCreateReturn, FormCreateReturn, FormTemplatePreview, FormTemplateCreateReturn, FormTemplateFieldAutofill, FormTemplate } from './interface'
+import { EmptyReturn, EventCreateReturn, OrganisationCreateReturn, UserCreateReturn, FormCreateReturn, FormTemplatePreview, FormTemplateCreateReturn, FormTemplateFieldAutofill, FormTemplate, Event } from './interface'
 
 import { errorMap } from './errorCodes'
 
@@ -31,6 +31,16 @@ try {
 	console.error('Migration failed:', error)
 }
 
+function convertTimesToUnix(objectsArray: any[]): Event[] {
+	return objectsArray.map((obj) => {
+		return {
+			...obj,
+			timeStart: Math.floor(new Date(obj.timeStart).getTime() / 1000),
+			timeEnd: Math.floor(new Date(obj.timeEnd).getTime() / 1000)
+		}
+	})
+}
+
 const app = new Elysia()
 	.use(swagger())
 	.get('/', () => 'Hello Elysia')
@@ -41,7 +51,7 @@ const app = new Elysia()
 			const currentTime = new Date()
 
 			const upcomingEvents = await db.select().from(events).where(gt(events.timeEnd, currentTime))
-			return { events: upcomingEvents }
+			return { events: convertTimesToUnix(upcomingEvents) }
 		},
 		{
 			response: t.Object({
@@ -160,7 +170,9 @@ const app = new Elysia()
 			// 	return error(404, errorMap.get(404))
 			// }
 
-			return { event: event[0] }
+			const convertedEvents = convertTimesToUnix(event)
+
+			return { event: convertedEvents[0] }
 		},
 		{
 			params: t.Object({
@@ -322,7 +334,7 @@ const app = new Elysia()
 
 			const eventsList = await db.select().from(events).where(eq(events.organisationId, orgId))
 
-			return { events: eventsList }
+			return { events: convertTimesToUnix(eventsList) }
 		},
 		{
 			params: t.Object({
@@ -443,7 +455,19 @@ const app = new Elysia()
 	.post(
 		'/admin/events',
 		async ({ body }) => {
-			const newEvent = await db.insert(events).values(body).returning()
+			const newEventObject = {
+				token: '1',
+				id: body.id,
+				organisationId: body.organisationId,
+				title: body.title,
+				description: body.description,
+				isPublic: body.isPublic,
+				timeStart: new Date(body.timeStart * 1000),
+				timeEnd: new Date(body.timeEnd * 1000),
+				location: body.location,
+				bannerURI: body.bannerURI
+			}
+			const newEvent = await db.insert(events).values(newEventObject).returning()
 			return {
 				eventId: newEvent[0].id
 			}
@@ -462,7 +486,19 @@ const app = new Elysia()
 		async ({ params, body }) => {
 			const { eventId } = params
 
-			await db.update(events).set(body).where(eq(events.id, eventId))
+			const updatedEventObject = {
+				token: '1',
+				id: body.id,
+				organisationId: body.organisationId,
+				title: body.title,
+				description: body.description,
+				isPublic: body.isPublic,
+				timeStart: new Date(body.timeStart * 1000),
+				timeEnd: new Date(body.timeEnd * 1000),
+				location: body.location,
+				bannerURI: body.bannerURI
+			}
+			await db.update(events).set(updatedEventObject).where(eq(events.id, eventId))
 
 			return {}
 		},
@@ -1660,6 +1696,6 @@ const app = new Elysia()
 		}
 	)
 
-	.listen(3000)
+	.listen(60000)
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)
