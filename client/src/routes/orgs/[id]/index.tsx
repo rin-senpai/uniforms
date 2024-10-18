@@ -2,8 +2,10 @@ import SocietyView from '~/components/SocietyView'
 import { boulderingURI, skullimgURI } from '~/components/URItest'
 import { createQuery, QueryClient, QueryClientProvider } from '@tanstack/solid-query'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
-import { Show, Suspense } from 'solid-js'
+import { createSignal, onMount, Show, Suspense } from 'solid-js'
 import { useNavigate, useParams } from '@solidjs/router'
+import { Button } from '~/components/ui/button'
+import { showToast, Toaster } from '~/components/ui/toast'
 
 const url = 'localhost'
 const dev_port = 60000
@@ -24,6 +26,19 @@ export default function IndividualOrgs() {
 function IndividualOrgsQuery() {
 	const navigate = useNavigate()
 	const params = useParams()
+
+	const [isEdited, setIsEdited] = createSignal(false);
+
+	// Check local storage on mount to set the initial state
+	onMount(() => {
+		const savedVisibility = localStorage.getItem('organisationEdited');
+		if (savedVisibility === 'true') {
+			showToast({title: "Wahoo!", description: "Successfully edited the society", variant: 'success'})
+			setIsEdited(false);
+			localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
+		}
+	});
+
 	const query = createQuery(() => ({
 		queryKey: ['data'],
 		queryFn: async () => {
@@ -49,13 +64,22 @@ function IndividualOrgsQuery() {
 	}))
 	return (
 		<Suspense fallback={'Loading...'}>
-			<div class='w-full m-5'>
-				<div class='*:rounded-lg relative'>
-					<img class='object-contain' src={query.data?.bannerURI} />
-					<div class='absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>
-					<h2 class='absolute inset-x-0 bottom-5 text-white text-sm lg:text-lg'>{query.data?.name}</h2>
+			<div class='w-full m-5 flex flex-col gap-4'>
+				<div class='*:rounded-xl relative'>
+					<img class='object-contain w-full h-auto' src={query.data?.bannerURI} />
+					<div class='object-contain absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30'></div>
+					<h2 class='absolute inset-x-5 bottom-5 text-white text-sm lg:text-6xl'>{query.data?.name}</h2>
+				</div>
+
+				<div class='w-full flex flex-row gap-4'>
+					<p class='w-3/4'>{query.data?.description}</p>
+					<div class='flex flex-col gap-4 w-1/4'>
+						<Button class='w-full' as='a' href='/events/new'>Create a new event</Button>
+						<Button class='w-full' as='a' href={`/orgs/${params.id}/edit`}>Edit this society</Button>
+					</div>
 				</div>
 			</div>
+			<Toaster/>
 		</Suspense>
 	)
 }

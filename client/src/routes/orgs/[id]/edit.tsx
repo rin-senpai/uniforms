@@ -90,7 +90,7 @@ function EditQuery() {
 				.then(() => {
 					setIsEdited(true);
 					localStorage.setItem('organisationEdited', JSON.stringify(isEdited()));
-					// navigate(`/orgs/${params.id}/edit`, { replace: false })
+					navigate(`/orgs/${params.id}/edit`, { replace: false })
 					location.reload()
 				})
 				.catch((value) => {
@@ -249,6 +249,8 @@ function EditQuery() {
 							<Button type='reset'>Reset</Button>
 
 							<Button onClick={form.handleSubmit}>Submit</Button>
+
+							<Button as='a' href={`/orgs/${params.id}`}>Back</Button>
 						</div>
 					</div>
 
