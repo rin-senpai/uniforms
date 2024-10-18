@@ -1,6 +1,5 @@
 import { For, splitProps } from 'solid-js'
-import { Card, CardContent, CardDescription, CardTitle } from './ui/card'
-
+import { Card, CardContent, CardHeader, CardDescription, CardTitle } from './ui/card'
 import EventsView from './EventsView'
 import { eventsListDefault } from './eventsTest'
 import { NavigationMenu } from './ui/navigation-menu'
@@ -29,9 +28,12 @@ export default function SocietyView(props: any) {
 						<CardContent class='grid grid-cols-2 pl-0'>
 							<div class='flex flex-row'>
 								<a href='/'>
-									<img class='h-64 rounded-lg relative inset-y-0 left-0' src={item.imageUrl} />
+									<img class='h-64 rounded-lg relative inset-y-0 left-0' src={item.avatarURI} />
 								</a>
-								<CardTitle class='justify-self-center'>{item.name}</CardTitle>
+								<div class='justify-self-center'>
+									<CardHeader>{item.name}</CardHeader>
+									<CardDescription class='justify-center mx-6 gap-4'>{item.description}</CardDescription>
+								</div>
 							</div>
 
 							<EventsView events={eventsListDefault} numberOfEvents={2} displayDescription={false} class='h-5/6' compact={true} />

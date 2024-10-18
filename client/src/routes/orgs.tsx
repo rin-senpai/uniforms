@@ -1,23 +1,33 @@
 import SocietyView from '~/components/SocietyView'
 import { boulderingURI, skullimgURI } from '../components/URItest'
 
-interface Society {
-	name: string
-	imageUrl: string
-}
+import { Organisation } from '../../../server/src/interface'
 
-const societies: Society[] = [
+
+const societies: Organisation[] = [
 	{
+		id: 1,
 		name: 'AnimeUNSW',
-		imageUrl: boulderingURI
+		description: 'anime is real',
+		avatarURI: boulderingURI,
+		bannerURI: null,
+		createdAt: new Date()
 	},
 	{
+		id: 2,
 		name: 'CSESoc',
-		imageUrl: skullimgURI
+		description: 'computer science rules!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1',
+		avatarURI: skullimgURI,
+		bannerURI: null,
+		createdAt: new Date()
 	},
 	{
+		id: 3,
 		name: 'DevSoc',
-		imageUrl: skullimgURI
+		description: 'i love coding so much ahshdjadalsdjaksdkjs',
+		avatarURI: skullimgURI,
+		bannerURI: null,
+		createdAt: new Date()
 	}
 ]
 

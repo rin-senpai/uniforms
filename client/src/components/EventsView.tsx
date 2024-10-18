@@ -82,7 +82,7 @@ export default function EventsView(props: any) {
 							<CardContent class='p-4 px-8'>
 								<HoverCard>
 									<HoverCardTrigger as={Button<'button'>} variant='link'>
-										See more...
+										Event Details
 									</HoverCardTrigger>
 									<HoverCardContent>{description() ? item.description : ''}</HoverCardContent>
 								</HoverCard>

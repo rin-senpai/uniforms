@@ -2,6 +2,12 @@ import { t } from 'elysia'
 import { Type, type Static } from '@sinclair/typebox'
 import { model } from './db/model'
 
+const EventSchemaType = t.Object(model.select.event);
+export type Event = Static<typeof EventSchemaType>
+
+const OrganisationSchemaType = t.Object(model.select.organisation);
+export type Organisation = Static<typeof OrganisationSchemaType>
+
 export const UserCreateReturn = t.Object(
 	{
 		userId: t.Number()
@@ -37,9 +43,6 @@ export const FormCreateReturn = t.Object(
 		description: 'Form creation return object'
 	}
 )
-
-const EventSchemaType = t.Object(model.select.event);
-export type Event = Static<typeof EventSchemaType>
 
 export const FormTemplate = t.Object(
 	{
