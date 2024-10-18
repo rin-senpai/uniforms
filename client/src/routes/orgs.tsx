@@ -3,7 +3,6 @@ import { boulderingURI, skullimgURI } from '../components/URItest'
 
 import { Organisation } from '../../../server/src/interface'
 
-
 const societies: Organisation[] = [
 	{
 		id: 1,
